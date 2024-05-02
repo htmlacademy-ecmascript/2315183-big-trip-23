@@ -13,6 +13,8 @@ function createListElementTemplate(listElement) {
   const timeFrom = humanizeDueDate(time.from, DateFormat.TIME);
   const timeTo = humanizeDueDate(time.to, DateFormat.TIME);
 
+  //console.log(offers);
+
   // const timeInDays = Math.floor((time.to - time.from) / (24 * 3600 * 1000));
   // const timeInHours = Math.floor((time.to - time.from) / (3600 * 1000));
   // const timeInMinutes = Math.floor((time.to - time.from) / (60000));
@@ -39,13 +41,11 @@ function createListElementTemplate(listElement) {
         &euro;&nbsp;<span class="event__price-value">${price}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
+
       <ul class="event__selected-offers">
-        <li class="event__offer">
-          <span class="event__offer-title">Order Uber</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">20</span>
-        </li>
       </ul>
+
+
       <button class="event__favorite-btn" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">

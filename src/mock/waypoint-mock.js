@@ -1,10 +1,9 @@
-import { EVENTS, OFFERS, PLACES } from '../const.js';
+import { EVENTS, PLACES } from '../const.js';
+import { getRandomOffer } from './offer-mock.js';
 import { getRandomArrayElement, getRandomNumber } from '../utils.js';
+import OffersModel from '../model/offer-model.js';
 
-const NumberOfOffer = {
-  MIN: 0,
-  MAX: 2
-};
+//const offersModel = new OffersModel();
 
 const mockWaypoints = [
   {
@@ -16,7 +15,7 @@ const mockWaypoints = [
       to: new Date(2024, 4, 30, 20, 0)
     },
     price: 20,
-    offers: Array.from({length: getRandomNumber(NumberOfOffer.MIN, NumberOfOffer.MAX)}, getRandomOffer),
+    offers: new OffersModel().getOffer(),
     isImportant: false
   },
   {
@@ -28,7 +27,7 @@ const mockWaypoints = [
       to: new Date(2024, 5, 12, 11, 0)
     },
     price: 150,
-    offers: Array.from({length: getRandomNumber(NumberOfOffer.MIN, NumberOfOffer.MAX)}, getRandomOffer),
+    offers: new OffersModel().getOffer(),
     isImportant: true
   },
   {
@@ -40,7 +39,7 @@ const mockWaypoints = [
       to: new Date(2024, 8, 14, 18, 0)
     },
     price: 1000,
-    offers: Array.from({length: getRandomNumber(NumberOfOffer.MIN, NumberOfOffer.MAX)}, getRandomOffer),
+    offers: new OffersModel().getOffer(),
     isImportant: false
   },
   {
@@ -52,14 +51,10 @@ const mockWaypoints = [
       to: new Date(2024, 1, 30, 13, 0)
     },
     price: 60,
-    offers: Array.from({length: getRandomNumber(NumberOfOffer.MIN, NumberOfOffer.MAX)}, getRandomOffer),
+    offers: new OffersModel().getOffer(),
     isImportant: true
   },
 ];
-
-function getRandomOffer() {
-  return getRandomArrayElement(OFFERS);
-}
 
 function getRandomWaypoint() {
   return getRandomArrayElement(mockWaypoints);
