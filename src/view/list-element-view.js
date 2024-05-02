@@ -1,25 +1,51 @@
 import { createElement } from '../render.js';
+import { humanizeDueDate } from '../utils.js';
 
-function createListElementTemplate() {
+const DateFormat = {
+  DAY_EVENT: 'MMM D',
+  TIME: 'HH:mm'
+};
+
+function createListElementTemplate(listElement) {
+  const {dueDate, event, place, time, price, offers, isImportant} = listElement;
+
+  const date = humanizeDueDate(dueDate, DateFormat.DAY_EVENT);
+  const timeFrom = humanizeDueDate(time.from, DateFormat.TIME);
+  const timeTo = humanizeDueDate(time.to, DateFormat.TIME);
+
+  // const timeInDays = Math.floor((time.to - time.from) / (24 * 3600 * 1000));
+  // const timeInHours = Math.floor((time.to - time.from) / (3600 * 1000));
+  // const timeInMinutes = Math.floor((time.to - time.from) / (60000));
+
+  // const timeIn = `${timeInDays}D ${timeInHours}H ${timeInMinutes}M`;
+
   return (
     `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="2019-03-20">MAR 20</time>
+      <time class="event__date" datetime="${date.toString()}">${date.toString()}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/sightseeing.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${event.toLowerCase()}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">Sightseeing Geneva</h3>
+      <h3 class="event__title">${event} ${place}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="2019-03-20T11:15">11:15</time>
+          <time class="event__start-time" datetime="${timeFrom}">${timeFrom}</time>
           &mdash;
-          <time class="event__end-time" datetime="2019-03-20T12:15">12:15</time>
+          <time class="event__end-time" datetime="${timeTo}">${timeTo}</time>
         </p>
-        <p class="event__duration">01H 00M</p>
+        <p class="event__duration">-------</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">180</span>
+        &euro;&nbsp;<span class="event__price-value">${price}</span>
       </p>
+      <h4 class="visually-hidden">Offers:</h4>
+      <ul class="event__selected-offers">
+        <li class="event__offer">
+          <span class="event__offer-title">Order Uber</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">20</span>
+        </li>
+      </ul>
       <button class="event__favorite-btn" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -35,8 +61,12 @@ function createListElementTemplate() {
 }
 
 export default class ListElementView {
+  constructor({listElement}) {
+    this.listElement = listElement;
+  }
+
   getTemplate() {
-    return createListElementTemplate();
+    return createListElementTemplate(this.listElement);
   }
 
   getElement() {

@@ -8,7 +8,7 @@ const NumberOfOffer = {
 
 const mockWaypoints = [
   {
-    date: new Date('2024-04-30'),
+    dueDate: new Date('2024-04-30'),
     event: getRandomArrayElement(EVENTS),
     place: getRandomArrayElement(PLACES),
     time: {
@@ -20,23 +20,23 @@ const mockWaypoints = [
     isImportant: false
   },
   {
-    date: new Date('2024-05-12'),
+    dueDate: new Date('2024-05-12'),
     event: getRandomArrayElement(EVENTS),
     place: getRandomArrayElement(PLACES),
     time: {
-      from: new Date(2024, 5, 12, 14, 0),
-      to: new Date(2024, 5, 12, 20, 0)
+      from: new Date(2024, 5, 12, 8, 25),
+      to: new Date(2024, 5, 12, 11, 0)
     },
     price: 150,
     offers: Array.from({length: getRandomNumber(NumberOfOffer.MIN, NumberOfOffer.MAX)}, getRandomOffer),
     isImportant: true
   },
   {
-    date: new Date('2024-08-12'),
+    dueDate: new Date('2024-08-12'),
     event: getRandomArrayElement(EVENTS),
     place: getRandomArrayElement(PLACES),
     time: {
-      from: new Date(2024, 8, 12, 14, 0),
+      from: new Date(2024, 8, 12, 14, 30),
       to: new Date(2024, 8, 14, 18, 0)
     },
     price: 1000,
@@ -44,12 +44,12 @@ const mockWaypoints = [
     isImportant: false
   },
   {
-    date: new Date('2024-01-30'),
+    dueDate: new Date('2024-01-30'),
     event: getRandomArrayElement(EVENTS),
     place: getRandomArrayElement(PLACES),
     time: {
-      from: new Date(2024, 1, 30, 14, 0),
-      to: new Date(2024, 1, 30, 20, 0)
+      from: new Date(2024, 1, 30, 3, 15),
+      to: new Date(2024, 1, 30, 13, 0)
     },
     price: 60,
     offers: Array.from({length: getRandomNumber(NumberOfOffer.MIN, NumberOfOffer.MAX)}, getRandomOffer),
