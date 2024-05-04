@@ -1,13 +1,9 @@
 import { createElement } from '../render.js';
 import { humanizeDueDate } from '../utils.js';
-
-const DateFormat = {
-  DAY_EVENT: 'MMM D',
-  TIME: 'HH:mm'
-};
+import { DateFormat } from '../const.js';
 
 function createListElementTemplate(listElement) {
-  const {dueDate, event, place, time, price, offers, isImportant} = listElement;
+  const {dueDate, event, place, time, price, isImportant} = listElement;
 
   const date = humanizeDueDate(dueDate, DateFormat.DAY_EVENT);
   const timeFrom = humanizeDueDate(time.from, DateFormat.TIME);
@@ -20,6 +16,12 @@ function createListElementTemplate(listElement) {
   // const timeInMinutes = Math.floor((time.to - time.from) / (60000));
 
   // const timeIn = `${timeInDays}D ${timeInHours}H ${timeInMinutes}M`;
+
+  let favoriteButton = 'event__favorite-btn--active';
+
+  if (isImportant) {
+    favoriteButton = '';
+  }
 
   return (
     `<li class="trip-events__item">
@@ -46,7 +48,7 @@ function createListElementTemplate(listElement) {
       </ul>
 
 
-      <button class="event__favorite-btn" type="button">
+      <button class="event__favorite-btn ${favoriteButton}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>

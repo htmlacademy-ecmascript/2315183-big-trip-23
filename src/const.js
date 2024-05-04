@@ -23,4 +23,18 @@ const OFFERS = [
   ''
 ];
 
-export { EVENTS, PLACES, OFFERS };
+const DESTINATIONS = [
+  'The mysterious ancient city of Machu Picchu: lost in the mountains of Peru, this archaeological complex leaves visitors in awe with its mystery and beauty',
+  'The idyllic beach on Bora Bora Island: with white sand, warm azure water, and palm trees, this beach is the perfect place for relaxation and leisure',
+  'The picturesque vineyards of the Tuscany region: famous for their wines and beautiful landscapes, these vineyards create a unique atmosphere inviting you to enjoy the beauty and flavors of the region',
+  'The snow-capped peaks of the Swiss Alps: majestic mountain peaks covered in snow offer a breathtaking view and a perfect location for winter sports',
+  'The mystical Yavari forest in Brazil: known for its diverse flora and fauna, this forest exudes a special aura of mystery and enigma'
+];
+
+const DateFormat = {
+  DAY_EVENT: 'MMM D',
+  DAY_AND_TIME_EVENT: 'MM/DD/YYYY HH:mm',
+  TIME: 'HH:mm'
+};
+
+export { EVENTS, PLACES, OFFERS, DESTINATIONS, DateFormat };

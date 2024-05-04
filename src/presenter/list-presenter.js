@@ -1,19 +1,15 @@
 import ListView from '../view/list-view.js';
 import ListElementView from '../view/list-element-view.js';
-import { render } from '../render.js';
-// import AddFormView from '../view/add-form-view.js';
-// import EditFormView from '../view/edit-form-view.js';
+import AddFormView from '../view/add-form-view.js';
+import EditFormView from '../view/edit-form-view.js';
 import ContainerListView from '../view/container-list-view.js';
 import ListOfferElementView from '../view/list-offer-element-view.js';
-import ListOfferView from '../view/list-offers-view.js';
-
+import { render } from '../render.js';
 
 export default class ListPresenter {
   container = new ContainerListView;
   listComponent = new ListView();
 
-  //listOfferComponent = new ListOfferView();
-  //listElementComponent = new ListElementView();
 
   constructor({listContainer, waypointsModel}) {
     this.listContainer = listContainer;
@@ -40,11 +36,8 @@ export default class ListPresenter {
         render(new ListOfferElementView({offerElement: this.listWaypoints[i].offers[j]}), listElementComponent.getElement().querySelector('.event__selected-offers'));
       }
 
-    }
+      render(new AddFormView({addFormElement: this.listWaypoints[i]}), this.listComponent.getElement());
 
-    // for (let i = 0; i < 3; i++) {
-    //   render(new ListElementView(), this.listElementComponent.getElement());
-    //   render(new AddFormView(), this.listElementComponent.getElement());
-    // }
+    }
   }
 }

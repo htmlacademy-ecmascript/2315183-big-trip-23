@@ -1,9 +1,8 @@
-import { EVENTS, PLACES } from '../const.js';
-import { getRandomOffer } from './offer-mock.js';
+import { DESTINATIONS, EVENTS, PLACES } from '../const.js';
 import { getRandomArrayElement, getRandomNumber } from '../utils.js';
 import OffersModel from '../model/offer-model.js';
 
-//const offersModel = new OffersModel();
+const PICTURES_COUNT = 6;
 
 const mockWaypoints = [
   {
@@ -16,7 +15,9 @@ const mockWaypoints = [
     },
     price: 20,
     offers: new OffersModel().getOffer(),
-    isImportant: false
+    isImportant: false,
+    destination: getRandomArrayElement(DESTINATIONS),
+    pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
     dueDate: new Date('2024-05-12'),
@@ -28,7 +29,9 @@ const mockWaypoints = [
     },
     price: 150,
     offers: new OffersModel().getOffer(),
-    isImportant: true
+    isImportant: true,
+    destination: getRandomArrayElement(DESTINATIONS),
+    pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
     dueDate: new Date('2024-08-12'),
@@ -40,7 +43,9 @@ const mockWaypoints = [
     },
     price: 1000,
     offers: new OffersModel().getOffer(),
-    isImportant: false
+    isImportant: false,
+    destination: getRandomArrayElement(DESTINATIONS),
+    pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
     dueDate: new Date('2024-01-30'),
@@ -52,7 +57,9 @@ const mockWaypoints = [
     },
     price: 60,
     offers: new OffersModel().getOffer(),
-    isImportant: true
+    isImportant: true,
+    destination: getRandomArrayElement(DESTINATIONS),
+    pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
 ];
 
