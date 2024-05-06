@@ -1,7 +1,6 @@
 import ListView from '../view/list-view.js';
 import ListElementView from '../view/list-element-view.js';
 import AddFormView from '../view/add-form-view.js';
-//import EditFormView from '../view/edit-form-view.js';
 import ContainerListView from '../view/container-list-view.js';
 import ListOfferElementView from '../view/list-offer-element-view.js';
 import { render } from '../render.js';
@@ -21,10 +20,10 @@ export default class ListPresenter {
 
     render(this.listComponent, this.listContainer);
 
+    // Мне это нужно для примера
     //render(new AddFormView(), this.listComponent.getElement(), 'afterbegin');
     // render(this.listComponent, this.listComponent.getElement());
     // render(new EditFormView(), this.listComponent.getElement());
-
     //render(new ListElementView(), this.listElementComponent.getElement());
 
     for (let i = 0; i < this.listWaypoints.length; i++) {

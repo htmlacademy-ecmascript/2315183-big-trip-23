@@ -9,7 +9,7 @@ function createListElementTemplate(listElement) {
   const timeFrom = humanizeDueDate(time.from, DateFormat.TIME);
   const timeTo = humanizeDueDate(time.to, DateFormat.TIME);
 
-  //console.log(offers);
+  // Понадобится позже
 
   // const timeInDays = Math.floor((time.to - time.from) / (24 * 3600 * 1000));
   // const timeInHours = Math.floor((time.to - time.from) / (3600 * 1000));
