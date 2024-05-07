@@ -1,4 +1,4 @@
-import { DESTINATIONS, EVENTS, PLACES } from '../const.js';
+import { DESCRIPTION, EVENTS, PLACES } from '../const.js';
 import { getRandomArrayElement, getRandomNumber } from '../view/utils/common.js';
 import OffersModel from '../model/offer-model.js';
 
@@ -16,7 +16,7 @@ const mockWaypoints = [
     price: 20,
     offers: new OffersModel().getOffer(),
     isImportant: false,
-    destination: getRandomArrayElement(DESTINATIONS),
+    description: getRandomArrayElement(DESCRIPTION),
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
@@ -30,7 +30,7 @@ const mockWaypoints = [
     price: 150,
     offers: new OffersModel().getOffer(),
     isImportant: true,
-    destination: getRandomArrayElement(DESTINATIONS),
+    description: getRandomArrayElement(DESCRIPTION),
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
@@ -44,7 +44,7 @@ const mockWaypoints = [
     price: 1000,
     offers: new OffersModel().getOffer(),
     isImportant: false,
-    destination: getRandomArrayElement(DESTINATIONS),
+    description: getRandomArrayElement(DESCRIPTION),
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
@@ -58,7 +58,7 @@ const mockWaypoints = [
     price: 60,
     offers: new OffersModel().getOffer(),
     isImportant: true,
-    destination: getRandomArrayElement(DESTINATIONS),
+    description: getRandomArrayElement(DESCRIPTION),
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
 ];

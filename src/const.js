@@ -37,4 +37,11 @@ const DateFormat = {
   TIME: 'HH:mm'
 };
 
-export { EVENTS, PLACES, OFFERS, DESCRIPTION, DateFormat };
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past'
+};
+
+export { EVENTS, PLACES, OFFERS, DESCRIPTION, DateFormat, FilterType };
