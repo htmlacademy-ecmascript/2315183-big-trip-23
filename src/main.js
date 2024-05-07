@@ -3,7 +3,7 @@ import TripInfoView from './view/trip-info-view.js';
 import SortView from './view/sort-view.js';
 import ListPresenter from './presenter/list-presenter.js';
 import WaypointsModel from './model/waypoint-model.js';
-import { render } from './render.js';
+import { render } from './framework/render.js';
 
 
 const siteMainElement = document.querySelector('main');

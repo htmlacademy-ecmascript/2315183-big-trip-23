@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createContainerListTemplate() {
   return (
@@ -7,20 +7,8 @@ function createContainerListTemplate() {
   );
 }
 
-export default class ContainerListView {
-  getTemplate() {
+export default class ContainerListView extends AbstractView {
+  get template() {
     return createContainerListTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

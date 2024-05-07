@@ -1,6 +1,43 @@
-import { createElement } from '../render.js';
 import { humanizeDueDate } from '../utils.js';
 import { DateFormat } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
+
+function createEventDataInPhotoTemplate(event) {
+  return (`<label class="event__type  event__type-btn" for="event-type-toggle-1">
+  <span class="visually-hidden">Choose event type</span>
+  <img class="event__type-icon" width="17" height="17" src="img/icons/${event.toLowerCase()}.png" alt="Event type icon">
+  </label>`);
+}
+
+function createDestinationInfoTemplate(event, place) {
+  return (`<label class="event__label  event__type-output" for="event-destination-1">
+  ${event}
+  </label>
+  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${place}" list="destination-list-1">
+  <datalist id="destination-list-1">
+    <option value="Amsterdam"></option>
+    <option value="Geneva"></option>
+    <option value="Chamonix"></option>
+  </datalist>`);
+}
+
+function createTimeInEventTemplate(timeFrom, timeTo) {
+  return (`<label class="visually-hidden" for="event-start-time-1">From</label>
+  <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${timeFrom}">
+  &mdash;
+  <label class="visually-hidden" for="event-end-time-1">To</label>
+  <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${timeTo}">`);
+}
+
+function createDestinationDescriptionTemplate(destination, pictures) {
+  return (`<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+  <p class="event__destination-description">${destination}</p>
+  <div class="event__photos-container">
+    <div class="event__photos-tape">
+    ${Object.entries(pictures).map((picture) => `<img class="event__photo" src="${picture[1]}" alt="Event photo"></img>)`).join('')}
+    </div>
+  </div>`);
+}
 
 function createAddFormTemplate(addFormElement) {
   const { event, place, time, price, destination, pictures} = addFormElement;
@@ -11,10 +48,7 @@ function createAddFormTemplate(addFormElement) {
   return (`<form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
-      <label class="event__type  event__type-btn" for="event-type-toggle-1">
-        <span class="visually-hidden">Choose event type</span>
-        <img class="event__type-icon" width="17" height="17" src="img/icons/${event.toLowerCase()}.png" alt="Event type icon">
-      </label>
+      ${createEventDataInPhotoTemplate(event)}
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
       <div class="event__type-list">
@@ -70,23 +104,11 @@ function createAddFormTemplate(addFormElement) {
     </div>
 
     <div class="event__field-group  event__field-group--destination">
-      <label class="event__label  event__type-output" for="event-destination-1">
-        ${event}
-      </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${place}" list="destination-list-1">
-      <datalist id="destination-list-1">
-        <option value="Amsterdam"></option>
-        <option value="Geneva"></option>
-        <option value="Chamonix"></option>
-      </datalist>
+      ${createDestinationInfoTemplate(event, place)}
     </div>
 
     <div class="event__field-group  event__field-group--time">
-      <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${timeFrom}">
-      &mdash;
-      <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${timeTo}">
+      ${createTimeInEventTemplate(timeFrom, timeTo)}
     </div>
 
     <div class="event__field-group  event__field-group--price">
@@ -153,41 +175,21 @@ function createAddFormTemplate(addFormElement) {
     </section>
 
     <section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destination}</p>
-
-      <div class="event__photos-container">
-        <div class="event__photos-tape">
-          <img class="event__photo" src="${pictures[1]}" alt="Event photo">
-          <img class="event__photo" src="${pictures[2]}" alt="Event photo">
-          <img class="event__photo" src="${pictures[3]}" alt="Event photo">
-          <img class="event__photo" src="${pictures[4]}" alt="Event photo">
-          <img class="event__photo" src="${pictures[5]}" alt="Event photo">
-        </div>
-      </div>
+      ${createDestinationDescriptionTemplate(destination, pictures)}
     </section>
   </section>
 </form>`);
 }
 
-export default class AddFormView {
+export default class AddFormView extends AbstractView {
+  #addFormElement = null;
+
   constructor({addFormElement}) {
-    this.addFormElement = addFormElement;
+    super();
+    this.#addFormElement = addFormElement;
   }
 
-  getTemplate() {
-    return createAddFormTemplate(this.addFormElement);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createAddFormTemplate(this.#addFormElement);
   }
 }

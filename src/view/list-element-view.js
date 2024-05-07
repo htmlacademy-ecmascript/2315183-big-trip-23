@@ -1,6 +1,6 @@
-import { createElement } from '../render.js';
 import { humanizeDueDate } from '../utils.js';
 import { DateFormat } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createDateElementTemplate(timeFrom, timeTo) {
   return (`
@@ -72,24 +72,15 @@ function createListElementTemplate(listElement) {
   );
 }
 
-export default class ListElementView {
+export default class ListElementView extends AbstractView{
+  #listElement = null;
+
   constructor({listElement}) {
-    this.listElement = listElement;
+    super();
+    this.#listElement = listElement;
   }
 
-  getTemplate() {
-    return createListElementTemplate(this.listElement);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createListElementTemplate(this.#listElement);
   }
 }
