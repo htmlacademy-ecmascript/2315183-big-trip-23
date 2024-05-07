@@ -1,8 +1,8 @@
 import { DESTINATIONS, EVENTS, PLACES } from '../const.js';
-import { getRandomArrayElement, getRandomNumber } from '../utils.js';
+import { getRandomArrayElement, getRandomNumber } from '../view/utils/common.js';
 import OffersModel from '../model/offer-model.js';
 
-const PICTURES_COUNT = 6;
+const PICTURES_COUNT = 5;
 
 const mockWaypoints = [
   {

@@ -23,7 +23,7 @@ const OFFERS = [
   ''
 ];
 
-const DESTINATIONS = [
+const DESCRIPTION = [
   'The mysterious ancient city of Machu Picchu: lost in the mountains of Peru, this archaeological complex leaves visitors in awe with its mystery and beauty',
   'The idyllic beach on Bora Bora Island: with white sand, warm azure water, and palm trees, this beach is the perfect place for relaxation and leisure',
   'The picturesque vineyards of the Tuscany region: famous for their wines and beautiful landscapes, these vineyards create a unique atmosphere inviting you to enjoy the beauty and flavors of the region',
@@ -37,4 +37,4 @@ const DateFormat = {
   TIME: 'HH:mm'
 };
 
-export { EVENTS, PLACES, OFFERS, DESTINATIONS, DateFormat };
+export { EVENTS, PLACES, OFFERS, DESCRIPTION, DateFormat };

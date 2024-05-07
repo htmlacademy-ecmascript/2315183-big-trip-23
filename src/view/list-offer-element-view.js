@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createOfferTemplate(offerElement) {
   const {name, price} = offerElement;
@@ -12,24 +12,15 @@ function createOfferTemplate(offerElement) {
   );
 }
 
-export default class ListOfferElementView {
+export default class ListOfferElementView extends AbstractView {
+  #offerElement = null;
+
   constructor({offerElement}) {
-    this.offerElement = offerElement;
+    super();
+    this.#offerElement = offerElement;
   }
 
-  getTemplate() {
-    return createOfferTemplate(this.offerElement);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createOfferTemplate(this.#offerElement);
   }
 }

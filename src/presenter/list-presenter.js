@@ -1,42 +1,90 @@
 import ListView from '../view/list-view.js';
 import ListElementView from '../view/list-element-view.js';
-import AddFormView from '../view/add-form-view.js';
-import ContainerListView from '../view/container-list-view.js';
+import EditFormView from '../view/edit-form-view.js';
 import ListOfferElementView from '../view/list-offer-element-view.js';
-import { render } from '../render.js';
+import { render, replace } from '../framework/render.js';
+import NoListElementView from '../view/no-list-element-view.js';
 
 export default class ListPresenter {
-  container = new ContainerListView;
-  listComponent = new ListView();
+  #listContainer = null;
+  #waypointsModel = null;
 
+  #listComponent = new ListView();
+
+  #listWaypoints = [];
 
   constructor({listContainer, waypointsModel}) {
-    this.listContainer = listContainer;
-    this.waypointsModel = waypointsModel;
+    this.#listContainer = listContainer;
+    this.#waypointsModel = waypointsModel;
   }
 
   init() {
-    this.listWaypoints = [...this.waypointsModel.getWaypoint()];
+    this.#listWaypoints = [...this.#waypointsModel.waypoint];
 
-    render(this.listComponent, this.listContainer);
+    this.#renderList();
 
-    // Мне это нужно для примера
-    //render(new AddFormView(), this.listComponent.getElement(), 'afterbegin');
-    // render(this.listComponent, this.listComponent.getElement());
-    // render(new EditFormView(), this.listComponent.getElement());
-    //render(new ListElementView(), this.listElementComponent.getElement());
+  }
 
-    for (let i = 0; i < this.listWaypoints.length; i++) {
-      const listElementComponent = new ListElementView({listElement: this.listWaypoints[i]});
+  #renderList() {
+    render(this.#listComponent, this.#listContainer);
 
-      render(listElementComponent, this.listComponent.getElement());
+    if (this.#listWaypoints.every((listElement) => listElement.isArchive)) {
+      render(new NoListElementView(), this.#listComponent.element);
+      return;
+    }
 
-      for (let j = 0; j < this.listWaypoints[i].offers.length; j++) {
-        render(new ListOfferElementView({offerElement: this.listWaypoints[i].offers[j]}), listElementComponent.getElement().querySelector('.event__selected-offers'));
+    for (let i = 0; i < this.#listWaypoints.length; i++) {
+      const listElementComponent = new ListElementView({listElement: this.#listWaypoints[i]});
+
+      this.#renderListElement(this.#listWaypoints[i]);
+
+      for (let j = 0; j < this.#listWaypoints[i].offers.length; j++) {
+        this.#renderOffersListElement(this.#listWaypoints[i].offers, listElementComponent);
       }
 
-      render(new AddFormView({addFormElement: this.listWaypoints[i]}), this.listComponent.getElement());
-
     }
+  }
+
+  #renderListElement(listElement) {
+
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceEditFormToListElement();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    const listComponent = new ListElementView({
+      listElement,
+      onEditClick: () => {
+        replaceListElementToEditForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    const listElementEditComponent = new EditFormView({
+      editFormElement: listElement,
+      onFormSubmit: () => {
+        replaceEditFormToListElement();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replaceListElementToEditForm() {
+      replace(listElementEditComponent, listComponent);
+    }
+
+    function replaceEditFormToListElement() {
+      replace(listComponent, listElementEditComponent);
+    }
+
+    render(listComponent, this.#listComponent.element);
+  }
+
+  #renderOffersListElement(offerElement, listElementComponent) {
+    const offerComponent = new ListOfferElementView({offerElement});
+
+    render(offerComponent, listElementComponent.element.querySelector('.event__selected-offers'));
   }
 }

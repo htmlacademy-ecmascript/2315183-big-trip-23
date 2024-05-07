@@ -1,5 +1,5 @@
 import { getRandomOffer } from '../mock/offer-mock.js';
-import { getRandomNumber } from '../utils.js';
+import { getRandomNumber } from '../view/utils/common.js';
 
 const NumberOfOffer = {
   MIN: 0,
