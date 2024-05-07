@@ -81,8 +81,7 @@ export default class ListElementView extends AbstractView{
     this.#listElement = listElement;
 
     this.#handleEditClick = onEditClick;
-    this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   get template() {

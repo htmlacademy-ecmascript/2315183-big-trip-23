@@ -1,6 +1,5 @@
 import ListView from '../view/list-view.js';
 import ListElementView from '../view/list-element-view.js';
-//import AddFormView from '../view/add-form-view.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListOfferElementView from '../view/list-offer-element-view.js';
 import { render, replace } from '../framework/render.js';
@@ -21,6 +20,11 @@ export default class ListPresenter {
   init() {
     this.#listWaypoints = [...this.#waypointsModel.waypoint];
 
+    this.#renderList();
+
+  }
+
+  #renderList() {
     render(this.#listComponent, this.#listContainer);
 
     for (let i = 0; i < this.#listWaypoints.length; i++) {
@@ -28,16 +32,11 @@ export default class ListPresenter {
 
       this.#renderListElement(this.#listWaypoints[i]);
 
-      // if(i === 0) {
-      //   render(new AddFormView({addFormElement: this.#listWaypoints[0]}), this.#listComponent.element);
-      // }
-
       for (let j = 0; j < this.#listWaypoints[i].offers.length; j++) {
         this.#renderOffersListElement(this.#listWaypoints[i].offers, listElementComponent);
       }
 
     }
-
   }
 
   #renderListElement(listElement) {
@@ -75,7 +74,6 @@ export default class ListPresenter {
     }
 
     render(listComponent, this.#listComponent.element);
-    //render(taskComponent, this.#taskListComponent.element);
   }
 
   #renderOffersListElement(offerElement, listElementComponent) {
