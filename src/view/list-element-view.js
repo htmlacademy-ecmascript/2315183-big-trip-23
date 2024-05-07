@@ -2,6 +2,33 @@ import { createElement } from '../render.js';
 import { humanizeDueDate } from '../utils.js';
 import { DateFormat } from '../const.js';
 
+function createDateElementTemplate(timeFrom, timeTo) {
+  return (`
+  <div class="event__schedule">
+        <p class="event__time">
+          <time class="event__start-time" datetime="${timeFrom}">${timeFrom}</time>
+          &mdash;
+          <time class="event__end-time" datetime="${timeTo}">${timeTo}</time>
+        </p>
+        <p class="event__duration">-------</p>
+      </div>`);
+}
+
+function createFavoriteButtonTemplate(isImportant) {
+  let favoriteButton = 'event__favorite-btn--active';
+
+  if (isImportant) {
+    favoriteButton = '';
+  }
+
+  return (`<button class="event__favorite-btn ${favoriteButton}" type="button">
+  <span class="visually-hidden">Add to favorite</span>
+  <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+    <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+  </svg>
+</button>`);
+}
+
 function createListElementTemplate(listElement) {
   const {dueDate, event, place, time, price, isImportant} = listElement;
 
@@ -10,35 +37,23 @@ function createListElementTemplate(listElement) {
   const timeTo = humanizeDueDate(time.to, DateFormat.TIME);
 
   // Понадобится позже
-
   // const timeInDays = Math.floor((time.to - time.from) / (24 * 3600 * 1000));
   // const timeInHours = Math.floor((time.to - time.from) / (3600 * 1000));
   // const timeInMinutes = Math.floor((time.to - time.from) / (60000));
 
   // const timeIn = `${timeInDays}D ${timeInHours}H ${timeInMinutes}M`;
 
-  let favoriteButton = 'event__favorite-btn--active';
-
-  if (isImportant) {
-    favoriteButton = '';
-  }
-
   return (
     `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="${date.toString()}">${date.toString()}</time>
+      <time class="event__date" datetime="${date}">${date}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${event.toLowerCase()}.png" alt="Event type icon">
       </div>
       <h3 class="event__title">${event} ${place}</h3>
-      <div class="event__schedule">
-        <p class="event__time">
-          <time class="event__start-time" datetime="${timeFrom}">${timeFrom}</time>
-          &mdash;
-          <time class="event__end-time" datetime="${timeTo}">${timeTo}</time>
-        </p>
-        <p class="event__duration">-------</p>
-      </div>
+
+      ${createDateElementTemplate(timeFrom, timeTo)}
+
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${price}</span>
       </p>
@@ -47,13 +62,8 @@ function createListElementTemplate(listElement) {
       <ul class="event__selected-offers">
       </ul>
 
+      ${createFavoriteButtonTemplate(isImportant)}
 
-      <button class="event__favorite-btn ${favoriteButton}" type="button">
-        <span class="visually-hidden">Add to favorite</span>
-        <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-          <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-        </svg>
-      </button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
