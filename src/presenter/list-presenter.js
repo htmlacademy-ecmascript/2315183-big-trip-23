@@ -25,17 +25,29 @@ export default class ListPresenter {
     for (let i = 0; i < this.#listWaypoints.length; i++) {
       const listElementComponent = new ListElementView({listElement: this.#listWaypoints[i]});
 
-      render(listElementComponent, this.#listComponent.element);
+      this.#renderListElement(this.#listWaypoints[i]);
 
       if(i === 0) {
         render(new AddFormView({addFormElement: this.#listWaypoints[0]}), this.#listComponent.element);
       }
 
-      // Может ещё понадобится
       for (let j = 0; j < this.#listWaypoints[i].offers.length; j++) {
-        render(new ListOfferElementView({offerElement: this.#listWaypoints[i].offers[j]}), listElementComponent.element.querySelector('.event__selected-offers'));
+        this.#renderOffersListElement(this.#listWaypoints[i].offers, listElementComponent);
       }
+
     }
 
+  }
+
+  #renderListElement(listElement) {
+    const listElementComponent = new ListElementView({listElement});
+
+    render(listElementComponent, this.#listComponent.element);
+  }
+
+  #renderOffersListElement(offerElement, listElementComponent) {
+    const offerComponent = new ListOfferElementView({offerElement});
+
+    render(offerComponent, listElementComponent.element.querySelector('.event__selected-offers'));
   }
 }
