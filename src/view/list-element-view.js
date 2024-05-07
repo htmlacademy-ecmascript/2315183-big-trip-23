@@ -1,8 +1,10 @@
 import { humanizeDueDate } from '../view/utils/list.js';
 import { DateFormat } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
+import dayjs from 'dayjs';
 
-function createDateElementTemplate(timeFrom, timeTo) {
+function createDateElementTemplate(timeFrom, timeTo, totalDuraction) {
+
   return (`
   <div class="event__schedule">
         <p class="event__time">
@@ -10,7 +12,7 @@ function createDateElementTemplate(timeFrom, timeTo) {
           &mdash;
           <time class="event__end-time" datetime="${timeTo}">${timeTo}</time>
         </p>
-        <p class="event__duration">-------</p>
+        <p class="event__duration">${totalDuraction}</p>
       </div>`);
 }
 
@@ -36,12 +38,13 @@ function createListElementTemplate(listElement) {
   const timeFrom = humanizeDueDate(time.from, DateFormat.TIME);
   const timeTo = humanizeDueDate(time.to, DateFormat.TIME);
 
-  // Понадобится позже
-  // const timeInDays = Math.floor((time.to - time.from) / (24 * 3600 * 1000));
-  // const timeInHours = Math.floor((time.to - time.from) / (3600 * 1000));
-  // const timeInMinutes = Math.floor((time.to - time.from) / (60000));
+  const dayDuraction = dayjs(time.from).diff(time.to, 'd') * (-1);
+  const hourDuraction = dayjs(time.from).diff(time.to, 'h') % 24 * (-1);
+  const minuteDuraction = dayjs(time.from).diff(time.to, 'm') % 60 * (-1);
+  const totalDuraction = `${dayDuraction !== 0 ? `${dayDuraction}D` : ''}
+  ${hourDuraction !== 0 ? `${hourDuraction}H` : ''}
+  ${minuteDuraction !== 0 ? `${minuteDuraction}D` : ''}M`;
 
-  // const timeIn = `${timeInDays}D ${timeInHours}H ${timeInMinutes}M`;
 
   return (
     `<li class="trip-events__item">
@@ -52,7 +55,7 @@ function createListElementTemplate(listElement) {
       </div>
       <h3 class="event__title">${event} ${place}</h3>
 
-      ${createDateElementTemplate(timeFrom, timeTo)}
+      ${createDateElementTemplate(timeFrom, timeTo, totalDuraction)}
 
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${price}</span>
