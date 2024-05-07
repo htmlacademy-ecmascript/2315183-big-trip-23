@@ -45,7 +45,8 @@ function createAddFormTemplate(addFormElement) {
   const timeFrom = humanizeDueDate(time.from, DateFormat.DAY_AND_TIME_EVENT);
   const timeTo = humanizeDueDate(time.to, DateFormat.DAY_AND_TIME_EVENT);
 
-  return (`<form class="event event--edit" action="#" method="post">
+  return (`<li class="trip-events__item">
+  <form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
       ${createEventDataInPhotoTemplate(event)}
@@ -178,7 +179,8 @@ function createAddFormTemplate(addFormElement) {
       ${createDestinationDescriptionTemplate(destination, pictures)}
     </section>
   </section>
-</form>`);
+</form>
+</li>`);
 }
 
 export default class AddFormView extends AbstractView {

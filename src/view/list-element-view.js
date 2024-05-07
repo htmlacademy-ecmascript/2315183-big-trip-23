@@ -74,13 +74,24 @@ function createListElementTemplate(listElement) {
 
 export default class ListElementView extends AbstractView{
   #listElement = null;
+  #handleEditClick = null;
 
-  constructor({listElement}) {
+  constructor({listElement, onEditClick}) {
     super();
     this.#listElement = listElement;
+
+    this.#handleEditClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
   }
 
   get template() {
     return createListElementTemplate(this.#listElement);
   }
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
+
 }
