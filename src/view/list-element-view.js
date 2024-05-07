@@ -1,4 +1,4 @@
-import { humanizeDueDate } from '../utils.js';
+import { humanizeDueDate } from '../view/utils/list.js';
 import { DateFormat } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 

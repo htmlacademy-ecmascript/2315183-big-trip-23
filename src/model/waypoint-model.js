@@ -1,5 +1,5 @@
 import { getRandomWaypoint } from '../mock/waypoint-mock.js';
-import { getRandomNumber } from '../utils.js';
+import { getRandomNumber } from '../view/utils/common.js';
 
 const WaypointCount = {
   MIN: 0,

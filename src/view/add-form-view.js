@@ -1,6 +1,25 @@
-import { humanizeDueDate } from '../utils.js';
+import { humanizeDueDate } from '../view/utils/list.js';
 import { DateFormat } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
+import { getRandomArrayElement, getRandomNumber } from './utils/common.js';
+import { EVENTS, PLACES, DESCRIPTION} from '../const.js';
+
+const PICTURES_COUNT = 5;
+
+const BLANK_FORM = {
+  dueDate: new Date(),
+  event: getRandomArrayElement(EVENTS),
+  place: getRandomArrayElement(PLACES),
+  time: {
+    from: new Date(),
+    to: new Date()
+  },
+  price: 0,
+  offers: null,
+  isImportant: false,
+  description: getRandomArrayElement(DESCRIPTION),
+  pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
+};
 
 function createEventDataInPhotoTemplate(event) {
   return (`<label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -186,7 +205,7 @@ function createAddFormTemplate(addFormElement) {
 export default class AddFormView extends AbstractView {
   #addFormElement = null;
 
-  constructor({addFormElement}) {
+  constructor({addFormElement = BLANK_FORM}) {
     super();
     this.#addFormElement = addFormElement;
   }

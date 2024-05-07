@@ -28,7 +28,7 @@ export default class ListPresenter {
   #renderList() {
     render(this.#listComponent, this.#listContainer);
 
-    if (this.#listWaypoints.every((task) => task.isArchive)) {
+    if (this.#listWaypoints.every((listElement) => listElement.isArchive)) {
       render(new NoListElementView(), this.#listComponent.element);
       return;
     }
