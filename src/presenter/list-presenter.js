@@ -3,6 +3,7 @@ import ListElementView from '../view/list-element-view.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListOfferElementView from '../view/list-offer-element-view.js';
 import { render, replace } from '../framework/render.js';
+import NoListElementView from '../view/no-list-element-view.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -26,6 +27,11 @@ export default class ListPresenter {
 
   #renderList() {
     render(this.#listComponent, this.#listContainer);
+
+    if (this.#listWaypoints.every((task) => task.isArchive)) {
+      render(new NoListElementView(), this.#listComponent.element);
+      return;
+    }
 
     for (let i = 0; i < this.#listWaypoints.length; i++) {
       const listElementComponent = new ListElementView({listElement: this.#listWaypoints[i]});
