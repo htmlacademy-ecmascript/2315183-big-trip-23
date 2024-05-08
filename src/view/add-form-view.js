@@ -48,9 +48,9 @@ function createTimeInEventTemplate(timeFrom, timeTo) {
   <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${timeTo}">`);
 }
 
-function createDestinationDescriptionTemplate(destination, pictures) {
+function createDestinationDescriptionTemplate(description, pictures) {
   return (`<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-  <p class="event__destination-description">${destination}</p>
+  <p class="event__destination-description">${description}</p>
   <div class="event__photos-container">
     <div class="event__photos-tape">
     ${Object.entries(pictures).map((picture) => `<img class="event__photo" src="${picture[1]}" alt="Event photo"></img>)`).join('')}
@@ -59,7 +59,7 @@ function createDestinationDescriptionTemplate(destination, pictures) {
 }
 
 function createAddFormTemplate(addFormElement) {
-  const { event, place, time, price, destination, pictures} = addFormElement;
+  const { event, place, time, price, description, pictures} = addFormElement;
 
   const timeFrom = humanizeDueDate(time.from, DateFormat.DAY_AND_TIME_EVENT);
   const timeTo = humanizeDueDate(time.to, DateFormat.DAY_AND_TIME_EVENT);
@@ -195,7 +195,7 @@ function createAddFormTemplate(addFormElement) {
     </section>
 
     <section class="event__section  event__section--destination">
-      ${createDestinationDescriptionTemplate(destination, pictures)}
+      ${createDestinationDescriptionTemplate(description, pictures)}
     </section>
   </section>
 </form>
