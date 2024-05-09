@@ -43,8 +43,7 @@ function createListElementTemplate(listElement) {
   const minuteDuraction = dayjs(time.from).diff(time.to, 'm') % 60 * (-1);
   const totalDuraction = `${dayDuraction !== 0 ? `${dayDuraction}D` : ''}
     ${hourDuraction !== 0 ? `${hourDuraction}H` : ''}
-    ${minuteDuraction !== 0 ? `${minuteDuraction}D` : ''}M`;
-
+    ${minuteDuraction !== 0 ? `${minuteDuraction}M` : ''}`;
 
   return (
     `<li class="trip-events__item">

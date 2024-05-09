@@ -1,10 +1,10 @@
 import ListView from '../view/list-view.js';
 import ListElementView from '../view/list-element-view.js';
-import EditFormView from '../view/edit-form-view.js';
 import ListOfferElementView from '../view/list-offer-element-view.js';
-import { render, replace } from '../framework/render.js';
+import { render } from '../framework/render.js';
 import NoListElementView from '../view/no-list-element-view.js';
 import SortView from '../view/sort-view.js';
+import ListElementPresenter from './list-element-presenter.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -52,39 +52,11 @@ export default class ListPresenter {
 
   #renderListElement(listElement) {
 
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditFormToListElement();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const listComponent = new ListElementView({
-      listElement,
-      onEditClick: () => {
-        replaceListElementToEditForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+    const listElementPresenter = new ListElementPresenter({
+      listContainer: this.#listComponent.element,
     });
 
-    const listElementEditComponent = new EditFormView({
-      editFormElement: listElement,
-      onFormSubmit: () => {
-        replaceEditFormToListElement();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replaceListElementToEditForm() {
-      replace(listElementEditComponent, listComponent);
-    }
-
-    function replaceEditFormToListElement() {
-      replace(listComponent, listElementEditComponent);
-    }
-
-    render(listComponent, this.#listComponent.element);
+    listElementPresenter.init(listElement);
   }
 
   #renderOffersListElement(offerElement, listElementComponent) {
