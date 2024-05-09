@@ -51,7 +51,6 @@ export default class ListPresenter {
   }
 
   #renderListElement(listElement) {
-
     const listElementPresenter = new ListElementPresenter({
       listContainer: this.#listComponent.element,
     });

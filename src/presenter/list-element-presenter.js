@@ -1,4 +1,4 @@
-import { render, replace } from '../framework/render.js';
+import { remove, render, replace } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListElementView from '../view/list-element-view.js';
 
@@ -16,6 +16,9 @@ export default class ListElementPresenter {
   }
 
   init(listElement) {
+    const prevListElementComponent = this.#listElementComponent;
+    const prevListElementEditComponent = this.#listELementEditComponent;
+
     this.#listElement = listElement;
 
     this.#listElementComponent = new ListElementView({
@@ -28,7 +31,27 @@ export default class ListElementPresenter {
       onFormSubmit: this.#handleFormSubmit,
     });
 
-    render(this.#listElementComponent, this.#listContainer);
+    if (prevListElementComponent === null || prevListElementEditComponent === null) {
+      render(this.#listElementComponent, this.#listContainer);
+      return;
+    }
+
+    if (this.#listContainer.contains(prevListElementComponent.element)) {
+      replace(this.#listElementComponent, prevListElementComponent);
+    }
+
+    if (this.#listContainer.contains(prevListElementEditComponent.element)) {
+      replace(this.#listELementEditComponent, prevListElementEditComponent);
+    }
+
+    remove(prevListElementComponent);
+    remove(prevListElementEditComponent);
+
+  }
+
+  destroy() {
+    remove(this.#listElementComponent);
+    remove(this.#listELementEditComponent);
   }
 
   #escKeyDownHandler = (evt) => {
