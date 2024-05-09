@@ -4,12 +4,15 @@ import EditFormView from '../view/edit-form-view.js';
 import ListOfferElementView from '../view/list-offer-element-view.js';
 import { render, replace } from '../framework/render.js';
 import NoListElementView from '../view/no-list-element-view.js';
+import SortView from '../view/sort-view.js';
 
 export default class ListPresenter {
   #listContainer = null;
   #waypointsModel = null;
 
   #listComponent = new ListView();
+  #sortComponent = new SortView();
+  #noListElementsComponent = new NoListElementView();
 
   #listWaypoints = [];
 
@@ -29,9 +32,11 @@ export default class ListPresenter {
     render(this.#listComponent, this.#listContainer);
 
     if (this.#listWaypoints.every((listElement) => listElement.isArchive)) {
-      render(new NoListElementView(), this.#listComponent.element);
+      this.#renderNoListElements(this.#noListElementsComponent, this.#listComponent);
       return;
     }
+
+    this.#renderSort(this.#sortComponent, this.#listContainer);
 
     for (let i = 0; i < this.#listWaypoints.length; i++) {
       const listElementComponent = new ListElementView({listElement: this.#listWaypoints[i]});
@@ -86,5 +91,13 @@ export default class ListPresenter {
     const offerComponent = new ListOfferElementView({offerElement});
 
     render(offerComponent, listElementComponent.element.querySelector('.event__selected-offers'));
+  }
+
+  #renderSort(sortComponent, listContainer) {
+    render(sortComponent, listContainer, 'afterbegin');
+  }
+
+  #renderNoListElements(noListElementsComponent, listComponent) {
+    render(noListElementsComponent, listComponent.element);
   }
 }

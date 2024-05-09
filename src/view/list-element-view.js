@@ -42,8 +42,8 @@ function createListElementTemplate(listElement) {
   const hourDuraction = dayjs(time.from).diff(time.to, 'h') % 24 * (-1);
   const minuteDuraction = dayjs(time.from).diff(time.to, 'm') % 60 * (-1);
   const totalDuraction = `${dayDuraction !== 0 ? `${dayDuraction}D` : ''}
-  ${hourDuraction !== 0 ? `${hourDuraction}H` : ''}
-  ${minuteDuraction !== 0 ? `${minuteDuraction}D` : ''}M`;
+    ${hourDuraction !== 0 ? `${hourDuraction}H` : ''}
+    ${minuteDuraction !== 0 ? `${minuteDuraction}D` : ''}M`;
 
 
   return (
