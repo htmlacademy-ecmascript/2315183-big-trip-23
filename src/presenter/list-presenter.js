@@ -15,6 +15,7 @@ export default class ListPresenter {
   #noListElementsComponent = new NoListElementView();
 
   #listWaypoints = [];
+  #listElementPresenters = new Map();
 
   constructor({listContainer, waypointsModel}) {
     this.#listContainer = listContainer;
@@ -56,6 +57,7 @@ export default class ListPresenter {
     });
 
     listElementPresenter.init(listElement);
+    this.#listElementPresenters.set(listElement.id, listElementPresenter);
   }
 
   #renderOffersListElement(offerElement, listElementComponent) {
@@ -70,5 +72,10 @@ export default class ListPresenter {
 
   #renderNoListElements(noListElementsComponent, listComponent) {
     render(noListElementsComponent, listComponent.element);
+  }
+
+  #clearList() {
+    this.#listElementPresenters.forEach((presenter) => presenter.destroy());
+    this.#listElementPresenters.clear();
   }
 }
