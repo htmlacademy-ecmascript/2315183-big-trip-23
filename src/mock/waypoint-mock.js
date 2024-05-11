@@ -21,7 +21,7 @@ const mockWaypoints = [
     },
     price: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
     offers: new OffersModel().getOffer(),
-    isImportant: false,
+    isFavorite: false,
     description: getRandomArrayElement(DESCRIPTION),
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
@@ -35,7 +35,7 @@ const mockWaypoints = [
     },
     price: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
     offers: new OffersModel().getOffer(),
-    isImportant: true,
+    isFavorite: true,
     description: getRandomArrayElement(DESCRIPTION),
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
@@ -49,7 +49,7 @@ const mockWaypoints = [
     },
     price: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
     offers: new OffersModel().getOffer(),
-    isImportant: false,
+    isFavorite: false,
     description: getRandomArrayElement(DESCRIPTION),
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
@@ -63,7 +63,7 @@ const mockWaypoints = [
     },
     price: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
     offers: new OffersModel().getOffer(),
-    isImportant: true,
+    isFavorite: true,
     description: getRandomArrayElement(DESCRIPTION),
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
@@ -77,7 +77,7 @@ const mockWaypoints = [
     },
     price: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
     offers: new OffersModel().getOffer(),
-    isImportant: true,
+    isFavorite: true,
     description: getRandomArrayElement(DESCRIPTION),
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },

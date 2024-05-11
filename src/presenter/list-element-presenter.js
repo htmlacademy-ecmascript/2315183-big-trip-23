@@ -11,8 +11,11 @@ export default class ListElementPresenter {
 
   #listElement = null;
 
-  constructor({listContainer}) {
+  #handleDataChange = null;
+
+  constructor({listContainer, onDataChange}) {
     this.#listContainer = listContainer;
+    this.#handleDataChange = onDataChange;
   }
 
   init(listElement) {
@@ -24,6 +27,7 @@ export default class ListElementPresenter {
     this.#listElementComponent = new ListElementView({
       listElement: this.#listElement,
       onEditClick: this.#handleEditClick,
+      onFavoriteClick: this.#handleFavoriteClick
     });
 
     this.#listELementEditComponent = new EditFormView({
@@ -75,8 +79,13 @@ export default class ListElementPresenter {
     this.#replaceListElementToEditForm();
   };
 
-  #handleFormSubmit = () => {
+  #handleFormSubmit = (listElement) => {
+    this.#handleDataChange(listElement);
     this.#replaceEditFormToListElement();
+  };
+
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({...this.#listElement, isFavorite: !this.#listElement.isFavorite});
   };
 
 }
