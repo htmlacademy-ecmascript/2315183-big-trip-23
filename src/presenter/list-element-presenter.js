@@ -2,6 +2,10 @@ import { remove, render, replace } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListElementView from '../view/list-element-view.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
 
 export default class ListElementPresenter {
   #listContainer = null;
@@ -12,10 +16,14 @@ export default class ListElementPresenter {
   #listElement = null;
 
   #handleDataChange = null;
+  #handleModeChange = null;
 
-  constructor({listContainer, onDataChange}) {
+  #mode = Mode.DEFAULT;
+
+  constructor({listContainer, onDataChange, onModeChange}) {
     this.#listContainer = listContainer;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(listElement) {
@@ -40,11 +48,11 @@ export default class ListElementPresenter {
       return;
     }
 
-    if (this.#listContainer.contains(prevListElementComponent.element)) {
+    if(this.#mode === Mode.DEFAULT) {
       replace(this.#listElementComponent, prevListElementComponent);
     }
 
-    if (this.#listContainer.contains(prevListElementEditComponent.element)) {
+    if(this.#mode === Mode.EDITING) {
       replace(this.#listELementEditComponent, prevListElementEditComponent);
     }
 
@@ -58,6 +66,12 @@ export default class ListElementPresenter {
     remove(this.#listELementEditComponent);
   }
 
+  resetView() {
+    if(this.#mode !== Mode.DEFAULT) {
+      this.#replaceEditFormToListElement();
+    }
+  }
+
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
@@ -68,11 +82,16 @@ export default class ListElementPresenter {
   #replaceListElementToEditForm() {
     replace(this.#listELementEditComponent, this.#listElementComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceEditFormToListElement() {
     replace(this.#listElementComponent, this.#listELementEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+
+    this.#mode = Mode.DEFAULT;
   }
 
   #handleEditClick = () => {
