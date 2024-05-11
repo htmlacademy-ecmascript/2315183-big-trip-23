@@ -5,6 +5,7 @@ import { render } from '../framework/render.js';
 import NoListElementView from '../view/no-list-element-view.js';
 import SortView from '../view/sort-view.js';
 import ListElementPresenter from './list-element-presenter.js';
+import { updateItem } from '../view/utils/common.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -28,6 +29,11 @@ export default class ListPresenter {
     this.#renderList();
 
   }
+
+  #handleListElementChange = (updatedListElement) => {
+    this.#listWaypoints = updateItem(this.#listWaypoints, updatedListElement);
+    this.#listElementPresenters.get(updatedListElement.id).init(updatedListElement);
+  };
 
   #renderList() {
     render(this.#listComponent, this.#listContainer);
