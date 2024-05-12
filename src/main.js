@@ -1,6 +1,5 @@
 import FilterView from './view/filter-view.js';
 import TripInfoView from './view/trip-info-view.js';
-import SortView from './view/sort-view.js';
 import ListPresenter from './presenter/list-presenter.js';
 import WaypointsModel from './model/waypoint-model.js';
 import { render } from './framework/render.js';
@@ -21,6 +20,5 @@ const filters = generateFilter(waypointsModel.waypoint);
 render(new TripInfoView(), siteTripInfoElement, 'afterbegin');
 render(new FilterView({filters}), siteFilterElement);
 
-
 listPresenter.init();
-render(new SortView(), siteListElement, 'afterbegin');
+

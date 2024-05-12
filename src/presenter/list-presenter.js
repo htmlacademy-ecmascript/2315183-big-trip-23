@@ -1,17 +1,22 @@
 import ListView from '../view/list-view.js';
 import ListElementView from '../view/list-element-view.js';
-import EditFormView from '../view/edit-form-view.js';
 import ListOfferElementView from '../view/list-offer-element-view.js';
-import { render, replace } from '../framework/render.js';
+import { render } from '../framework/render.js';
 import NoListElementView from '../view/no-list-element-view.js';
+import SortView from '../view/sort-view.js';
+import ListElementPresenter from './list-element-presenter.js';
+import { updateItem } from '../view/utils/common.js';
 
 export default class ListPresenter {
   #listContainer = null;
   #waypointsModel = null;
 
   #listComponent = new ListView();
+  #sortComponent = new SortView();
+  #noListElementsComponent = new NoListElementView();
 
   #listWaypoints = [];
+  #listElementPresenters = new Map();
 
   constructor({listContainer, waypointsModel}) {
     this.#listContainer = listContainer;
@@ -25,13 +30,24 @@ export default class ListPresenter {
 
   }
 
+  #handleListElementChange = (updatedListElement) => {
+    this.#listWaypoints = updateItem(this.#listWaypoints, updatedListElement);
+    this.#listElementPresenters.get(updatedListElement.id).init(updatedListElement);
+  };
+
+  #handleModeChange = () => {
+    this.#listElementPresenters.forEach((presenter) => presenter.resetView());
+  };
+
   #renderList() {
     render(this.#listComponent, this.#listContainer);
 
     if (this.#listWaypoints.every((listElement) => listElement.isArchive)) {
-      render(new NoListElementView(), this.#listComponent.element);
+      this.#renderNoListElements(this.#noListElementsComponent, this.#listComponent);
       return;
     }
+
+    this.#renderSort(this.#sortComponent, this.#listContainer);
 
     for (let i = 0; i < this.#listWaypoints.length; i++) {
       const listElementComponent = new ListElementView({listElement: this.#listWaypoints[i]});
@@ -46,45 +62,32 @@ export default class ListPresenter {
   }
 
   #renderListElement(listElement) {
-
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditFormToListElement();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const listComponent = new ListElementView({
-      listElement,
-      onEditClick: () => {
-        replaceListElementToEditForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+    const listElementPresenter = new ListElementPresenter({
+      listContainer: this.#listComponent.element,
+      onDataChange: this.#handleListElementChange,
+      onModeChange: this.#handleModeChange
     });
 
-    const listElementEditComponent = new EditFormView({
-      editFormElement: listElement,
-      onFormSubmit: () => {
-        replaceEditFormToListElement();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replaceListElementToEditForm() {
-      replace(listElementEditComponent, listComponent);
-    }
-
-    function replaceEditFormToListElement() {
-      replace(listComponent, listElementEditComponent);
-    }
-
-    render(listComponent, this.#listComponent.element);
+    listElementPresenter.init(listElement);
+    this.#listElementPresenters.set(listElement.id, listElementPresenter);
   }
 
   #renderOffersListElement(offerElement, listElementComponent) {
     const offerComponent = new ListOfferElementView({offerElement});
 
     render(offerComponent, listElementComponent.element.querySelector('.event__selected-offers'));
+  }
+
+  #renderSort(sortComponent, listContainer) {
+    render(sortComponent, listContainer, 'afterbegin');
+  }
+
+  #renderNoListElements(noListElementsComponent, listComponent) {
+    render(noListElementsComponent, listComponent.element);
+  }
+
+  #clearList() {
+    this.#listElementPresenters.forEach((presenter) => presenter.destroy());
+    this.#listElementPresenters.clear();
   }
 }

@@ -16,14 +16,8 @@ function createDateElementTemplate(timeFrom, timeTo, totalDuraction) {
       </div>`);
 }
 
-function createFavoriteButtonTemplate(isImportant) {
-  let favoriteButton = 'event__favorite-btn--active';
-
-  if (isImportant) {
-    favoriteButton = '';
-  }
-
-  return (`<button class="event__favorite-btn ${favoriteButton}" type="button">
+function createFavoriteButtonTemplate(isFavorite) {
+  return (`<button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
   <span class="visually-hidden">Add to favorite</span>
   <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
     <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -32,7 +26,7 @@ function createFavoriteButtonTemplate(isImportant) {
 }
 
 function createListElementTemplate(listElement) {
-  const {dueDate, event, place, time, price, isImportant} = listElement;
+  const {dueDate, event, place, time, price, isFavorite} = listElement;
 
   const date = humanizeDueDate(dueDate, DateFormat.DAY_EVENT);
   const timeFrom = humanizeDueDate(time.from, DateFormat.TIME);
@@ -42,9 +36,8 @@ function createListElementTemplate(listElement) {
   const hourDuraction = dayjs(time.from).diff(time.to, 'h') % 24 * (-1);
   const minuteDuraction = dayjs(time.from).diff(time.to, 'm') % 60 * (-1);
   const totalDuraction = `${dayDuraction !== 0 ? `${dayDuraction}D` : ''}
-  ${hourDuraction !== 0 ? `${hourDuraction}H` : ''}
-  ${minuteDuraction !== 0 ? `${minuteDuraction}D` : ''}M`;
-
+    ${hourDuraction !== 0 ? `${hourDuraction}H` : ''}
+    ${minuteDuraction !== 0 ? `${minuteDuraction}M` : ''}`;
 
   return (
     `<li class="trip-events__item">
@@ -65,7 +58,7 @@ function createListElementTemplate(listElement) {
       <ul class="event__selected-offers">
       </ul>
 
-      ${createFavoriteButtonTemplate(isImportant)}
+      ${createFavoriteButtonTemplate(isFavorite)}
 
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
@@ -77,14 +70,19 @@ function createListElementTemplate(listElement) {
 
 export default class ListElementView extends AbstractView{
   #listElement = null;
-  #handleEditClick = null;
 
-  constructor({listElement, onEditClick}) {
+  #handleEditClick = null;
+  #handleFavoriteClick = null;
+
+  constructor({listElement, onEditClick, onFavoriteClick}) {
     super();
     this.#listElement = listElement;
 
     this.#handleEditClick = onEditClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+
+    this.#handleFavoriteClick = onFavoriteClick;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -94,6 +92,10 @@ export default class ListElementView extends AbstractView{
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleEditClick();
+  };
+
+  #favoriteClickHandler = () => {
+    this.#handleFavoriteClick();
   };
 
 }
