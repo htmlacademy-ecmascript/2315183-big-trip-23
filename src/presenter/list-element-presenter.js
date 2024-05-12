@@ -41,6 +41,7 @@ export default class ListElementPresenter {
     this.#listELementEditComponent = new EditFormView({
       editFormElement: this.#listElement,
       onFormSubmit: this.#handleFormSubmit,
+      onCancelEditForm: this.#handleCancelEditForm
     });
 
     if (prevListElementComponent === null || prevListElementEditComponent === null) {
@@ -100,6 +101,10 @@ export default class ListElementPresenter {
 
   #handleFormSubmit = (listElement) => {
     this.#handleDataChange(listElement);
+    this.#replaceEditFormToListElement();
+  };
+
+  #handleCancelEditForm = () => {
     this.#replaceEditFormToListElement();
   };
 

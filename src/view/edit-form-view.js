@@ -46,8 +46,8 @@ function createEditFormTemplate(editFormElement) {
   const timeTo = humanizeDueDate(time.to, DateFormat.DAY_AND_TIME_EVENT);
 
   return (`<li class="trip-events__item">
-  <form class="event event--edit" action="#" method="post">
-  <header class="event__header">
+    <form class="event event--edit" action="#" method="post">
+    <header class="event__header">
     <div class="event__type-wrapper">
     ${createEventDataInPhotoTemplate(event)}
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
@@ -121,9 +121,12 @@ function createEditFormTemplate(editFormElement) {
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-    <button class="event__reset-btn" type="reset">Cancel</button>
-  </header>
-  <section class="event__details">
+    <button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>
+    </header>
+    <section class="event__details">
     <section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
@@ -133,16 +136,16 @@ function createEditFormTemplate(editFormElement) {
           <label class="event__offer-label" for="event-offer-luggage-1">
             <span class="event__offer-title">Add luggage</span>
             &plus;&euro;&nbsp;
-            <span class="event__offer-price">30</span>
+            <span class="event__offer-price">50</span>
           </label>
         </div>
 
         <div class="event__offer-selector">
           <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
           <label class="event__offer-label" for="event-offer-comfort-1">
-            <span class="event__offer-title">Switch to comfort class</span>
+            <span class="event__offer-title">Switch to comfort</span>
             &plus;&euro;&nbsp;
-            <span class="event__offer-price">100</span>
+            <span class="event__offer-price">80</span>
           </label>
         </div>
 
@@ -179,21 +182,24 @@ function createEditFormTemplate(editFormElement) {
     ${createDestinationDescriptionTemplate(description, pictures)}
     </section>
   </section>
-</form>
-</li>`);
+  </form></li>`);
 }
 
 export default class EditFormView extends AbstractView {
 
   #editFormElement = null;
   #handleFormSubmit = null;
+  #handleCancelEditForm = null;
 
-  constructor({editFormElement, onFormSubmit}) {
+  constructor({editFormElement, onFormSubmit, onCancelEditForm}) {
     super();
     this.#editFormElement = editFormElement;
 
     this.#handleFormSubmit = onFormSubmit;
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+
+    this.#handleCancelEditForm = onCancelEditForm;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
   }
 
   get template() {
@@ -203,5 +209,10 @@ export default class EditFormView extends AbstractView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(this.#editFormElement);
+  };
+
+  #cancelEditFormHandle = (evt) => {
+    evt.preventDefault();
+    this.#handleCancelEditForm();
   };
 }
