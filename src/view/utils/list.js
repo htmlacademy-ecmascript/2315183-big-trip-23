@@ -32,10 +32,20 @@ function getWeightForNullDate(dateA, dateB) {
   return null;
 }
 
-function sortListUp(taskA, taskB) {
-  const weight = getWeightForNullDate(taskA.dueDate, taskB.dueDate);
+function sortListByDate(waypointA, waypointB) {
+  const weight = getWeightForNullDate(waypointA.dueDate, waypointB.dueDate);
 
-  return weight ?? dayjs(taskA.dueDate).diff(dayjs(taskB.dueDate));
+  return weight ?? dayjs(waypointA.dueDate).diff(dayjs(waypointB.dueDate));
 }
 
-export { humanizeDueDate, isListElementFuture, isListElementPresent, isListElementPast, sortListUp };
+function sortListByPrice(waypointA, waypointB) {
+  return waypointB.price - waypointA.price;
+}
+
+function sortListByTime(waypointA, waypointB) {
+  const weight = getWeightForNullDate(waypointA.time.from, waypointB.time.from);
+
+  return weight ?? dayjs(waypointB.time.from).diff(dayjs(waypointA.time.from));
+}
+
+export { humanizeDueDate, isListElementFuture, isListElementPresent, isListElementPast, sortListByDate, sortListByPrice, sortListByTime};

@@ -7,7 +7,7 @@ import SortView from '../view/sort-view.js';
 import ListElementPresenter from './list-element-presenter.js';
 import { updateItem } from '../view/utils/common.js';
 import { SortType } from '../const.js';
-import { sortListUp } from '../view/utils/list.js';
+import { sortListByDate, sortListByPrice, sortListByTime } from '../view/utils/list.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -30,9 +30,12 @@ export default class ListPresenter {
 
   init() {
     this.#listWaypoints = [...this.#waypointsModel.waypoint];
+    this.#listWaypoints.sort(sortListByDate);
     this.#sourcedListWaypoints = [...this.#waypointsModel.waypoint];
+    this.#sourcedListWaypoints.sort(sortListByDate);
 
     this.#renderList();
+    this.#renderSort(this.#listContainer);
   }
 
   #handleListElementChange = (updatedListElement) => {
@@ -52,6 +55,9 @@ export default class ListPresenter {
     }
 
     this.#sortListElements(sortType);
+
+    this.#clearList();
+    this.#renderList();
   };
 
   #renderList() {
@@ -62,7 +68,7 @@ export default class ListPresenter {
       return;
     }
 
-    this.#renderSort(this.#listContainer);
+
 
     for (let i = 0; i < this.#listWaypoints.length; i++) {
       const listElementComponent = new ListElementView({listElement: this.#listWaypoints[i]});
@@ -111,11 +117,14 @@ export default class ListPresenter {
 
   #sortListElements(sortType) {
     switch (sortType) {
+      // case SortType.DAY:
+      //   this.#listWaypoints.sort(sortListDate);
+      //   break;
       case SortType.PRICE:
-        this.#listWaypoints.sort(sortListUp);
+        this.#listWaypoints.sort(sortListByPrice);
         break;
       case SortType.TIME:
-        this.#listWaypoints.sort(sortListUp);
+        this.#listWaypoints.sort(sortListByTime);
         break;
       default:
         this.#listWaypoints = [...this.#sourcedListWaypoints];
