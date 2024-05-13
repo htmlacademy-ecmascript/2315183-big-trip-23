@@ -12,7 +12,7 @@ export default class ListPresenter {
   #waypointsModel = null;
 
   #listComponent = new ListView();
-  #sortComponent = new SortView();
+  #sortComponent = null;
   #noListElementsComponent = new NoListElementView();
 
   #listWaypoints = [];
@@ -37,6 +37,10 @@ export default class ListPresenter {
 
   #handleModeChange = () => {
     this.#listElementPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleSortTypeChange = (sortType) => {
+
   };
 
   #renderList() {
@@ -79,6 +83,10 @@ export default class ListPresenter {
   }
 
   #renderSort(sortComponent, listContainer) {
+    this.#sortComponent = new SortView({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+
     render(sortComponent, listContainer, 'afterbegin');
   }
 
