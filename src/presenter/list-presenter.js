@@ -68,8 +68,6 @@ export default class ListPresenter {
       return;
     }
 
-
-
     for (let i = 0; i < this.#listWaypoints.length; i++) {
       const listElementComponent = new ListElementView({listElement: this.#listWaypoints[i]});
 
@@ -117,9 +115,6 @@ export default class ListPresenter {
 
   #sortListElements(sortType) {
     switch (sortType) {
-      // case SortType.DAY:
-      //   this.#listWaypoints.sort(sortListDate);
-      //   break;
       case SortType.PRICE:
         this.#listWaypoints.sort(sortListByPrice);
         break;
