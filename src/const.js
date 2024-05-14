@@ -14,15 +14,6 @@ const PLACES = [
   'Moscow'
 ];
 
-const OFFERS = [
-  'Order Uber +€  20',
-  'Add luggage +€  50',
-  'Switch to comfort +€  80',
-  'Rent a car +€  200',
-  'Add breakfast +€  50',
-  ''
-];
-
 const DESCRIPTION = [
   'The mysterious ancient city of Machu Picchu: lost in the mountains of Peru, this archaeological complex leaves visitors in awe with its mystery and beauty',
   'The idyllic beach on Bora Bora Island: with white sand, warm azure water, and palm trees, this beach is the perfect place for relaxation and leisure',
@@ -44,4 +35,10 @@ const FilterType = {
   PAST: 'past'
 };
 
-export { EVENTS, PLACES, OFFERS, DESCRIPTION, DateFormat, FilterType };
+const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price'
+};
+
+export { EVENTS, PLACES, DESCRIPTION, DateFormat, FilterType, SortType };

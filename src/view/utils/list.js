@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { getTimeFromDate } from './common';
 
 function humanizeDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
@@ -16,4 +17,34 @@ function isListElementPast(dueDate) {
   return dueDate && dayjs().isAfter(dueDate, 'D');
 }
 
-export { humanizeDueDate, isListElementFuture, isListElementPresent, isListElementPast };
+function getWeightForNullDate(dateA, dateB) {
+  if (dateA === null && dateB === null) {
+    return 0;
+  }
+
+  if (dateA === null) {
+    return 1;
+  }
+
+  if (dateB === null) {
+    return -1;
+  }
+
+  return null;
+}
+
+function sortListByDate(waypointA, waypointB) {
+  const weight = getWeightForNullDate(waypointA.dueDate, waypointB.dueDate);
+
+  return weight ?? dayjs(waypointA.dueDate).diff(dayjs(waypointB.dueDate));
+}
+
+function sortListByPrice(waypointA, waypointB) {
+  return waypointB.price - waypointA.price;
+}
+
+function sortListByTime(waypointA, waypointB) {
+  return new Date(`1970/01/01 ${getTimeFromDate(waypointB.time.from)}`) - new Date(`1970/01/01 ${getTimeFromDate(waypointA.time.from)}`);
+}
+
+export { humanizeDueDate, isListElementFuture, isListElementPresent, isListElementPast, sortListByDate, sortListByPrice, sortListByTime};

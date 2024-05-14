@@ -10,4 +10,8 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export { getRandomArrayElement, getRandomNumber, updateItem };
+function getTimeFromDate(date) {
+  return [date.getHours(), date.getMinutes()].map((x) => x < 10 ? `0${x}` : x).join(':');
+}
+
+export { getRandomArrayElement, getRandomNumber, updateItem, getTimeFromDate };

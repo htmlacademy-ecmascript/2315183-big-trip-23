@@ -3,7 +3,7 @@ import { getRandomNumber } from '../view/utils/common.js';
 
 const WaypointCount = {
   MIN: 0,
-  MAX: 6
+  MAX: 10
 };
 
 const WAYPOINT_COUNT = getRandomNumber(WaypointCount.MIN, WaypointCount.MAX);
