@@ -38,7 +38,9 @@ const FilterType = {
 const SortType = {
   DAY: 'day',
   TIME: 'time',
-  PRICE: 'price'
+  PRICE: 'price',
+  EVENT: 'event',
+  OFFER: 'offer'
 };
 
 export { EVENTS, PLACES, DESCRIPTION, DateFormat, FilterType, SortType };
