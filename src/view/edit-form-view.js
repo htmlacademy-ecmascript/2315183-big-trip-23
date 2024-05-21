@@ -238,6 +238,15 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
 
     this.#handleCancelEditForm = onCancelEditForm;
+
+    this._restoreHandlers();
+  }
+
+  get template() {
+    return createEditFormTemplate(this._state);
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
 
     this.element.querySelector('.event__type-toggle').addEventListener('click', this.#eventTypeToggleHandler);
@@ -247,10 +256,6 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('#event-end-time-1').addEventListener('click', () => {});
 
     this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
-  }
-
-  get template() {
-    return createEditFormTemplate(this._state);
   }
 
   #formSubmitHandler = (evt) => {
