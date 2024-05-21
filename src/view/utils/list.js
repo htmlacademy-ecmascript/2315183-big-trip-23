@@ -17,6 +17,10 @@ function isListElementPast(dueDate) {
   return dueDate && dayjs().isAfter(dueDate, 'D');
 }
 
+function isListElementHaveOffers(having) {
+  return having.some((elem) => Object.values(elem)[2] === true);
+}
+
 function getWeightForNullDate(dateA, dateB) {
   if (dateA === null && dateB === null) {
     return 0;
@@ -47,4 +51,4 @@ function sortListByTime(waypointA, waypointB) {
   return new Date(`1970/01/01 ${getTimeFromDate(waypointB.time.from)}`) - new Date(`1970/01/01 ${getTimeFromDate(waypointA.time.from)}`);
 }
 
-export { humanizeDueDate, isListElementFuture, isListElementPresent, isListElementPast, sortListByDate, sortListByPrice, sortListByTime};
+export { humanizeDueDate, isListElementFuture, isListElementPresent, isListElementPast, sortListByDate, sortListByPrice, sortListByTime, isListElementHaveOffers};

@@ -1,6 +1,24 @@
-import { humanizeDueDate } from '../view/utils/list.js';
-import { DateFormat } from '../const.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import { humanizeDueDate, isListElementHaveOffers } from '../view/utils/list.js';
+import { DateFormat, EVENTS, PLACES, DESCRIPTION } from '../const.js';
+import { getRandomArrayElement, getRandomNumber } from './utils/common.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+
+const PICTURES_COUNT = 5;
+
+const BLANK_FORM = {
+  dueDate: new Date(),
+  event: getRandomArrayElement(EVENTS),
+  place: getRandomArrayElement(PLACES),
+  time: {
+    from: new Date(),
+    to: new Date()
+  },
+  price: 0,
+  offers: null,
+  isImportant: false,
+  description: getRandomArrayElement(DESCRIPTION),
+  pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
+};
 
 function createEventDataInPhotoTemplate(event) {
   return (`<label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -39,8 +57,75 @@ function createDestinationDescriptionTemplate(description, pictures) {
   </div>`);
 }
 
+function createOffersEditTemplate(offers, isAnyOffers) {
+  let count = 0;
+
+  if (isAnyOffers) {
+    return (`<div class="event__available-offers">
+    ${Object.entries(offers).map((offer) => {
+        count++;
+        return (`<div class="event__offer-selector">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}"
+    name="event-offer-luggage" type="checkbox"  ${offer[1].isChecked ? 'checked' : ''}>
+    <label class="event__offer-label" for="event-offer-${count}">
+      <span class="event__offer-title">${offer[1].name}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer[1].price}</span>
+    </label>
+  </div>`);
+      }).join('')}
+  </div>`);
+  } else {
+    return (`<div class="event__available-offers">
+    <div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage">
+      <label class="event__offer-label" for="event-offer-luggage-1">
+        <span class="event__offer-title">Add luggage</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">50</span>
+      </label>
+    </div>
+
+    <div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort">
+      <label class="event__offer-label" for="event-offer-comfort-1">
+        <span class="event__offer-title">Switch to comfort</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">80</span>
+      </label>
+    </div>
+
+    <div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
+      <label class="event__offer-label" for="event-offer-meal-1">
+        <span class="event__offer-title">Add meal</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">15</span>
+      </label>
+    </div>
+
+    <div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
+      <label class="event__offer-label" for="event-offer-seats-1">
+        <span class="event__offer-title">Choose seats</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">5</span>
+      </label>
+    </div>
+
+    <div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
+      <label class="event__offer-label" for="event-offer-train-1">
+        <span class="event__offer-title">Travel by train</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">40</span>
+      </label>
+    </div>`);
+  }
+}
+
 function createEditFormTemplate(editFormElement) {
-  const { event, place, time, price, description, pictures} = editFormElement;
+  const { event, place, time, price, description, pictures, offers, isAnyOffers} = editFormElement;
 
   const timeFrom = humanizeDueDate(time.from, DateFormat.DAY_AND_TIME_EVENT);
   const timeTo = humanizeDueDate(time.to, DateFormat.DAY_AND_TIME_EVENT);
@@ -130,52 +215,8 @@ function createEditFormTemplate(editFormElement) {
     <section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
-      <div class="event__available-offers">
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-          <label class="event__offer-label" for="event-offer-luggage-1">
-            <span class="event__offer-title">Add luggage</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">50</span>
-          </label>
-        </div>
+      ${createOffersEditTemplate(offers, isAnyOffers)}
 
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-          <label class="event__offer-label" for="event-offer-comfort-1">
-            <span class="event__offer-title">Switch to comfort</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">80</span>
-          </label>
-        </div>
-
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-          <label class="event__offer-label" for="event-offer-meal-1">
-            <span class="event__offer-title">Add meal</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">15</span>
-          </label>
-        </div>
-
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-          <label class="event__offer-label" for="event-offer-seats-1">
-            <span class="event__offer-title">Choose seats</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">5</span>
-          </label>
-        </div>
-
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-          <label class="event__offer-label" for="event-offer-train-1">
-            <span class="event__offer-title">Travel by train</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">40</span>
-          </label>
-        </div>
-      </div>
     </section>
 
     <section class="event__section  event__section--destination">
@@ -185,15 +226,13 @@ function createEditFormTemplate(editFormElement) {
   </form></li>`);
 }
 
-export default class EditFormView extends AbstractView {
-
-  #editFormElement = null;
+export default class EditFormView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleCancelEditForm = null;
 
-  constructor({editFormElement, onFormSubmit, onCancelEditForm}) {
+  constructor({editFormElement = BLANK_FORM, onFormSubmit, onCancelEditForm}) {
     super();
-    this.#editFormElement = editFormElement;
+    this._setState(EditFormView.parseListElementToState(editFormElement));
 
     this.#handleFormSubmit = onFormSubmit;
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
@@ -203,16 +242,36 @@ export default class EditFormView extends AbstractView {
   }
 
   get template() {
-    return createEditFormTemplate(this.#editFormElement);
+    return createEditFormTemplate(this._state);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#editFormElement);
+    this.#handleFormSubmit(EditFormView.parseStateToListElement(this._state));
   };
 
   #cancelEditFormHandle = (evt) => {
     evt.preventDefault();
     this.#handleCancelEditForm();
   };
+
+  static parseListElementToState(listElement) {
+    return {...listElement,
+      isAnyOffers: isListElementHaveOffers(listElement.offers)
+    };
+  }
+
+  static parseStateToListElement(state) {
+    const listElement = {...state};
+
+    if (!listElement.isAnyOffers) {
+      listElement.offers.forEach((offer) => {
+        offer.isChecked = false;
+      });
+    }
+
+    delete listElement.isAnyOffers;
+
+    return listElement;
+  }
 }

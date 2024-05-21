@@ -16,11 +16,12 @@ function createDateElementTemplate(timeFrom, timeTo, totalDuraction) {
 }
 
 function createOffersTemplate(offers) {
-  return Object.entries(offers).map((offer) => (`<li class="event__offer">
+  return Object.entries(offers).map((offer) => (
+    offer[1].isChecked ? `<li class="event__offer">
     <span class="event__offer-title">${offer[1].name}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${offer[1].price}</span>
-    </li>`)).join('');
+    </li>` : '')).join('');
 }
 
 function createFavoriteButtonTemplate(isFavorite) {
