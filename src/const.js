@@ -1,9 +1,13 @@
 const EVENTS = [
   'Taxi',
-  'Flight',
+  'Bus',
+  'Train',
+  'Ship',
   'Drive',
+  'Flight',
   'Check-in',
-  'Sightseeing'
+  'Sightseeing',
+  'Restaurant'
 ];
 
 const PLACES = [

@@ -77,51 +77,34 @@ function createOffersEditTemplate(offers, isAnyOffers) {
   </div>`);
   } else {
     return (`<div class="event__available-offers">
-    <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage">
-      <label class="event__offer-label" for="event-offer-luggage-1">
-        <span class="event__offer-title">Add luggage</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">50</span>
-      </label>
-    </div>
-
-    <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort">
-      <label class="event__offer-label" for="event-offer-comfort-1">
-        <span class="event__offer-title">Switch to comfort</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">80</span>
-      </label>
-    </div>
-
-    <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-      <label class="event__offer-label" for="event-offer-meal-1">
-        <span class="event__offer-title">Add meal</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">15</span>
-      </label>
-    </div>
-
-    <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-      <label class="event__offer-label" for="event-offer-seats-1">
-        <span class="event__offer-title">Choose seats</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">5</span>
-      </label>
-    </div>
-
-    <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-      <label class="event__offer-label" for="event-offer-train-1">
-        <span class="event__offer-title">Travel by train</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">40</span>
-      </label>
-    </div>`);
+    ${Object.entries(offers).map((offer) => {
+        count++;
+        return (`<div class="event__offer-selector">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}"
+    name="event-offer-luggage" type="checkbox">
+    <label class="event__offer-label" for="event-offer-${count}">
+      <span class="event__offer-title">${offer[1].name}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer[1].price}</span>
+    </label>
+  </div>`);
+      }).join('')}
+  </div>`);
   }
+}
+
+function createSelectTypeEventTemplate(event) {
+  return (`<fieldset class="event__type-group">
+  <legend class="visually-hidden">Event type</legend>
+
+  ${EVENTS.map((typeOfEvent) => `<div class="event__type-item">
+  <input id="event-type-${typeOfEvent.toLowerCase()}-1" class="event__type-input  visually-hidden"
+  type="radio" name="event-type" value="${typeOfEvent.toLowerCase()}"
+  ${event === typeOfEvent ? 'checked' : ''}>
+  <label class="event__type-label  event__type-label--${typeOfEvent.toLowerCase()}" for="event-type-${typeOfEvent.toLowerCase()}-1">${typeOfEvent}</label>
+  </div>`).join('')}
+
+  </fieldset>`);
 }
 
 function createEditFormTemplate(editFormElement) {
@@ -138,54 +121,7 @@ function createEditFormTemplate(editFormElement) {
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
       <div class="event__type-list">
-        <fieldset class="event__type-group">
-          <legend class="visually-hidden">Event type</legend>
-
-          <div class="event__type-item">
-            <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-            <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-          </div>
-
-          <div class="event__type-item">
-            <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-            <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-          </div>
-
-          <div class="event__type-item">
-            <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-            <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-          </div>
-
-          <div class="event__type-item">
-            <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-            <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-          </div>
-
-          <div class="event__type-item">
-            <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-            <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-          </div>
-
-          <div class="event__type-item">
-            <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-            <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-          </div>
-
-          <div class="event__type-item">
-            <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-            <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-          </div>
-
-          <div class="event__type-item">
-            <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-            <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-          </div>
-
-          <div class="event__type-item">
-            <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-            <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-          </div>
-        </fieldset>
+        ${createSelectTypeEventTemplate(event)}
       </div>
     </div>
 
@@ -210,6 +146,7 @@ function createEditFormTemplate(editFormElement) {
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
+
     </header>
     <section class="event__details">
     <section class="event__section  event__section--offers">
@@ -249,11 +186,13 @@ export default class EditFormView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
 
-    this.element.querySelector('.event__type-toggle').addEventListener('click', this.#eventTypeToggleHandler);
+    this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('click', () => {});
 
     this.element.querySelector('#event-start-time-1').addEventListener('click', () => {});
     this.element.querySelector('#event-end-time-1').addEventListener('click', () => {});
+
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
 
     this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
   }
@@ -269,13 +208,32 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   #eventTypeToggleHandler = (evt) => {
-    evt.preventDefault();
+    this._setState({
+      event: evt.target.value
+    });
   };
 
-  #offersChangeToggleHandler = (evt) => {
+  #offersChangeToggleHandler = () => {
+    // не сохраняет когда нет офферов и хочешь добавить
+    const elements = this.element.querySelectorAll('.event__offer-checkbox');
+
+    for(let i = 0; i < this._state.offers.length; i++) {
+      if(elements[i].checked) {
+        this._state.offers[i].isChecked = true;
+      } else {
+        this._state.offers[i].isChecked = false;
+      }
+    }
+
+    this._setState({
+      offers: this._state.offers
+    });
+  };
+
+  #destinationInputHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({
-      isAnyOffers: !this._state.isAnyOffers
+    this._setState({
+      place: evt.target.value
     });
   };
 
