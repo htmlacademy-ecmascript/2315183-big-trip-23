@@ -52,7 +52,7 @@ function createDestinationDescriptionTemplate(description, pictures) {
   <p class="event__destination-description">${description}</p>
   <div class="event__photos-container">
     <div class="event__photos-tape">
-    ${Object.entries(pictures).map((picture) => `<img class="event__photo" src="${picture[1]}" alt="Event photo"></img>)`).join('')}
+    ${Object.entries(pictures).map((picture) => `<img class="event__photo" src="${picture[1]}" alt="Event photo"></img>`).join('')}
     </div>
   </div>`);
 }
@@ -239,6 +239,14 @@ export default class EditFormView extends AbstractStatefulView {
 
     this.#handleCancelEditForm = onCancelEditForm;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
+
+    this.element.querySelector('.event__type-toggle').addEventListener('click', this.#eventTypeToggleHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('click', () => {});
+
+    this.element.querySelector('#event-start-time-1').addEventListener('click', () => {});
+    this.element.querySelector('#event-end-time-1').addEventListener('click', () => {});
+
+    this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
   }
 
   get template() {
@@ -253,6 +261,17 @@ export default class EditFormView extends AbstractStatefulView {
   #cancelEditFormHandle = (evt) => {
     evt.preventDefault();
     this.#handleCancelEditForm();
+  };
+
+  #eventTypeToggleHandler = (evt) => {
+    evt.preventDefault();
+  };
+
+  #offersChangeToggleHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      isAnyOffers: !this._state.isAnyOffers
+    });
   };
 
   static parseListElementToState(listElement) {
