@@ -183,6 +183,12 @@ export default class EditFormView extends AbstractStatefulView {
     return createEditFormTemplate(this._state);
   }
 
+  reset(listElement) {
+    this.updateElement(
+      EditFormView.parseListElementToState(listElement)
+    );
+  }
+
   _restoreHandlers() {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
 
@@ -224,6 +230,10 @@ export default class EditFormView extends AbstractStatefulView {
         this._state.offers[i].isChecked = false;
       }
     }
+
+    //второй вариант (не рабочий)
+    // const count = Number(evt.target.id.replace(/^\D+/g, ''));
+    // this._state.offers[count - 1].isChecked = !!evt.target.checked;
 
     this._setState({
       offers: this._state.offers
