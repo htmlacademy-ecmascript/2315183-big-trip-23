@@ -14,12 +14,8 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-function getTimeFromDate(date) {
-  return [date.getHours(), date.getMinutes()].map((x) => x < 10 ? `0${x}` : x).join(':');
-}
-
 function getUpperCaseFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export { getRandomArrayElement, getRandomNumber, updateItem, getTimeFromDate, getRandomTrueOrFalse, getUpperCaseFirstLetter };
+export { getRandomArrayElement, getRandomNumber, updateItem, getRandomTrueOrFalse, getUpperCaseFirstLetter };

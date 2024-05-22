@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { getTimeFromDate } from './common';
 
 function humanizeDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
