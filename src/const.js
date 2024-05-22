@@ -1,9 +1,13 @@
 const EVENTS = [
   'Taxi',
-  'Flight',
+  'Bus',
+  'Train',
+  'Ship',
   'Drive',
+  'Flight',
   'Check-in',
-  'Sightseeing'
+  'Sightseeing',
+  'Restaurant'
 ];
 
 const PLACES = [
@@ -38,7 +42,9 @@ const FilterType = {
 const SortType = {
   DAY: 'day',
   TIME: 'time',
-  PRICE: 'price'
+  PRICE: 'price',
+  EVENT: 'event',
+  OFFER: 'offer'
 };
 
 export { EVENTS, PLACES, DESCRIPTION, DateFormat, FilterType, SortType };

@@ -1,6 +1,4 @@
 import ListView from '../view/list-view.js';
-import ListElementView from '../view/list-element-view.js';
-import ListOfferElementView from '../view/list-offer-element-view.js';
 import { render } from '../framework/render.js';
 import NoListElementView from '../view/no-list-element-view.js';
 import SortView from '../view/sort-view.js';
@@ -69,13 +67,7 @@ export default class ListPresenter {
     }
 
     for (let i = 0; i < this.#listWaypoints.length; i++) {
-      const listElementComponent = new ListElementView({listElement: this.#listWaypoints[i]});
-
       this.#renderListElement(this.#listWaypoints[i]);
-
-      for (let j = 0; j < this.#listWaypoints[i].offers.length; j++) {
-        this.#renderOffersListElement(this.#listWaypoints[i].offers, listElementComponent);
-      }
     }
   }
 
@@ -88,12 +80,6 @@ export default class ListPresenter {
 
     listElementPresenter.init(listElement);
     this.#listElementPresenters.set(listElement.id, listElementPresenter);
-  }
-
-  #renderOffersListElement(offerElement, listElementComponent) {
-    const offerComponent = new ListOfferElementView({offerElement});
-
-    render(offerComponent, listElementComponent.element.querySelector('.event__selected-offers'));
   }
 
   #renderSort(listContainer) {

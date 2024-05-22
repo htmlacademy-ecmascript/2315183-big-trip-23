@@ -69,6 +69,7 @@ export default class ListElementPresenter {
 
   resetView() {
     if(this.#mode !== Mode.DEFAULT) {
+      this.#listELementEditComponent.reset(this.#listElement);
       this.#replaceEditFormToListElement();
     }
   }
@@ -76,6 +77,7 @@ export default class ListElementPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#listELementEditComponent.reset(this.#listElement);
       this.#replaceEditFormToListElement();
     }
   };
@@ -105,6 +107,7 @@ export default class ListElementPresenter {
   };
 
   #handleCancelEditForm = () => {
+    this.#listELementEditComponent.reset(this.#listElement);
     this.#replaceEditFormToListElement();
   };
 

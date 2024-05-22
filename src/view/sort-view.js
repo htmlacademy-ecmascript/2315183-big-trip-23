@@ -13,7 +13,8 @@ function createSortTemplate() {
 
       <div class="trip-sort__item  trip-sort__item--event">
         <input id="sort-event" class="trip-sort__input  visually-hidden"
-        type="radio" name="trip-sort" value="sort-event" disabled>
+        type="radio" name="trip-sort" value="sort-event" disabled
+        data-sort-type="${SortType.EVENT}">
         <label class="trip-sort__btn" for="sort-event">Event</label>
       </div>
 
@@ -32,7 +33,9 @@ function createSortTemplate() {
       </div>
 
       <div class="trip-sort__item  trip-sort__item--offer">
-        <input id="sort-offer" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-offer" disabled>
+        <input id="sort-offer" class="trip-sort__input  visually-hidden"
+        type="radio" name="trip-sort" value="sort-offer" disabled
+        data-sort-type="${SortType.OFFER}">
         <label class="trip-sort__btn" for="sort-offer">Offers</label>
       </div>
     </form>`);
@@ -57,7 +60,6 @@ export default class SortView extends AbstractView {
       return;
     }
 
-    evt.preventDefault();
     this.#handleSortTyprChange(evt.target.dataset.sortType);
   };
 }
