@@ -170,6 +170,8 @@ export default class EditFormView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleCancelEditForm = null;
 
+  #datePicker = null;
+
   constructor({editFormElement = BLANK_FORM, onFormSubmit, onCancelEditForm}) {
     super();
     this._setState(EditFormView.parseListElementToState(editFormElement));
@@ -183,6 +185,15 @@ export default class EditFormView extends AbstractStatefulView {
 
   get template() {
     return createEditFormTemplate(this._state);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if(this.#datePicker) {
+      this.#datePicker.destroy();
+      this.#datePicker = null;
+    }
   }
 
   reset(listElement) {
@@ -217,6 +228,12 @@ export default class EditFormView extends AbstractStatefulView {
   #cancelEditFormHandle = (evt) => {
     evt.preventDefault();
     this.#handleCancelEditForm();
+  };
+
+  #dueDateChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dueDate: userDate
+    });
   };
 
   #eventTypeToggleHandler = (evt) => {
@@ -266,6 +283,17 @@ export default class EditFormView extends AbstractStatefulView {
       place: evt.target.value
     });
   };
+
+  #setDateHandler() {
+    this.#datePicker = flatpickr(
+      this.element.querySelector('.event__field-group--time'),
+      {
+        dateFormat: 'Y-m-d',
+        defaultDate: this._state.dueDate,
+        onChange: this.#dueDateChangeHandler
+      }
+    );
+  }
 
   static parseListElementToState(listElement) {
     return {...listElement,
