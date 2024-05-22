@@ -228,11 +228,10 @@ export default class EditFormView extends AbstractStatefulView {
       });
 
       this.updateElement({
-        event: newEvent,
+        event: newEvent
       });
-
-      this._restoreHandlers();
     }
+    this._restoreHandlers();
   };
 
   #inputToggleHandler = (evt) => {
@@ -243,20 +242,16 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   #offersChangeToggleHandler = () => {
-    // не сохраняет когда нет офферов и хочешь добавить
     const elements = this.element.querySelectorAll('.event__offer-checkbox');
 
     for(let i = 0; i < this._state.offers.length; i++) {
       if(elements[i].checked) {
         this._state.offers[i].isChecked = true;
+        this._state.isAnyOffers = true;
       } else {
         this._state.offers[i].isChecked = false;
       }
     }
-
-    //второй вариант (не рабочий)
-    // const count = Number(evt.target.id.replace(/^\D+/g, ''));
-    // this._state.offers[count - 1].isChecked = !!evt.target.checked;
 
     this._setState({
       offers: this._state.offers
