@@ -173,7 +173,6 @@ export default class EditFormView extends AbstractStatefulView {
     this._setState(EditFormView.parseListElementToState(editFormElement));
 
     this.#handleFormSubmit = onFormSubmit;
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
 
     this.#handleCancelEditForm = onCancelEditForm;
 
@@ -191,6 +190,8 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
 
     this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
