@@ -232,7 +232,6 @@ export default class EditFormView extends AbstractStatefulView {
         event: newEvent
       });
     }
-    this._restoreHandlers();
   };
 
   #inputToggleHandler = (evt) => {
