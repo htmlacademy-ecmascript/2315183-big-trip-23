@@ -1,6 +1,8 @@
 import { humanizeDueDate, isListElementHaveOffers } from '../view/utils/list.js';
 import { DateFormat, EVENTS, PLACES, DESCRIPTION } from '../const.js';
 import { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter } from './utils/common.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import OffersModel from '../model/offer-model.js';
 
