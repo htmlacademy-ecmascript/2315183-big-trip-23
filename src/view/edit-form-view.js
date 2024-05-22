@@ -1,7 +1,8 @@
 import { humanizeDueDate, isListElementHaveOffers } from '../view/utils/list.js';
 import { DateFormat, EVENTS, PLACES, DESCRIPTION } from '../const.js';
-import { getRandomArrayElement, getRandomNumber } from './utils/common.js';
+import { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter } from './utils/common.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import OffersModel from '../model/offer-model.js';
 
 const PICTURES_COUNT = 5;
 
@@ -198,6 +199,8 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('#event-start-time-1').addEventListener('click', () => {});
     this.element.querySelector('#event-end-time-1').addEventListener('click', () => {});
 
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#inputToggleHandler);
+
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
 
     this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
@@ -214,8 +217,28 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   #eventTypeToggleHandler = (evt) => {
+    if (evt.target.value !== undefined) {
+      const newEvent = getUpperCaseFirstLetter(evt.target.value);
+
+      this._setState({
+        event: newEvent,
+        offers:  new OffersModel().getOffer(),
+        description: getRandomArrayElement(DESCRIPTION),
+        pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
+      });
+
+      this.updateElement({
+        event: newEvent,
+      });
+
+      this._restoreHandlers();
+    }
+  };
+
+  #inputToggleHandler = (evt) => {
+    evt.preventDefault();
     this._setState({
-      event: evt.target.value
+      price: evt.target.value,
     });
   };
 
