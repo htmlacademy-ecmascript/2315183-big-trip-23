@@ -48,7 +48,10 @@ function sortListByPrice(waypointA, waypointB) {
 }
 
 function sortListByTime(waypointA, waypointB) {
-  return new Date(`1970/01/01 ${getTimeFromDate(waypointB.time.from)}`) - new Date(`1970/01/01 ${getTimeFromDate(waypointA.time.from)}`);
+  const minuteDuractionB = dayjs(waypointB.time.from).diff(waypointB.time.to, 'm');
+  const minuteDuractionA = dayjs(waypointA.time.from).diff(waypointA.time.to, 'm');
+
+  return minuteDuractionA - minuteDuractionB;
 }
 
 export { humanizeDueDate, isListElementFuture, isListElementPresent, isListElementPast, sortListByDate, sortListByPrice, sortListByTime, isListElementHaveOffers};

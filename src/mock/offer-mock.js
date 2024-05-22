@@ -7,11 +7,6 @@ const mockOffers = [
     isChecked: getRandomTrueOrFalse()
   },
   {
-    name: 'Switch to comfort',
-    price: 80,
-    isChecked: getRandomTrueOrFalse()
-  },
-  {
     name: 'Add luggage',
     price: 50,
     isChecked: getRandomTrueOrFalse()

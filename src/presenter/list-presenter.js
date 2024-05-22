@@ -56,8 +56,6 @@ export default class ListPresenter {
 
     this.#clearList();
     this.#renderList();
-
-
   };
 
   #renderList() {
