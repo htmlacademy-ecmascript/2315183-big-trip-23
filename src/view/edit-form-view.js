@@ -237,6 +237,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   #timeFromChangeHandler = ([userDate]) => {
     this.updateElement({
+      dueDate: userDate,
       timeFrom: userDate
     });
   };
