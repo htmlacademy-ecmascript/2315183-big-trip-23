@@ -34,15 +34,15 @@ function createFavoriteButtonTemplate(isFavorite) {
 }
 
 function createListElementTemplate(listElement) {
-  const {dueDate, event, place, time, price, isFavorite, offers} = listElement;
+  const {dueDate, event, place, timeFrom, timeTo, price, isFavorite, offers} = listElement;
 
   const date = humanizeDueDate(dueDate, DateFormat.DAY_EVENT);
-  const timeFrom = humanizeDueDate(time.from, DateFormat.TIME);
-  const timeTo = humanizeDueDate(time.to, DateFormat.TIME);
+  const from = humanizeDueDate(timeFrom, DateFormat.TIME);
+  const to = humanizeDueDate(timeTo, DateFormat.TIME);
 
-  const dayDuraction = dayjs(time.from).diff(time.to, 'd') * (-1);
-  const hourDuraction = dayjs(time.from).diff(time.to, 'h') % 24 * (-1);
-  const minuteDuraction = dayjs(time.from).diff(time.to, 'm') % 60 * (-1);
+  const dayDuraction = dayjs(timeFrom).diff(timeTo, 'd') * (-1);
+  const hourDuraction = dayjs(timeFrom).diff(timeTo, 'h') % 24 * (-1);
+  const minuteDuraction = dayjs(timeFrom).diff(timeTo, 'm') % 60 * (-1);
   const totalDuraction = `${dayDuraction !== 0 ? `${dayDuraction}D` : ''}
     ${hourDuraction !== 0 ? `${hourDuraction}H` : ''}
     ${minuteDuraction !== 0 ? `${minuteDuraction}M` : ''}`;
@@ -56,7 +56,7 @@ function createListElementTemplate(listElement) {
       </div>
       <h3 class="event__title">${event} ${place}</h3>
 
-      ${createDateElementTemplate(timeFrom, timeTo, totalDuraction)}
+      ${createDateElementTemplate(from, to, totalDuraction)}
 
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${price}</span>

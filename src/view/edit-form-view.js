@@ -1,6 +1,8 @@
 import { humanizeDueDate, isListElementHaveOffers } from '../view/utils/list.js';
 import { DateFormat, EVENTS, PLACES, DESCRIPTION } from '../const.js';
 import { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter } from './utils/common.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import OffersModel from '../model/offer-model.js';
 
@@ -109,10 +111,10 @@ function createSelectTypeEventTemplate(event) {
 }
 
 function createEditFormTemplate(editFormElement) {
-  const { event, place, time, price, description, pictures, offers, isAnyOffers} = editFormElement;
+  const { event, place, timeFrom, timeTo, price, description, pictures, offers, isAnyOffers} = editFormElement;
 
-  const timeFrom = humanizeDueDate(time.from, DateFormat.DAY_AND_TIME_EVENT);
-  const timeTo = humanizeDueDate(time.to, DateFormat.DAY_AND_TIME_EVENT);
+  const from = humanizeDueDate(timeFrom, DateFormat.DAY_AND_TIME_EVENT);
+  const to = humanizeDueDate(timeTo, DateFormat.DAY_AND_TIME_EVENT);
 
   return (`<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -131,7 +133,7 @@ function createEditFormTemplate(editFormElement) {
     </div>
 
     <div class="event__field-group  event__field-group--time">
-    ${createTimeInEventTemplate(timeFrom, timeTo)}
+    ${createTimeInEventTemplate(from, to)}
     </div>
 
     <div class="event__field-group  event__field-group--price">
@@ -168,6 +170,9 @@ export default class EditFormView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleCancelEditForm = null;
 
+  #datePickerFrom = null;
+  #datePickerTo = null;
+
   constructor({editFormElement = BLANK_FORM, onFormSubmit, onCancelEditForm}) {
     super();
     this._setState(EditFormView.parseListElementToState(editFormElement));
@@ -181,6 +186,19 @@ export default class EditFormView extends AbstractStatefulView {
 
   get template() {
     return createEditFormTemplate(this._state);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if(this.#datePickerFrom) {
+      this.#datePickerFrom.destroy();
+      this.#datePickerFrom = null;
+    }
+    if(this.#datePickerTo) {
+      this.#datePickerTo.destroy();
+      this.#datePickerTo = null;
+    }
   }
 
   reset(listElement) {
@@ -201,10 +219,10 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('#event-end-time-1').addEventListener('click', () => {});
 
     this.element.querySelector('.event__input--price').addEventListener('input', this.#inputToggleHandler);
-
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
-
     this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
+
+    this.#setDatePicker();
   }
 
   #formSubmitHandler = (evt) => {
@@ -215,6 +233,19 @@ export default class EditFormView extends AbstractStatefulView {
   #cancelEditFormHandle = (evt) => {
     evt.preventDefault();
     this.#handleCancelEditForm();
+  };
+
+  #timeFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dueDate: userDate,
+      timeFrom: userDate
+    });
+  };
+
+  #timeToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      timeTo: userDate
+    });
   };
 
   #eventTypeToggleHandler = (evt) => {
@@ -264,6 +295,35 @@ export default class EditFormView extends AbstractStatefulView {
       place: evt.target.value
     });
   };
+
+  #setDatePicker() {
+    this.#datePickerFrom = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        dateFormat: 'Y-m-d H:i',
+        enableTime: true,
+        defaultDate: this._state.timeFrom,
+        maxDate: this._state.timeTo,
+        // eslint-disable-next-line camelcase
+        time_24hr: true,
+        onChange: this.#timeFromChangeHandler
+      }
+    );
+
+    this.#datePickerTo = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        dateFormat: 'Y-m-d H:i',
+        enableTime: true,
+        defaultDate: this._state.timeTo,
+        minDate: this._state.timeFrom,
+        // eslint-disable-next-line camelcase
+        time_24hr: true,
+        onChange: this.#timeToChangeHandler
+      }
+    );
+
+  }
 
   static parseListElementToState(listElement) {
     return {...listElement,
