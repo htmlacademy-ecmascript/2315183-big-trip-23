@@ -3,7 +3,6 @@ import { render } from '../framework/render.js';
 import NoListElementView from '../view/no-list-element-view.js';
 import SortView from '../view/sort-view.js';
 import ListElementPresenter from './list-element-presenter.js';
-import { updateItem } from '../view/utils/common.js';
 import { SortType } from '../const.js';
 import { sortListByDate, sortListByPrice, sortListByTime } from '../view/utils/list.js';
 
@@ -15,8 +14,6 @@ export default class ListPresenter {
   #noListElementsComponent = new NoListElementView();
   #sortComponent = null;
 
-  #listWaypoints = [];
-  #sourcedListWaypoints = [];
   #listElementPresenters = new Map();
 
   #currentSortType = SortType.DAY;
@@ -27,23 +24,24 @@ export default class ListPresenter {
   }
 
   get waypoints() {
+    switch (this.#currentSortType) {
+      case SortType.PRICE:
+        return [...this.#waypointsModel.waypoints].sort(sortListByPrice);
+      case SortType.TIME:
+        return [...this.#waypointsModel.waypoints].sort(sortListByTime);
+    }
+
     return this.#waypointsModel.waypoints;
   }
 
   init() {
-    this.#listWaypoints = [...this.#waypointsModel.waypoints];
-    this.#listWaypoints.sort(sortListByDate);
-    this.#sourcedListWaypoints = [...this.#waypointsModel.waypoints];
-    this.#sourcedListWaypoints.sort(sortListByDate);
+    this.waypoints.sort(sortListByDate);
 
     this.#renderList();
     this.#renderSort(this.#listContainer);
   }
 
   #handleListElementChange = (updatedListElement) => {
-    this.#listWaypoints = updateItem(this.#listWaypoints, updatedListElement);
-    this.#sourcedListWaypoints = updateItem(this.#sourcedListWaypoints, updatedListElement);
-
     this.#listElementPresenters.get(updatedListElement.id).init(updatedListElement);
   };
 
@@ -56,7 +54,7 @@ export default class ListPresenter {
       return;
     }
 
-    this.#sortListElements(sortType);
+    this.#currentSortType = sortType;
 
     this.#clearList();
     this.#renderList();
@@ -65,13 +63,13 @@ export default class ListPresenter {
   #renderList() {
     render(this.#listComponent, this.#listContainer);
 
-    if (this.#listWaypoints.every((listElement) => listElement.isArchive)) {
+    if (this.waypoints.every((listElement) => listElement.isArchive)) {
       this.#renderNoListElements(this.#noListElementsComponent, this.#listComponent);
       return;
     }
 
-    for (let i = 0; i < this.#listWaypoints.length; i++) {
-      this.#renderListElement(this.#listWaypoints[i]);
+    for (let i = 0; i < this.waypoints.length; i++) {
+      this.#renderListElement(this.waypoints[i]);
     }
   }
 
@@ -101,20 +99,5 @@ export default class ListPresenter {
   #clearList() {
     this.#listElementPresenters.forEach((presenter) => presenter.destroy());
     this.#listElementPresenters.clear();
-  }
-
-  #sortListElements(sortType) {
-    switch (sortType) {
-      case SortType.PRICE:
-        this.#listWaypoints.sort(sortListByPrice);
-        break;
-      case SortType.TIME:
-        this.#listWaypoints.sort(sortListByTime);
-        break;
-      default:
-        this.#listWaypoints = [...this.#sourcedListWaypoints];
-    }
-
-    this.#currentSortType = sortType;
   }
 }
