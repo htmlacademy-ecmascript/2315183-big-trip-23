@@ -26,10 +26,14 @@ export default class ListPresenter {
     this.#waypointsModel = waypointsModel;
   }
 
+  get waypoints() {
+    return this.#waypointsModel.waypoints;
+  }
+
   init() {
-    this.#listWaypoints = [...this.#waypointsModel.waypoint];
+    this.#listWaypoints = [...this.#waypointsModel.waypoints];
     this.#listWaypoints.sort(sortListByDate);
-    this.#sourcedListWaypoints = [...this.#waypointsModel.waypoint];
+    this.#sourcedListWaypoints = [...this.#waypointsModel.waypoints];
     this.#sourcedListWaypoints.sort(sortListByDate);
 
     this.#renderList();

@@ -15,7 +15,7 @@ const listPresenter = new ListPresenter({listContainer: siteListElement, waypoin
 const siteFilterElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
 
-const filters = generateFilter(waypointsModel.waypoint);
+const filters = generateFilter(waypointsModel.waypoints);
 
 render(new TripInfoView(), siteTripInfoElement, 'afterbegin');
 render(new FilterView({filters}), siteFilterElement);

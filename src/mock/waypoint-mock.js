@@ -12,7 +12,7 @@ const RandomPrice = {
 
 const mockWaypoints = [
   {
-    dueDate: new Date('2024-04-30'),
+    dueDate: new Date(2024, 4, 30, 14, 0),
     event: getRandomArrayElement(EVENTS),
     place: getRandomArrayElement(PLACES),
     timeFrom: new Date(2024, 4, 30, 14, 0),
@@ -24,7 +24,7 @@ const mockWaypoints = [
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
-    dueDate: new Date('2024-05-12'),
+    dueDate: new Date(2024, 5, 12, 8, 25),
     event: getRandomArrayElement(EVENTS),
     place: getRandomArrayElement(PLACES),
     timeFrom: new Date(2024, 5, 12, 8, 25),
@@ -36,7 +36,7 @@ const mockWaypoints = [
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
-    dueDate: new Date('2024-08-12'),
+    dueDate: new Date(2024, 8, 12, 14, 35),
     event: getRandomArrayElement(EVENTS),
     place: getRandomArrayElement(PLACES),
     timeFrom: new Date(2024, 8, 12, 14, 35),
@@ -48,7 +48,7 @@ const mockWaypoints = [
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
-    dueDate: new Date('2024-01-30'),
+    dueDate: new Date(2024, 1, 30, 3, 15),
     event: getRandomArrayElement(EVENTS),
     place: getRandomArrayElement(PLACES),
     timeFrom: new Date(2024, 1, 30, 3, 15),
@@ -60,7 +60,7 @@ const mockWaypoints = [
     pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
   },
   {
-    dueDate: new Date('2024-05-7'),
+    dueDate: new Date(2024, 5, 7, 22, 1),
     event: getRandomArrayElement(EVENTS),
     place: getRandomArrayElement(PLACES),
     timeFrom: new Date(2024, 5, 7, 22, 15),

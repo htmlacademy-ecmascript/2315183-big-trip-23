@@ -302,7 +302,7 @@ export default class EditFormView extends AbstractStatefulView {
       {
         dateFormat: 'Y-m-d H:i',
         enableTime: true,
-        defaultDate: this._state.timeFrom,
+        //defaultDate: this._state.timeFrom,
         maxDate: this._state.timeTo,
         // eslint-disable-next-line camelcase
         time_24hr: true,

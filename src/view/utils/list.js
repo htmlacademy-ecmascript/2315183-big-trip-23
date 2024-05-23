@@ -47,8 +47,8 @@ function sortListByPrice(waypointA, waypointB) {
 }
 
 function sortListByTime(waypointA, waypointB) {
-  const minuteDuractionB = dayjs(waypointB.time.from).diff(waypointB.time.to, 'm');
-  const minuteDuractionA = dayjs(waypointA.time.from).diff(waypointA.time.to, 'm');
+  const minuteDuractionB = dayjs(waypointB.timeFrom).diff(waypointB.timeTo, 'm');
+  const minuteDuractionA = dayjs(waypointA.timeFrom).diff(waypointA.timeTo, 'm');
 
   return minuteDuractionA - minuteDuractionB;
 }
