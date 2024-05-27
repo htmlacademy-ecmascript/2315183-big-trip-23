@@ -1,3 +1,4 @@
+import { UserAction, UpdateType } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListElementView from '../view/list-element-view.js';
@@ -102,7 +103,11 @@ export default class ListElementPresenter {
   };
 
   #handleFormSubmit = (listElement) => {
-    this.#handleDataChange(listElement);
+    this.#handleDataChange(
+      UserAction.UPDATE_LIST_ELEMENT,
+      UpdateType.MINOR,
+      listElement
+    );
     this.#replaceEditFormToListElement();
   };
 
@@ -112,7 +117,11 @@ export default class ListElementPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#listElement, isFavorite: !this.#listElement.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_LIST_ELEMENT,
+      UpdateType.MINOR,
+      {...this.#listElement, isFavorite: !this.#listElement.isFavorite}
+    );
   };
 
 }

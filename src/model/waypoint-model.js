@@ -15,4 +15,44 @@ export default class WaypoinstModel extends Observable{
   get waypoints() {
     return this.#waypoints;
   }
+
+  updateListElement(updateType, update) {
+    const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting task');
+    }
+
+    this.#waypoints = [
+      ...this.#waypoints.slice(0, index),
+      update,
+      ...this.#waypoints.slice(index + 1)
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  addListElement(updateType, update) {
+    this.#waypoints = [
+      update,
+      ...this.#waypoints
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  deleteListElement(updateType, update) {
+    const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting task');
+    }
+
+    this.#waypoints = [
+      ...this.#waypoints.slice(0, index),
+      ...this.#waypoints.slice(index + 1)
+    ];
+
+    this._notify(updateType, update);
+  }
 }

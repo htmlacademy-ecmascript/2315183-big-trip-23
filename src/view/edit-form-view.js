@@ -213,10 +213,6 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
 
     this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('click', () => {});
-
-    this.element.querySelector('#event-start-time-1').addEventListener('click', () => {});
-    this.element.querySelector('#event-end-time-1').addEventListener('click', () => {});
 
     this.element.querySelector('.event__input--price').addEventListener('input', this.#inputToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);

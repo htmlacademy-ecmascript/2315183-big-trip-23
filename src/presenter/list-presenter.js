@@ -21,6 +21,8 @@ export default class ListPresenter {
   constructor({listContainer, waypointsModel}) {
     this.#listContainer = listContainer;
     this.#waypointsModel = waypointsModel;
+
+    this.#waypointsModel.addObserver(this.#handleModelEvent);
   }
 
   get waypoints() {
@@ -41,11 +43,19 @@ export default class ListPresenter {
     this.#renderSort(this.#listContainer);
   }
 
-  #handleListElementChange = (updatedListElement) => {
-    this.#listElementPresenters.get(updatedListElement.id).init(updatedListElement);
+  #handleViewAcion = (actionType, updateType, update) => {
+    // заглушка
+    // eslint-disable-next-line no-console
+    console.log.apply(actionType, updateType, update);
   };
 
-  #handleModeChange = () => {
+  #handleModelEvent = (updateType, data) => {
+    // заглушка
+    // eslint-disable-next-line no-console
+    console.log(updateType, data);
+  };
+
+  #handleModelChange = () => {
     this.#listElementPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -76,8 +86,8 @@ export default class ListPresenter {
   #renderListElement(listElement) {
     const listElementPresenter = new ListElementPresenter({
       listContainer: this.#listComponent.element,
-      onDataChange: this.#handleListElementChange,
-      onModeChange: this.#handleModeChange
+      onDataChange: this.#handleViewAcion,
+      onModeChange: this.#handleModelChange
     });
 
     listElementPresenter.init(listElement);
