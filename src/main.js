@@ -3,7 +3,7 @@ import ListPresenter from './presenter/list-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import WaypointsModel from './model/waypoint-model.js';
 import FilterModel from './model/filter-model.js';
-import { render } from './framework/render.js';
+import { RenderPosition, render } from './framework/render.js';
 
 const siteMainElement = document.querySelector('main');
 const siteHeaderElement = document.querySelector('.page-header');
@@ -17,7 +17,7 @@ const listPresenter = new ListPresenter({listContainer: siteListElement, waypoin
 const filterPresenter = new FilterPresenter({filterContainer: siteFilterElement, filterModel, waypointsModel});
 
 
-render(new TripInfoView(), siteTripInfoElement, 'afterbegin');
+render(new TripInfoView(), siteTripInfoElement, RenderPosition.AFTERBEGIN);
 
 filterPresenter.init();
 listPresenter.init();

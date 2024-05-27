@@ -1,9 +1,9 @@
 import ListView from '../view/list-view.js';
-import { remove, render } from '../framework/render.js';
+import { RenderPosition, remove, render } from '../framework/render.js';
 import NoListElementView from '../view/no-list-element-view.js';
 import SortView from '../view/sort-view.js';
 import ListElementPresenter from './list-element-presenter.js';
-import { SortType, UserAction, UpdateType } from '../const.js';
+import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
 import { sortListByDate, sortListByPrice, sortListByTime } from '../view/utils/list.js';
 import { filter } from '../view/utils/filter.js';
 
@@ -13,12 +13,13 @@ export default class ListPresenter {
   #filterModel = null;
 
   #listComponent = new ListView();
-  #noListElementsComponent = new NoListElementView();
+  #noListElementsComponent = null;
   #sortComponent = null;
 
   #listElementPresenters = new Map();
 
   #currentSortType = SortType.DAY;
+  #filterType = FilterType.EVERYTHING;
 
   constructor({listContainer, waypointsModel, filterModel}) {
     this.#listContainer = listContainer;
@@ -30,9 +31,9 @@ export default class ListPresenter {
   }
 
   get waypoints() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const waypoints = this.#waypointsModel.waypoints;
-    const filteredWaypoints = filter[filterType](waypoints);
+    const filteredWaypoints = filter[this.#filterType](waypoints);
 
     switch (this.#currentSortType) {
       case SortType.PRICE:
@@ -102,7 +103,7 @@ export default class ListPresenter {
     const waypointsCount = waypoints.length;
 
     if (waypointsCount === 0) {
-      this.#renderNoListElements(this.#noListElementsComponent, this.#listComponent);
+      this.#renderNoListElements(this.#listComponent);
       return;
     }
 
@@ -130,11 +131,15 @@ export default class ListPresenter {
       currentSort: this.#currentSortType
     });
 
-    render(this.#sortComponent, listContainer, 'afterbegin');
+    render(this.#sortComponent, listContainer, RenderPosition.AFTERBEGIN);
   }
 
-  #renderNoListElements(noListElementsComponent, listComponent) {
-    render(noListElementsComponent, listComponent.element);
+  #renderNoListElements(listComponent) {
+    this.#noListElementsComponent = new NoListElementView({
+      filterType: this.#filterType
+    });
+
+    render(this.#noListElementsComponent, listComponent.element, RenderPosition.AFTERBEGIN);
   }
 
   #clearList({resetSortType = false} = {}) {
@@ -142,7 +147,10 @@ export default class ListPresenter {
     this.#listElementPresenters.clear();
 
     remove(this.#sortComponent);
-    remove(this.#noListElementsComponent);
+
+    if (this.#noListElementsComponent) {
+      remove(this.#noListElementsComponent);
+    }
 
     if(resetSortType) {
       this.#currentSortType = SortType.DAY;
