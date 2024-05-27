@@ -53,4 +53,18 @@ function sortListByTime(waypointA, waypointB) {
   return minuteDuractionA - minuteDuractionB;
 }
 
-export { humanizeDueDate, isListElementFuture, isListElementPresent, isListElementPast, sortListByDate, sortListByPrice, sortListByTime, isListElementHaveOffers};
+function isDatesEqual(dateA, dateB) {
+  return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+}
+
+export {
+  humanizeDueDate,
+  isListElementFuture,
+  isListElementPresent,
+  isListElementPast,
+  sortListByDate,
+  sortListByPrice,
+  sortListByTime,
+  isListElementHaveOffers,
+  isDatesEqual
+};

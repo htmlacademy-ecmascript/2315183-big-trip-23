@@ -2,6 +2,7 @@ import { UserAction, UpdateType } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListElementView from '../view/list-element-view.js';
+import { isDatesEqual, isListElementHaveOffers } from '../view/utils/list.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -42,7 +43,8 @@ export default class ListElementPresenter {
     this.#listELementEditComponent = new EditFormView({
       editFormElement: this.#listElement,
       onFormSubmit: this.#handleFormSubmit,
-      onCancelEditForm: this.#handleCancelEditForm
+      onCancelEditForm: this.#handleCancelEditForm,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if (prevListElementComponent === null || prevListElementEditComponent === null) {
@@ -102,11 +104,15 @@ export default class ListElementPresenter {
     this.#replaceListElementToEditForm();
   };
 
-  #handleFormSubmit = (listElement) => {
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+    !isDatesEqual(this.#listElement.dueDate, update.dueDate) ||
+    isListElementHaveOffers(this.#listElement.offers) !== isListElementHaveOffers(update.offers);
+
     this.#handleDataChange(
       UserAction.UPDATE_LIST_ELEMENT,
-      UpdateType.MINOR,
-      listElement
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update
     );
     this.#replaceEditFormToListElement();
   };
@@ -119,8 +125,16 @@ export default class ListElementPresenter {
   #handleFavoriteClick = () => {
     this.#handleDataChange(
       UserAction.UPDATE_LIST_ELEMENT,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this.#listElement, isFavorite: !this.#listElement.isFavorite}
+    );
+  };
+
+  #handleDeleteClick = (listElement) => {
+    this.#handleDataChange(
+      UserAction.DELETE_LIST_ELEMENT,
+      UpdateType.MINOR,
+      listElement,
     );
   };
 

@@ -169,17 +169,18 @@ function createEditFormTemplate(editFormElement) {
 export default class EditFormView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleCancelEditForm = null;
+  #handleDeleteClick = null;
 
   #datePickerFrom = null;
   #datePickerTo = null;
 
-  constructor({editFormElement = BLANK_FORM, onFormSubmit, onCancelEditForm}) {
+  constructor({editFormElement = BLANK_FORM, onFormSubmit, onCancelEditForm, onDeleteClick}) {
     super();
     this._setState(EditFormView.parseListElementToState(editFormElement));
 
     this.#handleFormSubmit = onFormSubmit;
-
     this.#handleCancelEditForm = onCancelEditForm;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -209,8 +210,8 @@ export default class EditFormView extends AbstractStatefulView {
 
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
 
     this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
 
@@ -229,6 +230,11 @@ export default class EditFormView extends AbstractStatefulView {
   #cancelEditFormHandle = (evt) => {
     evt.preventDefault();
     this.#handleCancelEditForm();
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditFormView.parseStateToListElement(this._state));
   };
 
   #timeFromChangeHandler = ([userDate]) => {

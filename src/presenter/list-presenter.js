@@ -40,7 +40,6 @@ export default class ListPresenter {
     this.waypoints.sort(sortListByDate);
 
     this.#renderList();
-    this.#renderSort(this.#listContainer);
   }
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -98,6 +97,8 @@ export default class ListPresenter {
       this.#renderNoListElements(this.#noListElementsComponent, this.#listComponent);
       return;
     }
+
+    this.#renderSort(this.#listContainer);
 
     this.waypoints.forEach((waypoint) => {
       this.#renderListElement(waypoint);
