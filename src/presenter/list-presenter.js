@@ -3,7 +3,7 @@ import { render } from '../framework/render.js';
 import NoListElementView from '../view/no-list-element-view.js';
 import SortView from '../view/sort-view.js';
 import ListElementPresenter from './list-element-presenter.js';
-import { SortType } from '../const.js';
+import { SortType, UserAction, UpdateType } from '../const.js';
 import { sortListByDate, sortListByPrice, sortListByTime } from '../view/utils/list.js';
 
 export default class ListPresenter {
@@ -43,16 +43,30 @@ export default class ListPresenter {
     this.#renderSort(this.#listContainer);
   }
 
-  #handleViewAcion = (actionType, updateType, update) => {
-    // заглушка
-    // eslint-disable-next-line no-console
-    console.log.apply(actionType, updateType, update);
+  #handleViewAction = (actionType, updateType, update) => {
+    switch (actionType) {
+      case UserAction.UPDATE_LIST_ELEMENT:
+        this.#waypointsModel.updateListElement(updateType, update);
+        break;
+      case UserAction.ADD_LIST_ELEMENT:
+        this.#waypointsModel.addListElement(updateType, update);
+        break;
+      case UserAction.DELETE_LIST_ELEMENT:
+        this.#waypointsModel.deleteListElement(updateType, update);
+        break;
+    }
   };
 
   #handleModelEvent = (updateType, data) => {
-    // заглушка
-    // eslint-disable-next-line no-console
-    console.log(updateType, data);
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#listElementPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        break;
+      case UpdateType.MAJOR:
+        break;
+    }
   };
 
   #handleModelChange = () => {
@@ -86,7 +100,7 @@ export default class ListPresenter {
   #renderListElement(listElement) {
     const listElementPresenter = new ListElementPresenter({
       listContainer: this.#listComponent.element,
-      onDataChange: this.#handleViewAcion,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModelChange
     });
 
