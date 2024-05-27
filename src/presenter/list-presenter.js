@@ -1,5 +1,5 @@
 import ListView from '../view/list-view.js';
-import { render } from '../framework/render.js';
+import { remove, render } from '../framework/render.js';
 import NoListElementView from '../view/no-list-element-view.js';
 import SortView from '../view/sort-view.js';
 import ListElementPresenter from './list-element-presenter.js';
@@ -63,8 +63,12 @@ export default class ListPresenter {
         this.#listElementPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
+        this.#clearList();
+        this.#renderList();
         break;
       case UpdateType.MAJOR:
+        this.#clearList({resetSortType: true});
+        this.#renderList();
         break;
     }
   };
@@ -87,14 +91,17 @@ export default class ListPresenter {
   #renderList() {
     render(this.#listComponent, this.#listContainer);
 
-    if (this.waypoints.every((listElement) => listElement.isArchive)) {
+    const waypoints = this.waypoints;
+    const waypointsCount = waypoints.length;
+
+    if (waypointsCount === 0) {
       this.#renderNoListElements(this.#noListElementsComponent, this.#listComponent);
       return;
     }
 
-    for (let i = 0; i < this.waypoints.length; i++) {
-      this.#renderListElement(this.waypoints[i]);
-    }
+    this.waypoints.forEach((waypoint) => {
+      this.#renderListElement(waypoint);
+    });
   }
 
   #renderListElement(listElement) {
@@ -120,8 +127,15 @@ export default class ListPresenter {
     render(noListElementsComponent, listComponent.element);
   }
 
-  #clearList() {
+  #clearList({resetSortType = false} = {}) {
     this.#listElementPresenters.forEach((presenter) => presenter.destroy());
     this.#listElementPresenters.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#noListElementsComponent);
+
+    if(resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   }
 }
