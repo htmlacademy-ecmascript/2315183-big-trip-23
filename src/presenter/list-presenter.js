@@ -5,10 +5,12 @@ import SortView from '../view/sort-view.js';
 import ListElementPresenter from './list-element-presenter.js';
 import { SortType, UserAction, UpdateType } from '../const.js';
 import { sortListByDate, sortListByPrice, sortListByTime } from '../view/utils/list.js';
+import { filter } from '../view/utils/filter.js';
 
 export default class ListPresenter {
   #listContainer = null;
   #waypointsModel = null;
+  #filterModel = null;
 
   #listComponent = new ListView();
   #noListElementsComponent = new NoListElementView();
@@ -18,22 +20,28 @@ export default class ListPresenter {
 
   #currentSortType = SortType.DAY;
 
-  constructor({listContainer, waypointsModel}) {
+  constructor({listContainer, waypointsModel, filterModel}) {
     this.#listContainer = listContainer;
     this.#waypointsModel = waypointsModel;
+    this.#filterModel = filterModel;
 
     this.#waypointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get waypoints() {
+    const filterType = this.#filterModel.filter;
+    const waypoints = this.#waypointsModel.waypoints;
+    const filteredWaypoints = filter[filterType](waypoints);
+
     switch (this.#currentSortType) {
       case SortType.PRICE:
-        return [...this.#waypointsModel.waypoints].sort(sortListByPrice);
+        return filteredWaypoints.sort(sortListByPrice);
       case SortType.TIME:
-        return [...this.#waypointsModel.waypoints].sort(sortListByTime);
+        return filteredWaypoints.sort(sortListByTime);
     }
 
-    return this.#waypointsModel.waypoints;
+    return filteredWaypoints;
   }
 
   init() {
@@ -118,7 +126,8 @@ export default class ListPresenter {
 
   #renderSort(listContainer) {
     this.#sortComponent = new SortView({
-      onSortTypeChange: this.#handleSortTypeChange
+      onSortTypeChange: this.#handleSortTypeChange,
+      currentSort: this.#currentSortType
     });
 
     render(this.#sortComponent, listContainer, 'afterbegin');

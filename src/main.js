@@ -13,7 +13,7 @@ const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
 
 const waypointsModel = new WaypointsModel();
 const filterModel = new FilterModel();
-const listPresenter = new ListPresenter({listContainer: siteListElement, waypointsModel});
+const listPresenter = new ListPresenter({listContainer: siteListElement, waypointsModel, filterModel});
 const filterPresenter = new FilterPresenter({filterContainer: siteFilterElement, filterModel, waypointsModel});
 
 
