@@ -6,6 +6,7 @@ import ListElementPresenter from './list-element-presenter.js';
 import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
 import { sortListByDate, sortListByPrice, sortListByTime } from '../view/utils/list.js';
 import { filter } from '../view/utils/filter.js';
+import NewListElementPresenter from './new-list-element-presenter.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -17,14 +18,21 @@ export default class ListPresenter {
   #sortComponent = null;
 
   #listElementPresenters = new Map();
+  #newListElementPresenter = null;
 
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-  constructor({listContainer, waypointsModel, filterModel}) {
+  constructor({listContainer, waypointsModel, filterModel, onNewTaskDestroy}) {
     this.#listContainer = listContainer;
     this.#waypointsModel = waypointsModel;
     this.#filterModel = filterModel;
+
+    this.#newListElementPresenter = new NewListElementPresenter({
+      listContainer: this.#listContainer,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewTaskDestroy
+    });
 
     this.#waypointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -49,6 +57,12 @@ export default class ListPresenter {
     this.waypoints.sort(sortListByDate);
 
     this.#renderList();
+  }
+
+  createListElement() {
+    this.#currentSortType = SortType.DEFAULT;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newListElementPresenter.init();
   }
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -82,6 +96,7 @@ export default class ListPresenter {
   };
 
   #handleModelChange = () => {
+    this.#newListElementPresenter.destroy();
     this.#listElementPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -143,6 +158,7 @@ export default class ListPresenter {
   }
 
   #clearList({resetSortType = false} = {}) {
+    this.#newListElementPresenter.destroy();
     this.#listElementPresenters.forEach((presenter) => presenter.destroy());
     this.#listElementPresenters.clear();
 
