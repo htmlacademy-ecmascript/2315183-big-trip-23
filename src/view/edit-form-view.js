@@ -1,3 +1,4 @@
+import he from 'he';
 import { getCurrentDay, humanizeDueDate, isListElementHaveOffers } from '../view/utils/list.js';
 import { DateFormat, EVENTS, PLACES, DESCRIPTION, StatusOfForm } from '../const.js';
 import { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter } from './utils/common.js';
@@ -34,7 +35,7 @@ function createDestinationInfoTemplate(event, place) {
   return (`<label class="event__label  event__type-output" for="event-destination-1">
   ${event}
   </label>
-  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${place}" list="destination-list-1">
+  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(place)}" list="destination-list-1">
   <datalist id="destination-list-1">
     <option value="Amsterdam"></option>
     <option value="Geneva"></option>
