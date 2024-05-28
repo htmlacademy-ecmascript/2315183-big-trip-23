@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { RenderPosition, render } from '../framework/render.js';
+import { RenderPosition, remove, render } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import { StatusOfForm, UpdateType, UserAction } from '../const.js';
 
@@ -24,7 +24,7 @@ export default class NewListElementPresenter {
     this.#listElementEditComponent = new EditFormView({
       onFormSubmit: this.#handleFormSubmit,
       onCancelEditForm: this.#handleCancelEditForm,
-      onDeleteClick: this.#handleDeleteClick,
+      onDeleteClick: this.#handleCancelEditForm,
       isAddOrEdit: StatusOfForm.ADD
     });
 
@@ -57,10 +57,8 @@ export default class NewListElementPresenter {
   };
 
   #handleCancelEditForm = () => {
-    this.destroy();
-  };
-
-  #handleDeleteClick = () => {
+    // this.#listElementEditComponent.element.style.display = 'none';
+    remove(this.#listElementEditComponent);
     this.destroy();
   };
 }

@@ -1,4 +1,4 @@
-import { UserAction, UpdateType } from '../const.js';
+import { UserAction, UpdateType, StatusOfForm } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListElementView from '../view/list-element-view.js';
@@ -44,7 +44,8 @@ export default class ListElementPresenter {
       editFormElement: this.#listElement,
       onFormSubmit: this.#handleFormSubmit,
       onCancelEditForm: this.#handleCancelEditForm,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
+      isAddOrEdit: StatusOfForm.EDIT
     });
 
     if (prevListElementComponent === null || prevListElementEditComponent === null) {
