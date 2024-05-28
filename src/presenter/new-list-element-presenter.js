@@ -17,9 +17,9 @@ export default class NewListElementPresenter {
   }
 
   init() {
-    if (this.#listElementEditComponent !== null) {
-      return;
-    }
+    // if (this.#listElementEditComponent !== null) {
+    //   return;
+    // }
 
     this.#listElementEditComponent = new EditFormView({
       onFormSubmit: this.#handleFormSubmit,
@@ -43,6 +43,7 @@ export default class NewListElementPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      remove(this.#listElementEditComponent);
       this.destroy();
     }
   };
@@ -53,11 +54,11 @@ export default class NewListElementPresenter {
       UpdateType.MINOR,
       {id: nanoid(), ...listElement},
     );
+    remove(this.#listElementEditComponent);
     this.destroy();
   };
 
   #handleCancelEditForm = () => {
-    // this.#listElementEditComponent.element.style.display = 'none';
     remove(this.#listElementEditComponent);
     this.destroy();
   };
