@@ -10,7 +10,6 @@ function getRandomTrueOrFalse() {
   return Math.random() < 0.5;
 }
 
-
 function getUpperCaseFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }

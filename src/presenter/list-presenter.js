@@ -63,6 +63,9 @@ export default class ListPresenter {
     this.#currentSortType = SortType.DEFAULT;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newListElementPresenter.init();
+
+    this.#clearList();
+    this.#renderList();
   }
 
   #handleViewAction = (actionType, updateType, update) => {

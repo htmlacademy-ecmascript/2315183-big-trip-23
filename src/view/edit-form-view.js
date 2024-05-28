@@ -1,4 +1,4 @@
-import { humanizeDueDate, isListElementHaveOffers } from '../view/utils/list.js';
+import { getCurrentDay, humanizeDueDate, isListElementHaveOffers } from '../view/utils/list.js';
 import { DateFormat, EVENTS, PLACES, DESCRIPTION } from '../const.js';
 import { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter } from './utils/common.js';
 import flatpickr from 'flatpickr';
@@ -9,15 +9,15 @@ import OffersModel from '../model/offer-model.js';
 const PICTURES_COUNT = 5;
 
 const BLANK_FORM = {
-  dueDate: new Date(),
+  dueDate: getCurrentDay(),
   event: getRandomArrayElement(EVENTS),
   place: getRandomArrayElement(PLACES),
   time: {
-    from: new Date(),
+    from: getCurrentDay(),
     to: new Date()
   },
   price: 0,
-  offers: null,
+  offers: new OffersModel().getOffer(),
   isImportant: false,
   description: getRandomArrayElement(DESCRIPTION),
   pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
@@ -224,6 +224,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
+    console.log(this._state);
     this.#handleFormSubmit(EditFormView.parseStateToListElement(this._state));
   };
 

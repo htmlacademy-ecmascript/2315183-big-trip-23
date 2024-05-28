@@ -8,7 +8,7 @@ import NewEventButtonView from './view/new-event-button-view.js';
 
 const siteMainElement = document.querySelector('main');
 const siteHeaderElement = document.querySelector('.page-header');
-const siteListElement = siteMainElement.querySelector('.trip-events');
+const siteListElement = siteMainElement.querySelector('.trip-events__list');
 const siteFilterElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const siteEventButtonElement = siteHeaderElement.querySelector('.trip-main');
 const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');

@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
-import { RenderPosition, render } from '../framework/render';
-import AddFormView from '../view/add-form-view.js';
-import { UpdateType, UserAction } from '../const';
+import { RenderPosition, render } from '../framework/render.js';
+import EditFormView from '../view/edit-form-view.js';
+import { UpdateType, UserAction } from '../const.js';
 
 export default class NewListElementPresenter {
   #listContainer = null;
@@ -21,13 +21,12 @@ export default class NewListElementPresenter {
       return;
     }
 
-    this.#listElementAddComponent = new AddFormView({
+    this.#listElementAddComponent = new EditFormView({
       onFormSubmit: this.#handleFormSubmit,
       onCancelEditForm: this.#handleCancelEditForm,
       onDeleteClick: this.#handleDeleteClick
     });
 
-    console.log(this.#listContainer);
     render(this.#listElementAddComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
