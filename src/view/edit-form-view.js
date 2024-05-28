@@ -1,5 +1,5 @@
 import { getCurrentDay, humanizeDueDate, isListElementHaveOffers } from '../view/utils/list.js';
-import { DateFormat, EVENTS, PLACES, DESCRIPTION } from '../const.js';
+import { DateFormat, EVENTS, PLACES, DESCRIPTION, StatusOfForm } from '../const.js';
 import { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter } from './utils/common.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -110,7 +110,7 @@ function createSelectTypeEventTemplate(event) {
   </fieldset>`);
 }
 
-function createEditFormTemplate(editFormElement) {
+function createEditFormTemplate(editFormElement, statusOfForm) {
   const { event, place, timeFrom, timeTo, price, description, pictures, offers, isAnyOffers} = editFormElement;
 
   const from = humanizeDueDate(timeFrom, DateFormat.DAY_AND_TIME_EVENT);
@@ -145,7 +145,7 @@ function createEditFormTemplate(editFormElement) {
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-    <button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__reset-btn" type="reset">${statusOfForm === StatusOfForm.EDIT ? 'Delete' : 'Cancel'}</button>
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
@@ -174,13 +174,17 @@ export default class EditFormView extends AbstractStatefulView {
   #datePickerFrom = null;
   #datePickerTo = null;
 
-  constructor({editFormElement = BLANK_FORM, onFormSubmit, onCancelEditForm, onDeleteClick}) {
+  #statusOfForm = null;
+
+  constructor({editFormElement = BLANK_FORM, onFormSubmit, onCancelEditForm, onDeleteClick, isAddOrEdit = StatusOfForm.EDIT}) {
     super();
     this._setState(EditFormView.parseListElementToState(editFormElement));
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCancelEditForm = onCancelEditForm;
     this.#handleDeleteClick = onDeleteClick;
+
+    this.#statusOfForm = isAddOrEdit;
 
     this._restoreHandlers();
   }
@@ -224,8 +228,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    console.log(this._state);
-    this.#handleFormSubmit(EditFormView.parseStateToListElement(this._state));
+    this.#handleFormSubmit(EditFormView.parseStateToListElement(this._state), this.#statusOfForm);
   };
 
   #cancelEditFormHandle = (evt) => {

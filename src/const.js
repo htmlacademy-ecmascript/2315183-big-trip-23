@@ -59,4 +59,9 @@ const UpdateType = {
   MAJOR: 'MAJOR'
 };
 
-export { EVENTS, PLACES, DESCRIPTION, DateFormat, FilterType, SortType, UserAction, UpdateType };
+const StatusOfForm = {
+  EDIT: 'EDIT',
+  ADD: 'ADD'
+};
+
+export { EVENTS, PLACES, DESCRIPTION, DateFormat, FilterType, SortType, UserAction, UpdateType, StatusOfForm };

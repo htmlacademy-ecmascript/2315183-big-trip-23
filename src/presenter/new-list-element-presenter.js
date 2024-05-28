@@ -1,14 +1,14 @@
 import { nanoid } from 'nanoid';
 import { RenderPosition, render } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
-import { UpdateType, UserAction } from '../const.js';
+import { StatusOfForm, UpdateType, UserAction } from '../const.js';
 
 export default class NewListElementPresenter {
   #listContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
 
-  #listElementAddComponent = null;
+  #listElementEditComponent = null;
 
   constructor ({listContainer, onDataChange, onDestroy}) {
     this.#listContainer = listContainer;
@@ -17,22 +17,23 @@ export default class NewListElementPresenter {
   }
 
   init() {
-    if (this.#listElementAddComponent !== null) {
+    if (this.#listElementEditComponent !== null) {
       return;
     }
 
-    this.#listElementAddComponent = new EditFormView({
+    this.#listElementEditComponent = new EditFormView({
       onFormSubmit: this.#handleFormSubmit,
       onCancelEditForm: this.#handleCancelEditForm,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
+      isAddOrEdit: StatusOfForm.ADD
     });
 
-    render(this.#listElementAddComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
+    render(this.#listElementEditComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   destroy() {
-    if (this.#listElementAddComponent === null) {
+    if (this.#listElementEditComponent === null) {
       return;
     }
 
@@ -48,7 +49,7 @@ export default class NewListElementPresenter {
 
   #handleFormSubmit = (listElement) => {
     this.#handleDataChange(
-      UserAction.ADD_TASK,
+      UserAction.ADD_LIST_ELEMENT,
       UpdateType.MINOR,
       {id: nanoid(), ...listElement},
     );
