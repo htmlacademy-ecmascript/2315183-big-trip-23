@@ -4,8 +4,8 @@ import NoListElementView from '../view/no-list-element-view.js';
 import SortView from '../view/sort-view.js';
 import ListElementPresenter from './list-element-presenter.js';
 import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
-import { sortListByDate, sortListByPrice, sortListByTime } from '../view/utils/list.js';
-import { filter } from '../view/utils/filter.js';
+import { sortListByDate, sortListByPrice, sortListByTime } from '../utils/list.js';
+import { filter } from '../utils/filter.js';
 import NewListElementPresenter from './new-list-element-presenter.js';
 
 export default class ListPresenter {

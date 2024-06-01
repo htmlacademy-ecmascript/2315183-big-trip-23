@@ -1,6 +1,6 @@
 import Observable from '../framework/observable.js';
 import { getRandomWaypoint } from '../mock/waypoint-mock.js';
-import { getRandomNumber } from '../view/utils/common.js';
+import { getRandomNumber } from '../utils/common.js';
 
 const WaypointCount = {
   MIN: 0,

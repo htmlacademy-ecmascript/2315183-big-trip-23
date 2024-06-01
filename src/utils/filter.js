@@ -1,4 +1,4 @@
-import { FilterType } from '../../const.js';
+import { FilterType } from '../const.js';
 import { isListElementPast, isListElementPresent, isListElementFuture } from './list.js';
 
 const filter = {

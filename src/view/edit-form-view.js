@@ -1,27 +1,23 @@
 import he from 'he';
-import { getCurrentDay, humanizeDueDate, isListElementHaveOffers } from '../view/utils/list.js';
-import { DateFormat, EVENTS, PLACES, DESCRIPTION, StatusOfForm } from '../const.js';
-import { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter } from './utils/common.js';
+import { getCurrentDay, humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
+import { DateFormat, EVENTS, DESCRIPTION, StatusOfForm } from '../const.js';
+import { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter } from '../utils/common.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import OffersModel from '../model/offer-model.js';
+import DestinationModel from '../model/destination-model.js';
 
 const PICTURES_COUNT = 5;
 
 const BLANK_FORM = {
-  dueDate: getCurrentDay(),
-  event: getRandomArrayElement(EVENTS),
-  place: getRandomArrayElement(PLACES),
-  time: {
-    from: getCurrentDay(),
-    to: new Date()
-  },
-  price: 0,
-  offers: new OffersModel().getOffer(),
-  isImportant: false,
-  description: getRandomArrayElement(DESCRIPTION),
-  pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
+  basePrice: 0,
+  dateFrom: getCurrentDay(),
+  dateTo: getCurrentDay(),
+  destination: new DestinationModel().getDestination(),
+  isFavorite: false,
+  offers: new OffersModel().getOffer('taxi'),
+  type: 'taxi'
 };
 
 function createEventDataInPhotoTemplate(event) {
@@ -63,18 +59,19 @@ function createDestinationDescriptionTemplate(description, pictures) {
 
 function createOffersEditTemplate(offers, isAnyOffers) {
   let count = 0;
-
+  
   if (isAnyOffers) {
     return (`<div class="event__available-offers">
     ${Object.entries(offers).map((offer) => {
+      console.log(offer);
         count++;
         return (`<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}"
-    name="event-offer-luggage" type="checkbox"  ${offer[1].isChecked ? 'checked' : ''}>
+    name="event-offer-luggage" type="checkbox"  ${offer.isChecked ? 'checked' : ''}>
     <label class="event__offer-label" for="event-offer-${count}">
-      <span class="event__offer-title">${offer[1].name}</span>
+      <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer[1].price}</span>
+      <span class="event__offer-price">${offer.price}</span>
     </label>
   </div>`);
       }).join('')}
@@ -112,25 +109,26 @@ function createSelectTypeEventTemplate(event) {
 }
 
 function createEditFormTemplate(editFormElement, statusOfForm) {
-  const { event, place, timeFrom, timeTo, price, description, pictures, offers, isAnyOffers} = editFormElement;
+  const { type, dateFrom, dateTo, basePrice, destination, offers, isAnyOffers} = editFormElement;
+  const { name, description, pictures } = destination;
 
-  const from = humanizeDueDate(timeFrom, DateFormat.DAY_AND_TIME_EVENT);
-  const to = humanizeDueDate(timeTo, DateFormat.DAY_AND_TIME_EVENT);
+  const from = humanizeDueDate(dateFrom, DateFormat.DAY_AND_TIME_EVENT);
+  const to = humanizeDueDate(dateTo, DateFormat.DAY_AND_TIME_EVENT);
 
   return (`<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
     <header class="event__header">
     <div class="event__type-wrapper">
-    ${createEventDataInPhotoTemplate(event)}
+    ${createEventDataInPhotoTemplate(type)}
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
       <div class="event__type-list">
-        ${createSelectTypeEventTemplate(event)}
+        ${createSelectTypeEventTemplate(type)}
       </div>
     </div>
 
     <div class="event__field-group  event__field-group--destination">
-    ${createDestinationInfoTemplate(event, place)}
+    ${createDestinationInfoTemplate(type, name)}
     </div>
 
     <div class="event__field-group  event__field-group--time">
@@ -142,7 +140,7 @@ function createEditFormTemplate(editFormElement, statusOfForm) {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
