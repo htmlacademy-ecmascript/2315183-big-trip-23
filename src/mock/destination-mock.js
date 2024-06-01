@@ -174,7 +174,24 @@ const mockDestinations = [
   }
 ];
 
-function getRandomDestination() {
+let place;
+
+function getNeedPlace(currentPlace) {
+  mockDestinations.forEach((destination) => {
+    if (destination.name === currentPlace) {
+      place = destination;
+    }
+  });
+}
+
+function getRandomDestination(name) {
+  if (name) {
+    getNeedPlace(name);
+    return {
+      id: nanoid(),
+      ...place
+    };
+  }
   return {
     id: nanoid(),
     ...getRandomArrayElement(mockDestinations)

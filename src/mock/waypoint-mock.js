@@ -13,7 +13,7 @@ const mockWaypoints = [
     basePrice: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
     dateFrom: '2024-07-12T14:30:08.628Z',
     dateTo: '2024-07-13T11:21:08.628Z',
-    destination: new DestinationModel().getDestination(),
+    destination: new DestinationModel().getDestination('Tokyo'),
     isFavorite: false,
     offers: new OffersModel().getOffer('bus'),
     type: 'bus'

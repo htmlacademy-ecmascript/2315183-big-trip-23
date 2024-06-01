@@ -1,14 +1,11 @@
-import he from 'he';
 import { getCurrentDay, humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
-import { DateFormat, EVENTS, DESCRIPTION, StatusOfForm } from '../const.js';
-import { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter } from '../utils/common.js';
+import { DateFormat, EVENTS, StatusOfForm } from '../const.js';
+import { getUpperCaseFirstLetter } from '../utils/common.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import OffersModel from '../model/offer-model.js';
 import DestinationModel from '../model/destination-model.js';
-
-const PICTURES_COUNT = 5;
 
 const BLANK_FORM = {
   basePrice: 0,
@@ -31,7 +28,7 @@ function createDestinationInfoTemplate(event, place) {
   return (`<label class="event__label  event__type-output" for="event-destination-1">
   ${event}
   </label>
-  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(place)}" list="destination-list-1">
+  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${place}" list="destination-list-1">
   <datalist id="destination-list-1">
     <option value="Amsterdam"></option>
     <option value="Geneva"></option>
@@ -242,14 +239,13 @@ export default class EditFormView extends AbstractStatefulView {
 
   #timeFromChangeHandler = ([userDate]) => {
     this.updateElement({
-      dueDate: userDate,
-      timeFrom: userDate
+      dateFrom: userDate
     });
   };
 
   #timeToChangeHandler = ([userDate]) => {
     this.updateElement({
-      timeTo: userDate
+      dateTo: userDate
     });
   };
 
@@ -258,14 +254,13 @@ export default class EditFormView extends AbstractStatefulView {
       const newEvent = getUpperCaseFirstLetter(evt.target.value);
 
       this._setState({
-        event: newEvent,
-        offers:  new OffersModel().getOffer(),
-        description: getRandomArrayElement(DESCRIPTION),
-        pictures: Array.from({length: PICTURES_COUNT}, () => `https://loremflickr.com/248/152?random=${getRandomNumber(0, 100)}`)
+        type: newEvent,
+        offers:  new OffersModel().getOffer(evt.target.value),
+        destination: new DestinationModel().getDestination()
       });
 
       this.updateElement({
-        event: newEvent
+        type: newEvent
       });
     }
   };
@@ -273,19 +268,19 @@ export default class EditFormView extends AbstractStatefulView {
   #inputToggleHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      price: evt.target.value,
+      basePrice: evt.target.value,
     });
   };
 
   #offersChangeToggleHandler = () => {
     const elements = this.element.querySelectorAll('.event__offer-checkbox');
-
-    for(let i = 0; i < this._state.offers.length; i++) {
+    for(let i = 0; i < this._state.offers.offers.length; i++) {
       if(elements[i].checked) {
-        this._state.offers[i].isChecked = true;
+        this._state.offers.offers[i].isChecked = true;
         this._state.isAnyOffers = true;
       } else {
-        this._state.offers[i].isChecked = false;
+
+        this._state.offers.offers[i].isChecked = false;
       }
     }
 
@@ -297,7 +292,7 @@ export default class EditFormView extends AbstractStatefulView {
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      place: evt.target.value
+      destination: new DestinationModel().getDestination(evt.target.value)
     });
   };
 
@@ -305,10 +300,10 @@ export default class EditFormView extends AbstractStatefulView {
     this.#datePickerFrom = flatpickr(
       this.element.querySelector('#event-start-time-1'),
       {
-        dateFormat: 'Y-m-d H:i',
+        dateFormat: 'Y/m/d H:i',
         enableTime: true,
-        //defaultDate: this._state.timeFrom,
-        maxDate: this._state.timeTo,
+        defaultDate: this._state.dateFrom,
+        maxDate: this._state.dateTo,
         // eslint-disable-next-line camelcase
         time_24hr: true,
         onChange: this.#timeFromChangeHandler
@@ -318,10 +313,10 @@ export default class EditFormView extends AbstractStatefulView {
     this.#datePickerTo = flatpickr(
       this.element.querySelector('#event-end-time-1'),
       {
-        dateFormat: 'Y-m-d H:i',
+        dateFormat: 'Y/m/d H:i',
         enableTime: true,
-        defaultDate: this._state.timeTo,
-        minDate: this._state.timeFrom,
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
         // eslint-disable-next-line camelcase
         time_24hr: true,
         onChange: this.#timeToChangeHandler
