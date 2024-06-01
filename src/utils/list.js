@@ -38,18 +38,18 @@ function getWeightForNullDate(dateA, dateB) {
 }
 
 function sortListByDate(waypointA, waypointB) {
-  const weight = getWeightForNullDate(waypointA.dueDate, waypointB.dueDate);
+  const weight = getWeightForNullDate(waypointA.dateFrom, waypointB.dateFrom);
 
-  return weight ?? dayjs(waypointA.dueDate).diff(dayjs(waypointB.dueDate));
+  return weight ?? dayjs(waypointA.dateFrom).diff(dayjs(waypointB.dateFrom));
 }
 
 function sortListByPrice(waypointA, waypointB) {
-  return waypointB.price - waypointA.price;
+  return waypointB.basePrice - waypointA.basePrice;
 }
 
 function sortListByTime(waypointA, waypointB) {
-  const minuteDuractionB = dayjs(waypointB.timeFrom).diff(waypointB.timeTo, 'm');
-  const minuteDuractionA = dayjs(waypointA.timeFrom).diff(waypointA.timeTo, 'm');
+  const minuteDuractionB = dayjs(waypointB.dateFrom).diff(waypointB.dateTo, 'm');
+  const minuteDuractionA = dayjs(waypointA.dateFrom).diff(waypointA.dateTo, 'm');
 
   return minuteDuractionA - minuteDuractionB;
 }

@@ -40,7 +40,7 @@ export default class ListPresenter {
 
   get waypoints() {
     this.#filterType = this.#filterModel.filter;
-    const waypoints = this.#waypointsModel.waypoints;
+    const waypoints = this.#waypointsModel.waypoints.sort(sortListByDate);
     const filteredWaypoints = filter[this.#filterType](waypoints);
 
     switch (this.#currentSortType) {
@@ -107,7 +107,6 @@ export default class ListPresenter {
     if(this.#currentSortType === sortType) {
       return;
     }
-
     this.#currentSortType = sortType;
 
     this.#clearList();
@@ -116,7 +115,6 @@ export default class ListPresenter {
 
   #renderList() {
     render(this.#listComponent, this.#listContainer);
-
     const waypoints = this.waypoints;
     const waypointsCount = waypoints.length;
 
