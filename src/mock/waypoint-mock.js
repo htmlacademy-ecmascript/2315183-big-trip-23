@@ -233,6 +233,42 @@ const mockWaypoints = [
     isFavorite: false,
     offers: new OffersModel().getOffer('taxi'),
     type: 'taxi'
+  },
+  {
+    basePrice: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
+    dateFrom: '2024-04-29T19:18:08.628Z',
+    dateTo: '2024-04-30T05:55:08.628Z',
+    destination: new DestinationModel().getDestination(),
+    isFavorite: true,
+    offers: new OffersModel().getOffer('sightseeing'),
+    type: 'sightseeing'
+  },
+  {
+    basePrice: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
+    dateFrom: '2024-03-01T03:08:08.628Z',
+    dateTo: '2024-03-01T22:06:08.628Z',
+    destination: new DestinationModel().getDestination(),
+    isFavorite: false,
+    offers: new OffersModel().getOffer('check-in'),
+    type: 'check-in'
+  },
+  {
+    basePrice: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
+    dateFrom: '2024-02-02T22:33:08.628Z',
+    dateTo: '2024-02-03T07:01:08.628Z',
+    destination: new DestinationModel().getDestination(),
+    isFavorite: true,
+    offers: new OffersModel().getOffer('flight'),
+    type: 'flight'
+  },
+  {
+    basePrice: getRandomNumber(RandomPrice.MIN, RandomPrice.MAX),
+    dateFrom: '2024-01-04T06:37:08.628Z',
+    dateTo: '2024-01-06T04:56:08.628Z',
+    destination: new DestinationModel().getDestination(),
+    isFavorite: false,
+    offers: new OffersModel().getOffer('taxi'),
+    type: 'taxi'
   }
 ];
 
