@@ -16,11 +16,11 @@ function createDateElementTemplate(timeFrom, timeTo, totalDuraction) {
 }
 
 function createOffersTemplate(offers) {
-  return Object.entries(offers).map((offer) => (
-    offer[1].isChecked ? `<li class="event__offer">
-    <span class="event__offer-title">${offer[1].name}</span>
+  return Object.entries(offers)[2][1].map((offer) => (
+    offer.isChecked ? `<li class="event__offer">
+    <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
-    <span class="event__offer-price">${offer[1].price}</span>
+    <span class="event__offer-price">${offer.price}</span>
     </li>` : '')).join('');
 }
 

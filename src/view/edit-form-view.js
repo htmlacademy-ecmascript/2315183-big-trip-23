@@ -52,18 +52,18 @@ function createDestinationDescriptionTemplate(description, pictures) {
   <p class="event__destination-description">${description}</p>
   <div class="event__photos-container">
     <div class="event__photos-tape">
-    ${Object.entries(pictures).map((picture) => `<img class="event__photo" src="${picture[1]}" alt="Event photo"></img>`).join('')}
+    ${Object.entries(pictures).map((picture) => `<img class="event__photo" src="${picture[1].src}"
+    alt="${picture[1].description}"></img>`).join('')}
     </div>
   </div>`);
 }
 
 function createOffersEditTemplate(offers, isAnyOffers) {
   let count = 0;
-  
+
   if (isAnyOffers) {
     return (`<div class="event__available-offers">
-    ${Object.entries(offers).map((offer) => {
-      console.log(offer);
+    ${Object.entries(offers)[2][1].map((offer) => {
         count++;
         return (`<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}"
@@ -78,15 +78,15 @@ function createOffersEditTemplate(offers, isAnyOffers) {
   </div>`);
   } else {
     return (`<div class="event__available-offers">
-    ${Object.entries(offers).map((offer) => {
+    ${Object.entries(offers)[2][1].map((offer) => {
         count++;
         return (`<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}"
     name="event-offer-luggage" type="checkbox">
     <label class="event__offer-label" for="event-offer-${count}">
-      <span class="event__offer-title">${offer[1].name}</span>
+      <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer[1].price}</span>
+      <span class="event__offer-price">${offer.price}</span>
     </label>
   </div>`);
       }).join('')}
