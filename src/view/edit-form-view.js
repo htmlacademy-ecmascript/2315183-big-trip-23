@@ -13,8 +13,8 @@ const BLANK_FORM = {
   dateTo: getCurrentDay(),
   destination: new DestinationModel().getDestination(),
   isFavorite: false,
-  offers: new OffersModel().getOffer('taxi'),
-  type: 'taxi'
+  offers: new OffersModel().getOffer('flight'),
+  type: 'flight'
 };
 
 function createEventDataInPhotoTemplate(event) {
@@ -45,21 +45,27 @@ function createTimeInEventTemplate(timeFrom, timeTo) {
 }
 
 function createDestinationDescriptionTemplate(description, pictures) {
-  return (`<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-  <p class="event__destination-description">${description}</p>
-  <div class="event__photos-container">
+  if(pictures !== undefined) {
+    return (`${description ? `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${description}</p>` : ''}
+    ${pictures.length !== null ? `<div class="event__photos-container">
     <div class="event__photos-tape">
     ${Object.entries(pictures).map((picture) => `<img class="event__photo" src="${picture[1].src}"
     alt="${picture[1].description}"></img>`).join('')}
     </div>
-  </div>`);
+  </div>` : ''}
+    `);
+  }
+  return '';
 }
 
 function createOffersEditTemplate(offers, isAnyOffers) {
   let count = 0;
 
   if (isAnyOffers) {
-    return (`<div class="event__available-offers">
+    return (`<section class="event__section  event__section--offers">
+    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+    <div class="event__available-offers">
     ${Object.entries(offers)[2][1].map((offer) => {
         count++;
         return (`<div class="event__offer-selector">
@@ -70,24 +76,12 @@ function createOffersEditTemplate(offers, isAnyOffers) {
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${offer.price}</span>
     </label>
-  </div>`);
+    </div>`);
       }).join('')}
-  </div>`);
+    </div>
+  </section>`);
   } else {
-    return (`<div class="event__available-offers">
-    ${Object.entries(offers)[2][1].map((offer) => {
-        count++;
-        return (`<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}"
-    name="event-offer-luggage" type="checkbox">
-    <label class="event__offer-label" for="event-offer-${count}">
-      <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-    </label>
-  </div>`);
-      }).join('')}
-  </div>`);
+    return '';
   }
 }
 
@@ -148,12 +142,7 @@ function createEditFormTemplate(editFormElement, statusOfForm) {
 
     </header>
     <section class="event__details">
-    <section class="event__section  event__section--offers">
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-      ${createOffersEditTemplate(offers, isAnyOffers)}
-
-    </section>
+    ${createOffersEditTemplate(offers, isAnyOffers)}
 
     <section class="event__section  event__section--destination">
     ${createDestinationDescriptionTemplate(description, pictures)}
@@ -217,7 +206,10 @@ export default class EditFormView extends AbstractStatefulView {
 
     this.element.querySelector('.event__input--price').addEventListener('input', this.#inputToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
-    this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
+
+    if (this._state.offers.offers.length !== 0) {
+      this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
+    }
 
     this.#setDatePicker();
   }
@@ -327,7 +319,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   static parseListElementToState(listElement) {
     return {...listElement,
-      isAnyOffers: isListElementHaveOffers(listElement.offers)
+      isAnyOffers: isListElementHaveOffers(listElement.offers.offers)
     };
   }
 

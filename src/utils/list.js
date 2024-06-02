@@ -17,7 +17,6 @@ function isListElementPast(dueDate) {
 }
 
 function isListElementHaveOffers(having) {
-  //return having.some((elem) => Object.values(elem)[2] === true);
   return having.length !== 0;
 }
 
