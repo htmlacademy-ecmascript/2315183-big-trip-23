@@ -5,6 +5,10 @@ import WaypointsModel from './model/waypoint-model.js';
 import FilterModel from './model/filter-model.js';
 import { RenderPosition, render } from './framework/render.js';
 import NewEventButtonView from './view/new-event-button-view.js';
+import WaypointsApiService from './waypoints-api-service.js';
+
+const AUTHORIZATION = 'Basic k8v5s7m2h9z';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const siteMainElement = document.querySelector('main');
 const siteHeaderElement = document.querySelector('.page-header');
@@ -13,7 +17,9 @@ const siteFilterElement = siteHeaderElement.querySelector('.trip-controls__filte
 const siteEventButtonElement = siteHeaderElement.querySelector('.trip-main');
 const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
 
-const waypointsModel = new WaypointsModel();
+const waypointsModel = new WaypointsModel({
+  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
+});
 const filterModel = new FilterModel();
 const listPresenter = new ListPresenter({
   listContainer: siteListElement,

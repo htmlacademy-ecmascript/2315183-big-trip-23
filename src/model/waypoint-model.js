@@ -10,7 +10,17 @@ const WaypointCount = {
 const WAYPOINT_COUNT = getRandomNumber(WaypointCount.MIN, WaypointCount.MAX);
 
 export default class WaypoinstModel extends Observable{
+  #waypointsApiService = null;
   #waypoints = Array.from({length: WAYPOINT_COUNT}, getRandomWaypoint);
+
+  constructor({waypointsApiService}) {
+    super();
+    this.#waypointsApiService = waypointsApiService;
+
+    this.#waypointsApiService.waypoints.then((waypoint) => {
+      console.log(waypoint);
+    });
+  }
 
   get waypoints() {
     return this.#waypoints;

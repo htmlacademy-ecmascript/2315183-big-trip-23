@@ -7,13 +7,13 @@ const Method = {
 
 export default class WaypointsApiService extends ApiService {
   get waypoints() {
-    return this._load({url: 'big-trip/points'})
+    return this._load({url: 'points'})
       .then(ApiService.parseResponse);
   }
 
   async updateWaypoint(waypoint) {
     const response = await this._load({
-      url: `big-trip/points/${waypoint.id}`,
+      url: `points/${waypoint.id}`,
       method: Method.PUT,
       body: JSON.stringify(waypoint),
       headers: new Headers({
