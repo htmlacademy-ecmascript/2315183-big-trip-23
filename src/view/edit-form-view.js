@@ -251,6 +251,10 @@ export default class EditFormView extends AbstractStatefulView {
         destination: new DestinationModel().getDestination()
       });
 
+      for(let i = 0; i < this._state.offers.offers.length; i++) {
+        this._state.offers.offers[i].isChecked = false;
+      }
+
       this.updateElement({
         type: newEvent
       });
@@ -271,7 +275,6 @@ export default class EditFormView extends AbstractStatefulView {
         this._state.offers.offers[i].isChecked = true;
         this._state.isAnyOffers = true;
       } else {
-
         this._state.offers.offers[i].isChecked = false;
       }
     }
