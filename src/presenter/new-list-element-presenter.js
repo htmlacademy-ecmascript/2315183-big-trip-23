@@ -17,7 +17,6 @@ export default class NewListElementPresenter {
   }
 
   init() {
-    console.log(this.#listElementEditComponent);
     if (this.#listElementEditComponent !== null) {
       return;
     }
@@ -64,5 +63,7 @@ export default class NewListElementPresenter {
   #handleCancelEditForm = () => {
     remove(this.#listElementEditComponent);
     this.destroy();
+
+    this.#listElementEditComponent = null;
   };
 }
