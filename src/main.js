@@ -50,3 +50,4 @@ render(newEventButtonComponent, siteEventButtonElement);
 
 filterPresenter.init();
 listPresenter.init();
+waypointsModel.init();

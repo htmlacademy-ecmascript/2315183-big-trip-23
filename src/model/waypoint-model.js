@@ -1,29 +1,25 @@
 import Observable from '../framework/observable.js';
-import { getRandomWaypoint } from '../mock/waypoint-mock.js';
-import { getRandomNumber } from '../utils/common.js';
-
-const WaypointCount = {
-  MIN: 0,
-  MAX: 10
-};
-
-const WAYPOINT_COUNT = getRandomNumber(WaypointCount.MIN, WaypointCount.MAX);
 
 export default class WaypoinstModel extends Observable{
   #waypointsApiService = null;
-  #waypoints = Array.from({length: WAYPOINT_COUNT}, getRandomWaypoint);
+  #waypoints = [];
 
   constructor({waypointsApiService}) {
     super();
     this.#waypointsApiService = waypointsApiService;
-
-    this.#waypointsApiService.waypoints.then((waypoint) => {
-      console.log(waypoint.map(this.#adaptToClient));
-    });
   }
 
   get waypoints() {
     return this.#waypoints;
+  }
+
+  async init() {
+    try {
+      const waypoints = await this.#waypointsApiService.tasks;
+      this.#waypoints = waypoints.map(this.#adaptToClient);
+    } catch(err) {
+      this.#waypoints = [];
+    }
   }
 
   updateListElement(updateType, update) {
