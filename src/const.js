@@ -47,4 +47,21 @@ const SortType = {
   OFFER: 'offer'
 };
 
-export { EVENTS, PLACES, DESCRIPTION, DateFormat, FilterType, SortType };
+const UserAction = {
+  UPDATE_LIST_ELEMENT: 'UPDATE_LIST_ELEMENT',
+  ADD_LIST_ELEMENT: 'ADD_LIST_ELEMENT',
+  DELETE_LIST_ELEMENT: 'DELETE_LIST_ELEMENT'
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR'
+};
+
+const StatusOfForm = {
+  EDIT: 'EDIT',
+  ADD: 'ADD'
+};
+
+export { EVENTS, PLACES, DESCRIPTION, DateFormat, FilterType, SortType, UserAction, UpdateType, StatusOfForm };

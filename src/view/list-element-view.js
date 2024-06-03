@@ -1,4 +1,4 @@
-import { humanizeDueDate } from '../view/utils/list.js';
+import { humanizeDueDate } from '../utils/list.js';
 import { DateFormat } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
@@ -16,11 +16,11 @@ function createDateElementTemplate(timeFrom, timeTo, totalDuraction) {
 }
 
 function createOffersTemplate(offers) {
-  return Object.entries(offers).map((offer) => (
-    offer[1].isChecked ? `<li class="event__offer">
-    <span class="event__offer-title">${offer[1].name}</span>
+  return Object.entries(offers)[2][1].map((offer) => (
+    offer.isChecked ? `<li class="event__offer">
+    <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
-    <span class="event__offer-price">${offer[1].price}</span>
+    <span class="event__offer-price">${offer.price}</span>
     </li>` : '')).join('');
 }
 
@@ -34,15 +34,16 @@ function createFavoriteButtonTemplate(isFavorite) {
 }
 
 function createListElementTemplate(listElement) {
-  const {dueDate, event, place, timeFrom, timeTo, price, isFavorite, offers} = listElement;
+  const {type, destination, dateFrom, dateTo, basePrice, isFavorite, offers} = listElement;
+  const {name} = destination;
 
-  const date = humanizeDueDate(dueDate, DateFormat.DAY_EVENT);
-  const from = humanizeDueDate(timeFrom, DateFormat.TIME);
-  const to = humanizeDueDate(timeTo, DateFormat.TIME);
+  const date = humanizeDueDate(dateFrom, DateFormat.DAY_EVENT);
+  const from = humanizeDueDate(dateFrom, DateFormat.TIME);
+  const to = humanizeDueDate(dateTo, DateFormat.TIME);
 
-  const dayDuraction = dayjs(timeFrom).diff(timeTo, 'd') * (-1);
-  const hourDuraction = dayjs(timeFrom).diff(timeTo, 'h') % 24 * (-1);
-  const minuteDuraction = dayjs(timeFrom).diff(timeTo, 'm') % 60 * (-1);
+  const dayDuraction = dayjs(dateFrom).diff(dateTo, 'd') * (-1);
+  const hourDuraction = dayjs(dateFrom).diff(dateTo, 'h') % 24 * (-1);
+  const minuteDuraction = dayjs(dateFrom).diff(dateTo, 'm') % 60 * (-1);
   const totalDuraction = `${dayDuraction !== 0 ? `${dayDuraction}D` : ''}
     ${hourDuraction !== 0 ? `${hourDuraction}H` : ''}
     ${minuteDuraction !== 0 ? `${minuteDuraction}M` : ''}`;
@@ -52,14 +53,14 @@ function createListElementTemplate(listElement) {
     <div class="event">
       <time class="event__date" datetime="${date}">${date}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/${event.toLowerCase()}.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${event} ${place}</h3>
+      <h3 class="event__title">${type} ${name}</h3>
 
       ${createDateElementTemplate(from, to, totalDuraction)}
 
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">${price}</span>
+        &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
 

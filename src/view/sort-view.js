@@ -1,12 +1,12 @@
 import { SortType } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createSortTemplate() {
+function createSortTemplate(currentSort) {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <div class="trip-sort__item  trip-sort__item--day">
         <input id="sort-day" class="trip-sort__input  visually-hidden"
-        type="radio" name="trip-sort" value="sort-day" checked
+        type="radio" name="trip-sort" value="sort-day" ${currentSort === SortType.DAY ? 'checked' : ''}
         data-sort-type="${SortType.DAY}">
         <label class="trip-sort__btn" for="sort-day">Day</label>
       </div>
@@ -20,14 +20,14 @@ function createSortTemplate() {
 
       <div class="trip-sort__item  trip-sort__item--time">
         <input id="sort-time" class="trip-sort__input  visually-hidden"
-        type="radio" name="trip-sort" value="sort-time"
+        type="radio" name="trip-sort" value="sort-time" ${currentSort === SortType.TIME ? 'checked' : ''}
         data-sort-type="${SortType.TIME}">
         <label class="trip-sort__btn" for="sort-time">Time</label>
       </div>
 
       <div class="trip-sort__item  trip-sort__item--price">
         <input id="sort-price" class="trip-sort__input  visually-hidden"
-        type="radio" name="trip-sort" value="sort-price"
+        type="radio" name="trip-sort" value="sort-price" ${currentSort === SortType.PRICE ? 'checked' : ''}
         data-sort-type="${SortType.PRICE}">
         <label class="trip-sort__btn" for="sort-price">Price</label>
       </div>
@@ -42,17 +42,20 @@ function createSortTemplate() {
 }
 
 export default class SortView extends AbstractView {
-  #handleSortTyprChange = null;
+  #handleSortTypeChange = null;
+  #currentSort = null;
 
-  constructor({onSortTypeChange}) {
+  constructor({onSortTypeChange, currentSort}) {
     super();
 
-    this.#handleSortTyprChange = onSortTypeChange;
+    this.#currentSort = currentSort;
+
+    this.#handleSortTypeChange = onSortTypeChange;
     this.element.addEventListener('click', this.#sortTypeChangeHandler);
   }
 
   get template() {
-    return createSortTemplate();
+    return createSortTemplate(this.#currentSort);
   }
 
   #sortTypeChangeHandler = (evt) => {
@@ -60,6 +63,6 @@ export default class SortView extends AbstractView {
       return;
     }
 
-    this.#handleSortTyprChange(evt.target.dataset.sortType);
+    this.#handleSortTypeChange(evt.target.dataset.sortType);
   };
 }

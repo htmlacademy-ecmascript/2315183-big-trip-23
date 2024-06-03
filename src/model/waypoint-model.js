@@ -1,5 +1,6 @@
+import Observable from '../framework/observable.js';
 import { getRandomWaypoint } from '../mock/waypoint-mock.js';
-import { getRandomNumber } from '../view/utils/common.js';
+import { getRandomNumber } from '../utils/common.js';
 
 const WaypointCount = {
   MIN: 0,
@@ -8,10 +9,50 @@ const WaypointCount = {
 
 const WAYPOINT_COUNT = getRandomNumber(WaypointCount.MIN, WaypointCount.MAX);
 
-export default class WaypoinstModel {
+export default class WaypoinstModel extends Observable{
   #waypoints = Array.from({length: WAYPOINT_COUNT}, getRandomWaypoint);
 
-  get waypoint() {
+  get waypoints() {
     return this.#waypoints;
+  }
+
+  updateListElement(updateType, update) {
+    const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting task');
+    }
+
+    this.#waypoints = [
+      ...this.#waypoints.slice(0, index),
+      update,
+      ...this.#waypoints.slice(index + 1)
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  addListElement(updateType, update) {
+    this.#waypoints = [
+      update,
+      ...this.#waypoints
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  deleteListElement(updateType, update) {
+    const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting task');
+    }
+
+    this.#waypoints = [
+      ...this.#waypoints.slice(0, index),
+      ...this.#waypoints.slice(index + 1)
+    ];
+
+    this._notify(updateType, update);
   }
 }

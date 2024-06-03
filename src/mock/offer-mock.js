@@ -1,75 +1,201 @@
-import { getRandomArrayElement, getRandomTrueOrFalse } from '../view/utils/common.js';
+import { nanoid } from 'nanoid';
 
 const mockOffers = [
   {
-    name: 'Order Uber',
-    price: 20,
-    isChecked: getRandomTrueOrFalse()
+    type: 'taxi',
+    offers: [
+      {
+        title: 'Upgrade to a business class',
+        price: 190
+      },
+      {
+        title: 'Choose the radio station',
+        price: 82
+      },
+      {
+        title: 'Choose temperature',
+        price: 63
+      },
+      {
+        title: 'Drive quickly, I\'m in a hurry',
+        price: 184
+      },
+      {
+        title: 'Drive slowly',
+        price: 169
+      }
+    ]
   },
   {
-    name: 'Add luggage',
-    price: 50,
-    isChecked: getRandomTrueOrFalse()
+    type: 'bus',
+    offers: [
+      {
+        title: 'Infotainment system',
+        price: 119
+      },
+      {
+        title: 'Order meal',
+        price: 74
+      },
+      {
+        title: 'Choose seats',
+        price: 41
+      }
+    ]
   },
   {
-    name: 'With pets',
-    price: 40,
-    isChecked: getRandomTrueOrFalse()
+    type: 'train',
+    offers: [
+      {
+        title: 'Book a taxi at the arrival point',
+        price: 69
+      },
+      {
+        title: 'Order a breakfast',
+        price: 135
+      },
+      {
+        title: 'Wake up at a certain time',
+        price: 132
+      }
+    ]
   },
   {
-    name: 'Add lunch',
-    price: 10,
-    isChecked: getRandomTrueOrFalse()
+    type: 'flight',
+    offers: [
+      {
+        title: 'Choose meal',
+        price: 195
+      },
+      {
+        title: 'Choose seats',
+        price: 69
+      },
+      {
+        title: 'Upgrade to comfort class',
+        price: 186
+      },
+      {
+        title: 'Upgrade to business class',
+        price: 83
+      },
+      {
+        title: 'Add luggage',
+        price: 143
+      },
+      {
+        title: 'Business lounge',
+        price: 176
+      }
+    ]
   },
   {
-    name: 'Rent a car',
-    price: 200,
-    isChecked: getRandomTrueOrFalse()
+    type: 'check-in',
+    offers: [
+      {
+        title: 'Choose the time of check-in',
+        price: 168
+      },
+      {
+        title: 'Choose the time of check-out',
+        price: 144
+      },
+      {
+        title: 'Add breakfast',
+        price: 137
+      },
+      {
+        title: 'Laundry',
+        price: 104
+      },
+      {
+        title: 'Order a meal from the restaurant',
+        price: 152
+      }
+    ]
   },
   {
-    name: 'Lunch in city',
-    price: 30,
-    isChecked: getRandomTrueOrFalse()
+    type: 'sightseeing',
+    offers: []
   },
   {
-    name: 'Long rent',
-    price: 100,
-    isChecked: getRandomTrueOrFalse()
+    type: 'ship',
+    offers: [
+      {
+        title: 'Choose meal',
+        price: 140
+      },
+      {
+        title: 'Choose seats',
+        price: 51
+      },
+      {
+        title: 'Upgrade to comfort class',
+        price: 109
+      },
+      {
+        title: 'Upgrade to business class',
+        price: 121
+      },
+      {
+        title: 'Add luggage',
+        price: 192
+      },
+      {
+        title: 'Business lounge',
+        price: 93
+      }
+    ]
   },
   {
-    name: 'Add breakfast',
-    price: 50,
-    isChecked: getRandomTrueOrFalse()
+    type: 'drive',
+    offers: [
+      {
+        title: 'With automatic transmission',
+        price: 157
+      },
+      {
+        title: 'With air conditioning',
+        price: 174
+      }
+    ]
   },
   {
-    name: 'Switch to comfort',
-    price: 80,
-    isChecked: getRandomTrueOrFalse()
-  },
-  {
-    name: 'Add transfer',
-    price: 20,
-    isChecked: getRandomTrueOrFalse()
-  },
-  {
-    name: 'Book tickets',
-    price: 50,
-    isChecked: getRandomTrueOrFalse()
-  },
-  {
-    name: 'VIP ticket',
-    price: 200,
-    isChecked: getRandomTrueOrFalse()
-  },
-  {
-    name: 'Trip guide',
-    price: 5,
-    isChecked: getRandomTrueOrFalse()
+    type: 'restaurant',
+    offers: [
+      {
+        title: 'Choose live music',
+        price: 148
+      },
+      {
+        title: 'Choose VIP area',
+        price: 57
+      }
+    ]
   }
 ];
 
-function getRandomOffer() {
-  return getRandomArrayElement(mockOffers);
+let offers;
+
+function getNeedType(currentType) {
+  mockOffers.forEach((offer) => {
+    if (offer.type === currentType) {
+      offers = offer;
+    }
+  });
 }
 
-export { getRandomOffer };
+function getNeedOffer(type) {
+  getNeedType(type);
+
+  offers.offers.forEach((offer) => {
+    offer.isChecked = true;
+  });
+
+  return {
+    id: nanoid(),
+    ...offers
+  };
+}
+
+export { getNeedOffer };

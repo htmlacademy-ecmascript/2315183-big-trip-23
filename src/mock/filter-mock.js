@@ -1,4 +1,4 @@
-import { filter } from '../view/utils/filter.js';
+import { filter } from '../utils/filter.js';
 
 function generateFilter(listElements) {
   return Object.entries(filter).map(
