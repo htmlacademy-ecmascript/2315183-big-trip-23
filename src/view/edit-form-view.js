@@ -1,4 +1,4 @@
-import { getCurrentDay, humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
+import { humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
 import { DateFormat, EVENTS, StatusOfForm } from '../const.js';
 import { getUpperCaseFirstLetter } from '../utils/common.js';
 import flatpickr from 'flatpickr';
@@ -9,8 +9,8 @@ import DestinationModel from '../model/destination-model.js';
 
 const BLANK_FORM = {
   basePrice: 0,
-  dateFrom: getCurrentDay(),
-  dateTo: getCurrentDay(),
+  dateFrom: new Date(),
+  dateTo: new Date(),
   destination: new DestinationModel().getDestination(),
   isFavorite: false,
   offers: new OffersModel().getOffer('flight'),
