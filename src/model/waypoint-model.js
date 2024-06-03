@@ -1,3 +1,4 @@
+import { UpdateType } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class WaypoinstModel extends Observable{
@@ -15,11 +16,13 @@ export default class WaypoinstModel extends Observable{
 
   async init() {
     try {
-      const waypoints = await this.#waypointsApiService.tasks;
+      const waypoints = await this.#waypointsApiService.waypoints;
       this.#waypoints = waypoints.map(this.#adaptToClient);
     } catch(err) {
       this.#waypoints = [];
     }
+
+    this._notify(UpdateType.INIT);
   }
 
   updateListElement(updateType, update) {
