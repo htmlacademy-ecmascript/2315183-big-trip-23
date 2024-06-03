@@ -251,9 +251,9 @@ export default class EditFormView extends AbstractStatefulView {
         destination: new DestinationModel().getDestination()
       });
 
-      for(let i = 0; i < this._state.offers.offers.length; i++) {
-        this._state.offers.offers[i].isChecked = false;
-      }
+      this._state.offers.offers.forEach((offer) => {
+        offer.isChecked = false;
+      });
 
       this.updateElement({
         type: newEvent
@@ -270,6 +270,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   #offersChangeToggleHandler = () => {
     const elements = this.element.querySelectorAll('.event__offer-checkbox');
+
     for(let i = 0; i < this._state.offers.offers.length; i++) {
       if(elements[i].checked) {
         this._state.offers.offers[i].isChecked = true;
