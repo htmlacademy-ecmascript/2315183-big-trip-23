@@ -17,9 +17,9 @@ export default class NewListElementPresenter {
   }
 
   init() {
-    // if (this.#listElementEditComponent !== null) {
-    //   return;
-    // }
+    if (this.#listElementEditComponent !== null) {
+      return;
+    }
 
     this.#listElementEditComponent = new EditFormView({
       onFormSubmit: this.#handleFormSubmit,
