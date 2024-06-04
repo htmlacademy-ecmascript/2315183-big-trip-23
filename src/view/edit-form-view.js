@@ -1,11 +1,8 @@
 import { getCurrentDestination, getNeededOffers, humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
 import { DateFormat, EVENTS, StatusOfForm } from '../const.js';
-import { getUpperCaseFirstLetter } from '../utils/common.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import OffersModel from '../model/offer-model.js';
-import DestinationModel from '../model/destination-model.js';
 
 const BLANK_FORM = {
   basePrice: 0,
@@ -77,7 +74,7 @@ function createOffersEditTemplate(offers, isAnyOffers, allOffers, type) {
     ${Object.entries(offersByType[0]).map((offer) => {
         count++;
         return (`<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}"
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}" data-offer-id="${offer[1].id}"
     name="event-offer-luggage" type="checkbox"  ${offers.includes(offer[1]) ? 'checked' : ''}>
     <label class="event__offer-label" for="event-offer-${count}" data-offer-id="${offer[1].id}">
       <span class="event__offer-title">${offer[1].title}</span>
@@ -255,16 +252,12 @@ export default class EditFormView extends AbstractStatefulView {
 
   #eventTypeToggleHandler = (evt) => {
     if (evt.target.value !== undefined) {
-      const newEvent = getUpperCaseFirstLetter(evt.target.value);
+      const newEvent = evt.target.value;
 
       this._setState({
         type: newEvent,
-        offers:  new OffersModel().getOffer(evt.target.value),
-        destination: new DestinationModel().getDestination()
-      });
-
-      this._state.offers.offers.forEach((offer) => {
-        offer.isChecked = false;
+        offers: [],
+        destination: ''
       });
 
       this.updateElement({
@@ -280,17 +273,15 @@ export default class EditFormView extends AbstractStatefulView {
     });
   };
 
-  #offersChangeToggleHandler = (evt) => {
+  #offersChangeToggleHandler = () => {
     const elements = this.element.querySelectorAll('.event__offer-checkbox');
+    let offersById = null;
+    this._state.offers = [];
 
-    if (evt.target.dataset.offerId !== undefined) {
-      let offersById = null;
-      offersById = evt.target.dataset.offerId;
-      this._state.offers.push(offersById);
-    }
-
-    for(let i = 0; i < this._state.offers.length; i++) {
+    for(let i = 0; i < elements.length; i++) {
       if(elements[i].checked) {
+        offersById = elements[i].dataset.offerId;
+        this._state.offers.push(offersById);
         this._state.isAnyOffers = true;
       }
     }
@@ -303,7 +294,7 @@ export default class EditFormView extends AbstractStatefulView {
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      destination: new DestinationModel().getDestination(evt.target.value)
+      destination: ''
     });
   };
 

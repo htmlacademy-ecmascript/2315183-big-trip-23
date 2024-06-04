@@ -25,6 +25,8 @@ export default class ListPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #offers = null;
+  #destination = null;
 
   constructor({listContainer, waypointsModel, filterModel, onNewTaskDestroy}) {
     this.#listContainer = listContainer;
@@ -140,8 +142,8 @@ export default class ListPresenter {
     const waypoints = this.waypoints;
     const waypointsCount = waypoints.length;
 
-    const offers = this.offers;
-    const destination = this.destination;
+    this.#offers = this.offers;
+    this.#destination = this.destination;
 
     if (waypointsCount === 0) {
       this.#renderNoListElements(this.#listComponent);
@@ -151,7 +153,7 @@ export default class ListPresenter {
     this.#renderSort(this.#listContainer);
 
     this.waypoints.forEach((waypoint) => {
-      this.#renderListElement(waypoint, offers, destination);
+      this.#renderListElement(waypoint, this.#offers, this.#destination);
     });
   }
 

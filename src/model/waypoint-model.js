@@ -42,16 +42,19 @@ export default class WaypointsModel extends Observable{
     this._notify(UpdateType.INIT);
   }
 
-  updateListElement(updateType, update) {
+  async updateListElement(updateType, update) {
     const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error('Can\'t update unexisting waypoint');
     }
+
+    const response = await this.#waypointsApiService.updateWaypoint(update);
+    const updatedListElement = this.#adaptToClient(response);
 
     this.#waypoints = [
       ...this.#waypoints.slice(0, index),
-      update,
+      updatedListElement,
       ...this.#waypoints.slice(index + 1)
     ];
 
@@ -71,7 +74,7 @@ export default class WaypointsModel extends Observable{
     const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error('Can\'t update unexisting waypoint');
     }
 
     this.#waypoints = [

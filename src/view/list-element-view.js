@@ -81,13 +81,13 @@ function createListElementTemplate(listElement, allOffers, allDestination) {
 
 export default class ListElementView extends AbstractView{
   #listElement = null;
-  #offers = null;
-  #destination = null;
+  #offers = [];
+  #destination = '';
 
   #handleEditClick = null;
   #handleFavoriteClick = null;
 
-  constructor({listElement, offers, destination, onEditClick, onFavoriteClick}) {
+  constructor({listElement, offers = [], destination = '', onEditClick, onFavoriteClick}) {
     super();
     this.#listElement = listElement;
     this.#offers = offers;
