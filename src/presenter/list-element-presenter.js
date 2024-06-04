@@ -28,7 +28,7 @@ export default class ListElementPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(listElement) {
+  init(listElement, offers) {
     const prevListElementComponent = this.#listElementComponent;
     const prevListElementEditComponent = this.#listELementEditComponent;
 
@@ -36,12 +36,14 @@ export default class ListElementPresenter {
 
     this.#listElementComponent = new ListElementView({
       listElement: this.#listElement,
+      offers: offers,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick
     });
 
     this.#listELementEditComponent = new EditFormView({
       editFormElement: this.#listElement,
+      offers: offers,
       onFormSubmit: this.#handleFormSubmit,
       onCancelEditForm: this.#handleCancelEditForm,
       onDeleteClick: this.#handleDeleteClick,

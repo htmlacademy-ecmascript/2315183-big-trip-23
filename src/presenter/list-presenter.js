@@ -7,6 +7,7 @@ import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
 import { sortListByDate, sortListByPrice, sortListByTime } from '../utils/list.js';
 import { filter } from '../utils/filter.js';
 import NewListElementPresenter from './new-list-element-presenter.js';
+import LoadingView from '../view/loading-view.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -16,12 +17,14 @@ export default class ListPresenter {
   #listComponent = new ListView();
   #noListElementsComponent = null;
   #sortComponent = null;
+  #loadingComponent = new LoadingView();
 
   #listElementPresenters = new Map();
   #newListElementPresenter = null;
 
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({listContainer, waypointsModel, filterModel, onNewTaskDestroy}) {
     this.#listContainer = listContainer;
@@ -51,6 +54,11 @@ export default class ListPresenter {
     }
 
     return filteredWaypoints;
+  }
+
+  get offers() {
+    const offers = this.#waypointsModel.offers;
+    return offers;
   }
 
   init() {
@@ -95,6 +103,11 @@ export default class ListPresenter {
         this.#clearList({resetSortType: true});
         this.#renderList();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderList();
+        break;
     }
   };
 
@@ -115,8 +128,16 @@ export default class ListPresenter {
 
   #renderList() {
     render(this.#listComponent, this.#listContainer);
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const waypoints = this.waypoints;
     const waypointsCount = waypoints.length;
+
+    const offers = this.offers;
 
     if (waypointsCount === 0) {
       this.#renderNoListElements(this.#listComponent);
@@ -126,18 +147,18 @@ export default class ListPresenter {
     this.#renderSort(this.#listContainer);
 
     this.waypoints.forEach((waypoint) => {
-      this.#renderListElement(waypoint);
+      this.#renderListElement(waypoint, offers);
     });
   }
 
-  #renderListElement(listElement) {
+  #renderListElement(listElement, offers) {
     const listElementPresenter = new ListElementPresenter({
       listContainer: this.#listComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModelChange
     });
 
-    listElementPresenter.init(listElement);
+    listElementPresenter.init(listElement, offers);
     this.#listElementPresenters.set(listElement.id, listElementPresenter);
   }
 
@@ -158,12 +179,17 @@ export default class ListPresenter {
     render(this.#noListElementsComponent, listComponent.element, RenderPosition.AFTERBEGIN);
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#listComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
   #clearList({resetSortType = false} = {}) {
     this.#newListElementPresenter.destroy();
     this.#listElementPresenters.forEach((presenter) => presenter.destroy());
     this.#listElementPresenters.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noListElementsComponent) {
       remove(this.#noListElementsComponent);

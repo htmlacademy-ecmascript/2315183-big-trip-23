@@ -1,4 +1,4 @@
-import { humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
+import { getNeededOffers, humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
 import { DateFormat, EVENTS, StatusOfForm } from '../const.js';
 import { getUpperCaseFirstLetter } from '../utils/common.js';
 import flatpickr from 'flatpickr';
@@ -59,22 +59,29 @@ function createDestinationDescriptionTemplate(description, pictures) {
   return '';
 }
 
-function createOffersEditTemplate(offers, isAnyOffers) {
+function createOffersEditTemplate(offers, isAnyOffers, allOffers, type) {
+  const offersByType = [];
   let count = 0;
+
+  allOffers.forEach((offerType) => {
+    if (offerType.type === type) {
+      offersByType.push(offerType.offers);
+    }
+  });
 
   if (isAnyOffers) {
     return (`<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-    ${Object.entries(offers)[2][1].map((offer) => {
+    ${Object.entries(offersByType[0]).map((offer) => {
         count++;
         return (`<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}"
-    name="event-offer-luggage" type="checkbox"  ${offer.isChecked ? 'checked' : ''}>
-    <label class="event__offer-label" for="event-offer-${count}">
-      <span class="event__offer-title">${offer.title}</span>
+    name="event-offer-luggage" type="checkbox"  ${offers.includes(offer[1]) ? 'checked' : ''}>
+    <label class="event__offer-label" for="event-offer-${count}" data-offer-id="${offer[1].id}">
+      <span class="event__offer-title">${offer[1].title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
+      <span class="event__offer-price">${offer[1].price}</span>
     </label>
     </div>`);
       }).join('')}
@@ -99,12 +106,14 @@ function createSelectTypeEventTemplate(event) {
   </fieldset>`);
 }
 
-function createEditFormTemplate(editFormElement, statusOfForm) {
+function createEditFormTemplate(editFormElement, statusOfForm, allOffers) {
   const { type, dateFrom, dateTo, basePrice, destination, offers, isAnyOffers} = editFormElement;
   const { name, description, pictures } = destination;
 
   const from = humanizeDueDate(dateFrom, DateFormat.DAY_AND_TIME_EVENT);
   const to = humanizeDueDate(dateTo, DateFormat.DAY_AND_TIME_EVENT);
+
+  const currentOffers = getNeededOffers(allOffers, type, offers);
 
   return (`<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -142,7 +151,7 @@ function createEditFormTemplate(editFormElement, statusOfForm) {
 
     </header>
     <section class="event__details">
-    ${createOffersEditTemplate(offers, isAnyOffers)}
+    ${createOffersEditTemplate(currentOffers, isAnyOffers, allOffers, type)}
 
     <section class="event__section  event__section--destination">
     ${createDestinationDescriptionTemplate(description, pictures)}
@@ -160,8 +169,9 @@ export default class EditFormView extends AbstractStatefulView {
   #datePickerTo = null;
 
   #statusOfForm = null;
+  #offers = null;
 
-  constructor({editFormElement = BLANK_FORM, onFormSubmit, onCancelEditForm, onDeleteClick, isAddOrEdit = StatusOfForm.EDIT}) {
+  constructor({editFormElement = BLANK_FORM, offers = [], onFormSubmit, onCancelEditForm, onDeleteClick, isAddOrEdit = StatusOfForm.EDIT}) {
     super();
     this._setState(EditFormView.parseListElementToState(editFormElement));
 
@@ -170,12 +180,13 @@ export default class EditFormView extends AbstractStatefulView {
     this.#handleDeleteClick = onDeleteClick;
 
     this.#statusOfForm = isAddOrEdit;
+    this.#offers = offers;
 
     this._restoreHandlers();
   }
 
   get template() {
-    return createEditFormTemplate(this._state, this.#statusOfForm);
+    return createEditFormTemplate(this._state, this.#statusOfForm, this.#offers);
   }
 
   removeElement() {
@@ -207,7 +218,7 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('.event__input--price').addEventListener('input', this.#inputToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
 
-    if (this._state.offers.offers.length !== 0) {
+    if (this._state.offers.length !== 0) {
       this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
     }
 
@@ -268,15 +279,18 @@ export default class EditFormView extends AbstractStatefulView {
     });
   };
 
-  #offersChangeToggleHandler = () => {
+  #offersChangeToggleHandler = (evt) => {
     const elements = this.element.querySelectorAll('.event__offer-checkbox');
 
-    for(let i = 0; i < this._state.offers.offers.length; i++) {
+    if (evt.target.dataset.offerId !== undefined) {
+      let offersById = null;
+      offersById = evt.target.dataset.offerId;
+      this._state.offers.push(offersById);
+    }
+
+    for(let i = 0; i < this._state.offers.length; i++) {
       if(elements[i].checked) {
-        this._state.offers.offers[i].isChecked = true;
         this._state.isAnyOffers = true;
-      } else {
-        this._state.offers.offers[i].isChecked = false;
       }
     }
 
@@ -323,7 +337,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   static parseListElementToState(listElement) {
     return {...listElement,
-      isAnyOffers: isListElementHaveOffers(listElement.offers.offers)
+      isAnyOffers: isListElementHaveOffers(listElement.offers)
     };
   }
 

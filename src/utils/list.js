@@ -57,6 +57,24 @@ function isDatesEqual(dateA, dateB) {
   return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 }
 
+function getNeededOffers(allOffers, type, offers) {
+  const currentOffers = [];
+
+  allOffers.forEach((offer) => {
+    if (offer.type === type) {
+      offer.offers.forEach((offerId) => {
+        offers.forEach((listOffers) => {
+          if (offerId.id === listOffers) {
+            currentOffers.push(offerId);
+          }
+        });
+      });
+    }
+  });
+
+  return currentOffers;
+}
+
 export {
   humanizeDueDate,
   isListElementFuture,
@@ -66,5 +84,6 @@ export {
   sortListByPrice,
   sortListByTime,
   isListElementHaveOffers,
-  isDatesEqual
+  isDatesEqual,
+  getNeededOffers
 };

@@ -1,9 +1,12 @@
 import { UpdateType } from '../const.js';
 import Observable from '../framework/observable.js';
+import OffersModel from './offer-model.js';
 
-export default class WaypoinstModel extends Observable{
+export default class WaypointsModel extends Observable{
   #waypointsApiService = null;
   #waypoints = [];
+  #offers = [];
+  #destination = [];
 
   constructor({waypointsApiService}) {
     super();
@@ -14,12 +17,29 @@ export default class WaypoinstModel extends Observable{
     return this.#waypoints;
   }
 
+  get offers() {
+    return this.#offers;
+  }
+
+  get destination() {
+    return this.#destination;
+  }
+
   async init() {
     try {
       const waypoints = await this.#waypointsApiService.waypoints;
+      const offers = await this.#waypointsApiService.offers;
+      const offersModel = new OffersModel({offers: offers});
+      const destination = await this.#waypointsApiService.destination;
+
+      offersModel.init();
+      this.#offers = offers;
+      this.#destination = destination;
       this.#waypoints = waypoints.map(this.#adaptToClient);
     } catch(err) {
       this.#waypoints = [];
+      this.#offers = [];
+      this.#destination = [];
     }
 
     this._notify(UpdateType.INIT);
@@ -71,8 +91,9 @@ export default class WaypoinstModel extends Observable{
       basePrice: waypoint['base_price'],
       dateFrom: new Date(waypoint['date_from']),
       dateTo: new Date(waypoint['date_to']),
-      isFavorite: waypoint['is_favorite'],
+      isFavorite: waypoint['is_favorite']
     };
+
 
     delete adaptedWaypoint['base_price'];
     delete adaptedWaypoint['date_from'];
