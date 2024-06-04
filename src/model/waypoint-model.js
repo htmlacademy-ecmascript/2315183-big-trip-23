@@ -1,6 +1,5 @@
 import { UpdateType } from '../const.js';
 import Observable from '../framework/observable.js';
-import OffersModel from './offer-model.js';
 
 export default class WaypointsModel extends Observable{
   #waypointsApiService = null;
@@ -29,10 +28,8 @@ export default class WaypointsModel extends Observable{
     try {
       const waypoints = await this.#waypointsApiService.waypoints;
       const offers = await this.#waypointsApiService.offers;
-      const offersModel = new OffersModel({offers: offers});
       const destination = await this.#waypointsApiService.destination;
 
-      offersModel.init();
       this.#offers = offers;
       this.#destination = destination;
       this.#waypoints = waypoints.map(this.#adaptToClient);

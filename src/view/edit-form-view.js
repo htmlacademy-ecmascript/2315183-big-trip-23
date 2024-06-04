@@ -1,4 +1,4 @@
-import { getNeededOffers, humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
+import { getCurrentDestination, getNeededOffers, humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
 import { DateFormat, EVENTS, StatusOfForm } from '../const.js';
 import { getUpperCaseFirstLetter } from '../utils/common.js';
 import flatpickr from 'flatpickr';
@@ -11,9 +11,9 @@ const BLANK_FORM = {
   basePrice: 0,
   dateFrom: new Date(),
   dateTo: new Date(),
-  destination: new DestinationModel().getDestination(),
+  destination: '',
   isFavorite: false,
-  offers: new OffersModel().getOffer('flight'),
+  offers: [],
   type: 'flight'
 };
 
@@ -46,15 +46,16 @@ function createTimeInEventTemplate(timeFrom, timeTo) {
 
 function createDestinationDescriptionTemplate(description, pictures) {
   if(pictures !== undefined) {
-    return (`${description ? `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    return (`<section class="event__section  event__section--destination">
+    ${description ? `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${description}</p>` : ''}
-    ${pictures.length !== null ? `<div class="event__photos-container">
+    ${pictures.length !== 0 ? `<div class="event__photos-container">
     <div class="event__photos-tape">
     ${Object.entries(pictures).map((picture) => `<img class="event__photo" src="${picture[1].src}"
     alt="${picture[1].description}"></img>`).join('')}
     </div>
   </div>` : ''}
-    `);
+    </section>`);
   }
   return '';
 }
@@ -106,9 +107,9 @@ function createSelectTypeEventTemplate(event) {
   </fieldset>`);
 }
 
-function createEditFormTemplate(editFormElement, statusOfForm, allOffers) {
+function createEditFormTemplate(editFormElement, statusOfForm, allOffers, allDestination) {
   const { type, dateFrom, dateTo, basePrice, destination, offers, isAnyOffers} = editFormElement;
-  const { name, description, pictures } = destination;
+  const { name, description, pictures } = getCurrentDestination(allDestination, destination);
 
   const from = humanizeDueDate(dateFrom, DateFormat.DAY_AND_TIME_EVENT);
   const to = humanizeDueDate(dateTo, DateFormat.DAY_AND_TIME_EVENT);
@@ -153,9 +154,7 @@ function createEditFormTemplate(editFormElement, statusOfForm, allOffers) {
     <section class="event__details">
     ${createOffersEditTemplate(currentOffers, isAnyOffers, allOffers, type)}
 
-    <section class="event__section  event__section--destination">
     ${createDestinationDescriptionTemplate(description, pictures)}
-    </section>
   </section>
   </form></li>`);
 }
@@ -170,8 +169,9 @@ export default class EditFormView extends AbstractStatefulView {
 
   #statusOfForm = null;
   #offers = null;
+  #destination = null;
 
-  constructor({editFormElement = BLANK_FORM, offers = [], onFormSubmit, onCancelEditForm, onDeleteClick, isAddOrEdit = StatusOfForm.EDIT}) {
+  constructor({editFormElement = BLANK_FORM, offers, destination, onFormSubmit, onCancelEditForm, onDeleteClick, isAddOrEdit = StatusOfForm.EDIT}) {
     super();
     this._setState(EditFormView.parseListElementToState(editFormElement));
 
@@ -181,12 +181,13 @@ export default class EditFormView extends AbstractStatefulView {
 
     this.#statusOfForm = isAddOrEdit;
     this.#offers = offers;
+    this.#destination = destination;
 
     this._restoreHandlers();
   }
 
   get template() {
-    return createEditFormTemplate(this._state, this.#statusOfForm, this.#offers);
+    return createEditFormTemplate(this._state, this.#statusOfForm, this.#offers, this.#destination);
   }
 
   removeElement() {

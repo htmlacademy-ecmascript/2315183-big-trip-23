@@ -57,8 +57,11 @@ export default class ListPresenter {
   }
 
   get offers() {
-    const offers = this.#waypointsModel.offers;
-    return offers;
+    return this.#waypointsModel.offers;
+  }
+
+  get destination() {
+    return this.#waypointsModel.destination;
   }
 
   init() {
@@ -138,6 +141,7 @@ export default class ListPresenter {
     const waypointsCount = waypoints.length;
 
     const offers = this.offers;
+    const destination = this.destination;
 
     if (waypointsCount === 0) {
       this.#renderNoListElements(this.#listComponent);
@@ -147,18 +151,18 @@ export default class ListPresenter {
     this.#renderSort(this.#listContainer);
 
     this.waypoints.forEach((waypoint) => {
-      this.#renderListElement(waypoint, offers);
+      this.#renderListElement(waypoint, offers, destination);
     });
   }
 
-  #renderListElement(listElement, offers) {
+  #renderListElement(listElement, offers, destination) {
     const listElementPresenter = new ListElementPresenter({
       listContainer: this.#listComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModelChange
     });
 
-    listElementPresenter.init(listElement, offers);
+    listElementPresenter.init(listElement, offers, destination);
     this.#listElementPresenters.set(listElement.id, listElementPresenter);
   }
 

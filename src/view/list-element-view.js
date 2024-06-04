@@ -1,4 +1,4 @@
-import { getNeededOffers, humanizeDueDate } from '../utils/list.js';
+import { getCurrentDestination, getNeededOffers, humanizeDueDate } from '../utils/list.js';
 import { DateFormat } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
@@ -32,9 +32,9 @@ function createFavoriteButtonTemplate(isFavorite) {
 </button>`);
 }
 
-function createListElementTemplate(listElement, allOffers) {
+function createListElementTemplate(listElement, allOffers, allDestination) {
   const {type, destination, dateFrom, dateTo, basePrice, isFavorite, offers} = listElement;
-  const {name} = destination;
+  const { name } = getCurrentDestination(allDestination, destination);
 
   const currentOffers = getNeededOffers(allOffers, type, offers);
 
@@ -82,14 +82,16 @@ function createListElementTemplate(listElement, allOffers) {
 export default class ListElementView extends AbstractView{
   #listElement = null;
   #offers = null;
+  #destination = null;
 
   #handleEditClick = null;
   #handleFavoriteClick = null;
 
-  constructor({listElement, offers, onEditClick, onFavoriteClick}) {
+  constructor({listElement, offers, destination, onEditClick, onFavoriteClick}) {
     super();
     this.#listElement = listElement;
     this.#offers = offers;
+    this.#destination = destination;
 
     this.#handleEditClick = onEditClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
@@ -99,7 +101,7 @@ export default class ListElementView extends AbstractView{
   }
 
   get template() {
-    return createListElementTemplate(this.#listElement, this.#offers);
+    return createListElementTemplate(this.#listElement, this.#offers, this.#destination);
   }
 
   #editClickHandler = (evt) => {

@@ -75,6 +75,18 @@ function getNeededOffers(allOffers, type, offers) {
   return currentOffers;
 }
 
+function getCurrentDestination(allDestination, destination) {
+  let currentDestination = null;
+
+  allDestination.forEach((destinationById) => {
+    if (destinationById.id === destination) {
+      currentDestination = destinationById;
+    }
+  });
+
+  return currentDestination;
+}
+
 export {
   humanizeDueDate,
   isListElementFuture,
@@ -85,5 +97,6 @@ export {
   sortListByTime,
   isListElementHaveOffers,
   isDatesEqual,
-  getNeededOffers
+  getNeededOffers,
+  getCurrentDestination
 };
