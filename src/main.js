@@ -46,8 +46,10 @@ function handleNewEventButtonClick() {
 }
 
 render(new TripInfoView(), siteTripInfoElement, RenderPosition.AFTERBEGIN);
-render(newEventButtonComponent, siteEventButtonElement);
 
 filterPresenter.init();
 listPresenter.init();
-waypointsModel.init();
+waypointsModel.init()
+  .finally(() => {
+    render(newEventButtonComponent, siteEventButtonElement);
+  });
