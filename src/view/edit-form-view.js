@@ -1,5 +1,5 @@
-import { getCurrentDestination, getNeededOffers, humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
-import { DateFormat, EVENTS, StatusOfForm } from '../const.js';
+import { getCurrentDestination, getCurrentDestinationByName, getNeededOffers, getOffersByType, humanizeDueDate, isListElementHaveOffers } from '../utils/list.js';
+import { DateFormat, EVENTS, PLACES, StatusOfForm } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
@@ -8,7 +8,7 @@ const BLANK_FORM = {
   basePrice: 0,
   dateFrom: new Date(),
   dateTo: new Date(),
-  destination: '',
+  destination: 'Madrid',
   isFavorite: false,
   offers: [],
   type: 'flight'
@@ -25,11 +25,10 @@ function createDestinationInfoTemplate(event, place) {
   return (`<label class="event__label  event__type-output" for="event-destination-1">
   ${event}
   </label>
-  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${place}" list="destination-list-1">
+  <input class="event__input  event__input--destination" id="event-destination-1" type="text"
+  name="event-destination" value="${place}" list="destination-list-1">
   <datalist id="destination-list-1">
-    <option value="Amsterdam"></option>
-    <option value="Geneva"></option>
-    <option value="Chamonix"></option>
+    ${PLACES.map((name) => `<option value="${name}"></option>`)}
   </datalist>`);
 }
 
@@ -86,16 +85,40 @@ function createOffersEditTemplate(offers, isAnyOffers, allOffers, type) {
     </div>
   </section>`);
   } else {
-    return '';
+    const uncelectedOffersId = getOffersByType(allOffers, type);
+    const uncelectedOffers = getNeededOffers(allOffers, type, uncelectedOffersId);
+
+    if (uncelectedOffersId.length !== 0) {
+      return (`<section class="event__section  event__section--offers">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+        ${Object.entries(uncelectedOffers).map((offer) => {
+          count++;
+          return (`<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}" data-offer-id="${offer[1].id}"
+        name="event-offer-luggage" type="checkbox">
+        <label class="event__offer-label" for="event-offer-${count}" data-offer-id="${offer[1].id}">
+          <span class="event__offer-title">${offer[1].title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer[1].price}</span>
+        </label>
+        </div>`);
+        }).join('')}
+        </div>
+      </section>`);
+    } else {
+      return '';
+    }
   }
 }
 
-function createSelectTypeEventTemplate(event) {
+function createSelectTypeEventTemplate(event, destinations) {
   return (`<fieldset class="event__type-group">
   <legend class="visually-hidden">Event type</legend>
 
   ${EVENTS.map((typeOfEvent) => `<div class="event__type-item">
   <input id="event-type-${typeOfEvent.toLowerCase()}-1" class="event__type-input  visually-hidden"
+  data-destination-id="${destinations.find((destination) => destination[typeOfEvent.toLowerCase()])}"
   type="radio" name="event-type" value="${typeOfEvent.toLowerCase()}"
   ${event === typeOfEvent ? 'checked' : ''}>
   <label class="event__type-label  event__type-label--${typeOfEvent.toLowerCase()}" for="event-type-${typeOfEvent.toLowerCase()}-1">${typeOfEvent}</label>
@@ -106,6 +129,7 @@ function createSelectTypeEventTemplate(event) {
 
 function createEditFormTemplate(editFormElement, statusOfForm, allOffers, allDestination) {
   const { type, dateFrom, dateTo, basePrice, destination, offers, isAnyOffers} = editFormElement;
+  // При создании уловии по имени
   const { name, description, pictures } = getCurrentDestination(allDestination, destination);
 
   const from = humanizeDueDate(dateFrom, DateFormat.DAY_AND_TIME_EVENT);
@@ -121,7 +145,7 @@ function createEditFormTemplate(editFormElement, statusOfForm, allOffers, allDes
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
       <div class="event__type-list">
-        ${createSelectTypeEventTemplate(type)}
+        ${createSelectTypeEventTemplate(type, allDestination)}
       </div>
     </div>
 
@@ -254,22 +278,26 @@ export default class EditFormView extends AbstractStatefulView {
     if (evt.target.value !== undefined) {
       const newEvent = evt.target.value;
 
+      this._state.isAnyOffers = false;
+
       this._setState({
         type: newEvent,
-        offers: [],
-        destination: ''
+        //offers: getOffersByType(this.#offers, newEvent)
       });
 
       this.updateElement({
         type: newEvent
       });
+
+      //this.reset(this._state);
+      //this._restoreHandlers();
     }
   };
 
   #inputToggleHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      basePrice: evt.target.value,
+      basePrice: Number(evt.target.value),
     });
   };
 
@@ -289,12 +317,14 @@ export default class EditFormView extends AbstractStatefulView {
     this._setState({
       offers: this._state.offers
     });
+
+    console.log(this._state);
   };
 
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      destination: ''
+      destination: getCurrentDestinationByName(this.#destination, evt.target.value)?.id
     });
   };
 
@@ -335,12 +365,6 @@ export default class EditFormView extends AbstractStatefulView {
 
   static parseStateToListElement(state) {
     const listElement = {...state};
-
-    if (!listElement.isAnyOffers) {
-      listElement.offers.forEach((offer) => {
-        offer.isChecked = false;
-      });
-    }
 
     delete listElement.isAnyOffers;
 

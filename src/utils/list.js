@@ -75,16 +75,23 @@ function getNeededOffers(allOffers, type, offers) {
   return currentOffers;
 }
 
-function getCurrentDestination(allDestination, destination) {
-  let currentDestination = null;
+function getOffersByType(allOffers, type) {
+  const offersByType = allOffers?.find((offers) => offers.type === type).offers;
+  const currentOffers = [];
 
-  allDestination.forEach((destinationById) => {
-    if (destinationById.id === destination) {
-      currentDestination = destinationById;
-    }
+  offersByType.forEach((offer) => {
+    currentOffers.push(offer.id);
   });
 
-  return currentDestination;
+  return currentOffers;
+}
+
+function getCurrentDestination(allDestinations, destinationId) {
+  return allDestinations?.find((destination) => destination.id === destinationId);
+}
+
+function getCurrentDestinationByName(allDestinations, name) {
+  return allDestinations?.find((destination) => destination.name === name);
 }
 
 export {
@@ -98,5 +105,7 @@ export {
   isListElementHaveOffers,
   isDatesEqual,
   getNeededOffers,
-  getCurrentDestination
+  getCurrentDestination,
+  getOffersByType,
+  getCurrentDestinationByName
 };

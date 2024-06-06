@@ -11,10 +11,15 @@ const EVENTS = [
 ];
 
 const PLACES = [
-  'Amsterdam',
-  'Chamonix',
-  'Geneva',
-  'Soul',
+  'Barcelona',
+  'Berlin',
+  'Madrid',
+  'Hiroshima',
+  'Kioto',
+  'Den Haag',
+  'Saint Petersburg',
+  'Valencia',
+  'Naples',
   'Moscow'
 ];
 
