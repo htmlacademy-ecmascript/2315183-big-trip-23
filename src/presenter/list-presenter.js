@@ -74,12 +74,15 @@ export default class ListPresenter {
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_LIST_ELEMENT:
+        this.#listElementPresenters.get(update.id).setSaving();
         this.#waypointsModel.updateListElement(updateType, update);
         break;
       case UserAction.ADD_LIST_ELEMENT:
+        this.#newListElementPresenter.setSaving();
         this.#waypointsModel.addListElement(updateType, update);
         break;
       case UserAction.DELETE_LIST_ELEMENT:
+        this.#listElementPresenters.get(update.id).setDeleting();
         this.#waypointsModel.deleteListElement(updateType, update);
         break;
     }
