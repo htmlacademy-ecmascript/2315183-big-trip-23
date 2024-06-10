@@ -57,6 +57,43 @@ function isDatesEqual(dateA, dateB) {
   return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 }
 
+function getNeededOffers(allOffers, type, offers) {
+  const currentOffers = [];
+
+  allOffers.forEach((offer) => {
+    if (offer.type === type) {
+      offer.offers.forEach((offerId) => {
+        offers.forEach((listOffers) => {
+          if (offerId.id === listOffers) {
+            currentOffers.push(offerId);
+          }
+        });
+      });
+    }
+  });
+
+  return currentOffers;
+}
+
+function getOffersByType(allOffers, type) {
+  const offersByType = allOffers?.find((offers) => offers.type === type).offers;
+  const currentOffers = [];
+
+  offersByType.forEach((offer) => {
+    currentOffers.push(offer.id);
+  });
+
+  return currentOffers;
+}
+
+function getCurrentDestination(allDestinations, destinationId) {
+  return allDestinations?.find((destination) => destination.id === destinationId);
+}
+
+function getCurrentDestinationByName(allDestinations, name) {
+  return allDestinations?.find((destination) => destination.name === name);
+}
+
 export {
   humanizeDueDate,
   isListElementFuture,
@@ -66,5 +103,9 @@ export {
   sortListByPrice,
   sortListByTime,
   isListElementHaveOffers,
-  isDatesEqual
+  isDatesEqual,
+  getNeededOffers,
+  getCurrentDestination,
+  getOffersByType,
+  getCurrentDestinationByName
 };

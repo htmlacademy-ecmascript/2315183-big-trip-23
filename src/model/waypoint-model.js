@@ -1,31 +1,60 @@
+import { UpdateType } from '../const.js';
 import Observable from '../framework/observable.js';
-import { getRandomWaypoint } from '../mock/waypoint-mock.js';
-import { getRandomNumber } from '../utils/common.js';
 
-const WaypointCount = {
-  MIN: 0,
-  MAX: 10
-};
+export default class WaypointsModel extends Observable{
+  #waypointsApiService = null;
+  #waypoints = [];
+  #offers = [];
+  #destination = [];
 
-const WAYPOINT_COUNT = getRandomNumber(WaypointCount.MIN, WaypointCount.MAX);
-
-export default class WaypoinstModel extends Observable{
-  #waypoints = Array.from({length: WAYPOINT_COUNT}, getRandomWaypoint);
+  constructor({waypointsApiService}) {
+    super();
+    this.#waypointsApiService = waypointsApiService;
+  }
 
   get waypoints() {
     return this.#waypoints;
   }
 
-  updateListElement(updateType, update) {
+  get offers() {
+    return this.#offers;
+  }
+
+  get destination() {
+    return this.#destination;
+  }
+
+  async init() {
+    try {
+      const waypoints = await this.#waypointsApiService.waypoints;
+      const offers = await this.#waypointsApiService.offers;
+      const destination = await this.#waypointsApiService.destination;
+
+      this.#offers = offers;
+      this.#destination = destination;
+      this.#waypoints = waypoints.map(this.#adaptToClient);
+    } catch(err) {
+      this.#waypoints = [];
+      this.#offers = [];
+      this.#destination = [];
+    }
+
+    this._notify(UpdateType.INIT);
+  }
+
+  async updateListElement(updateType, update) {
     const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error('Can\'t update unexisting waypoint');
     }
+
+    const response = await this.#waypointsApiService.updateWaypoint(update);
+    const updatedListElement = this.#adaptToClient(response);
 
     this.#waypoints = [
       ...this.#waypoints.slice(0, index),
-      update,
+      updatedListElement,
       ...this.#waypoints.slice(index + 1)
     ];
 
@@ -45,7 +74,7 @@ export default class WaypoinstModel extends Observable{
     const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error('Can\'t update unexisting waypoint');
     }
 
     this.#waypoints = [
@@ -54,5 +83,23 @@ export default class WaypoinstModel extends Observable{
     ];
 
     this._notify(updateType, update);
+  }
+
+  #adaptToClient(waypoint) {
+    const adaptedWaypoint = {
+      ...waypoint,
+      basePrice: waypoint['base_price'],
+      dateFrom: new Date(waypoint['date_from']),
+      dateTo: new Date(waypoint['date_to']),
+      isFavorite: waypoint['is_favorite']
+    };
+
+
+    delete adaptedWaypoint['base_price'];
+    delete adaptedWaypoint['date_from'];
+    delete adaptedWaypoint['date_to'];
+    delete adaptedWaypoint['is_favorite'];
+
+    return adaptedWaypoint;
   }
 }

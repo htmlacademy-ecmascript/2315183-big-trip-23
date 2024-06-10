@@ -11,10 +11,15 @@ const EVENTS = [
 ];
 
 const PLACES = [
-  'Amsterdam',
-  'Chamonix',
-  'Geneva',
-  'Soul',
+  'Barcelona',
+  'Berlin',
+  'Madrid',
+  'Hiroshima',
+  'Kioto',
+  'Den Haag',
+  'Saint Petersburg',
+  'Valencia',
+  'Naples',
   'Moscow'
 ];
 
@@ -56,7 +61,8 @@ const UserAction = {
 const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
-  MAJOR: 'MAJOR'
+  MAJOR: 'MAJOR',
+  INIT: 'INIT'
 };
 
 const StatusOfForm = {

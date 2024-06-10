@@ -2,7 +2,7 @@ import { UserAction, UpdateType, StatusOfForm } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListElementView from '../view/list-element-view.js';
-import { isDatesEqual, isListElementHaveOffers } from '../utils/list.js';
+//import { isDatesEqual, isListElementHaveOffers } from '../utils/list.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -16,6 +16,8 @@ export default class ListElementPresenter {
   #listELementEditComponent = null;
 
   #listElement = null;
+  #offers = null;
+  #destination = null;
 
   #handleDataChange = null;
   #handleModeChange = null;
@@ -28,20 +30,26 @@ export default class ListElementPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(listElement) {
+  init(listElement, offers, destination) {
     const prevListElementComponent = this.#listElementComponent;
     const prevListElementEditComponent = this.#listELementEditComponent;
 
     this.#listElement = listElement;
+    this.#offers = offers;
+    this.#destination = destination;
 
     this.#listElementComponent = new ListElementView({
       listElement: this.#listElement,
+      offers: this.#offers,
+      destination: this.#destination,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick
     });
 
     this.#listELementEditComponent = new EditFormView({
       editFormElement: this.#listElement,
+      offers: this.#offers,
+      destination: this.#destination,
       onFormSubmit: this.#handleFormSubmit,
       onCancelEditForm: this.#handleCancelEditForm,
       onDeleteClick: this.#handleDeleteClick,
@@ -106,13 +114,18 @@ export default class ListElementPresenter {
   };
 
   #handleFormSubmit = (update) => {
-    const isMinorUpdate =
-    !isDatesEqual(this.#listElement.dueDate, update.dueDate) ||
-    isListElementHaveOffers(this.#listElement.offers) !== isListElementHaveOffers(update.offers);
+    // const isMinorUpdate =
+    // !isDatesEqual(this.#listElement.dateFrom, update.dateFrom) ||
+    // isListElementHaveOffers(this.#listElement.offers) !== isListElementHaveOffers(update.offers);
 
+    // this.#handleDataChange(
+    //   UserAction.UPDATE_LIST_ELEMENT,
+    //   isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+    //   update
+    // );
     this.#handleDataChange(
       UserAction.UPDATE_LIST_ELEMENT,
-      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      UpdateType.MINOR,
       update
     );
     this.#replaceEditFormToListElement();
