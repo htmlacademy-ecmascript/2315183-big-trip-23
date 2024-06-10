@@ -1,13 +1,8 @@
-import { UserAction, UpdateType, StatusOfForm } from '../const.js';
+import { UserAction, UpdateType, StatusOfForm, Mode } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListElementView from '../view/list-element-view.js';
 import { isDatesEqual, isListElementHaveOffers } from '../utils/list.js';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING'
-};
 
 export default class ListElementPresenter {
   #listContainer = null;
@@ -123,11 +118,7 @@ export default class ListElementPresenter {
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update
     );
-    this.#handleDataChange(
-      UserAction.UPDATE_LIST_ELEMENT,
-      UpdateType.MINOR,
-      update
-    );
+
     this.#replaceEditFormToListElement();
   };
 

@@ -71,6 +71,11 @@ const StatusOfForm = {
   ADD: 'ADD'
 };
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
 export {
   EVENTS,
   PLACES,
@@ -83,5 +88,6 @@ export {
   offersFromServer,
   destinationsFromServer,
   BLANK_FORM,
-  waypointsApiService
+  waypointsApiService,
+  Mode
 };

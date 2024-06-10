@@ -40,6 +40,7 @@ export default class NewListElementPresenter {
       destinations: destinations,
       onCancelEditForm: this.#handleCancelEditForm,
       onDeleteClick: this.#handleCancelEditForm,
+      onOutsideClick: this.#handleCancelEditForm,
       isAddOrEdit: StatusOfForm.ADD
     });
 

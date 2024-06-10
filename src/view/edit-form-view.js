@@ -185,6 +185,7 @@ export default class EditFormView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleCancelEditForm = null;
   #handleDeleteClick = null;
+  #handleOutsideClick = null;
 
   #datePickerFrom = null;
   #datePickerTo = null;
@@ -193,15 +194,26 @@ export default class EditFormView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
 
-  constructor({editFormElement = BLANK_FORM, offers = offersFromServer, destinations = destinationsFromServer, onFormSubmit, onCancelEditForm, onDeleteClick, isAddOrEdit = StatusOfForm.EDIT}) {
+  constructor({
+    editFormElement = BLANK_FORM,
+    offers = offersFromServer,
+    destinations = destinationsFromServer,
+    onFormSubmit,
+    onCancelEditForm,
+    onDeleteClick,
+    isAddOrEdit = StatusOfForm.EDIT,
+    onOutsideClick
+  }) {
     super();
     this._setState(EditFormView.parseListElementToState(editFormElement));
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCancelEditForm = onCancelEditForm;
     this.#handleDeleteClick = onDeleteClick;
+    this.#handleOutsideClick = onOutsideClick;
 
     this.#statusOfForm = isAddOrEdit;
+
     this.#offers = offers;
     this.#destinations = destinations;
 
@@ -243,6 +255,10 @@ export default class EditFormView extends AbstractStatefulView {
 
     if (this.element.querySelector('.event__available-offers')) {
       this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
+    }
+
+    if (this.#statusOfForm === StatusOfForm.ADD) {
+      document.addEventListener('click', this.#outsideClickHandler);
     }
 
     this.#setDatePicker();
@@ -326,6 +342,14 @@ export default class EditFormView extends AbstractStatefulView {
         destination: getCurrentDestinationByName(this.#destinations, evt.target.value)?.id
       });
     }
+  };
+
+  #outsideClickHandler = (evt) => {
+    const form = document.querySelector('.event__details');
+    if (!evt.target.contains(form) && !evt.target.classList.contains('event__rollup-btn')) {
+      return;
+    }
+    this.#handleOutsideClick();
   };
 
   #setDatePicker() {
