@@ -8,6 +8,12 @@ import { sortListByDate, sortListByPrice, sortListByTime } from '../utils/list.j
 import { filter } from '../utils/filter.js';
 import NewListElementPresenter from './new-list-element-presenter.js';
 import LoadingView from '../view/loading-view.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000
+};
 
 export default class ListPresenter {
   #listContainer = null;
@@ -25,6 +31,11 @@ export default class ListPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor({listContainer, waypointsModel, filterModel, onNewTaskDestroy}) {
     this.#listContainer = listContainer;
@@ -72,6 +83,7 @@ export default class ListPresenter {
   }
 
   #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_LIST_ELEMENT:
         this.#listElementPresenters.get(update.id).setSaving();
@@ -99,6 +111,8 @@ export default class ListPresenter {
         }
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
