@@ -240,7 +240,7 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('.event__input--price').addEventListener('input', this.#inputToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
 
-    if (this._state.offers.length !== 0) {
+    if (this.element.querySelector('.event__available-offers')) {
       this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersChangeToggleHandler);
     }
 
@@ -281,16 +281,12 @@ export default class EditFormView extends AbstractStatefulView {
       this._state.isAnyOffers = false;
 
       this._setState({
-        type: newEvent,
-        //offers: getOffersByType(this.#offers, newEvent)
+        type: newEvent
       });
 
       this.updateElement({
         type: newEvent
       });
-
-      //this.reset(this._state);
-      //this._restoreHandlers();
     }
   };
 
@@ -317,8 +313,6 @@ export default class EditFormView extends AbstractStatefulView {
     this._setState({
       offers: this._state.offers
     });
-
-    console.log(this._state);
   };
 
   #destinationInputHandler = (evt) => {
