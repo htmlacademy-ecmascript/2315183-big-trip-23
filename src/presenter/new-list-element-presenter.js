@@ -5,15 +5,25 @@ import { StatusOfForm, UpdateType, UserAction } from '../const.js';
 
 export default class NewListElementPresenter {
   #listContainer = null;
+  #waypointsModel = null;
   #handleDataChange = null;
   #handleDestroy = null;
 
   #listElementEditComponent = null;
 
-  constructor ({listContainer, onDataChange, onDestroy}) {
+  constructor ({listContainer, waypointsModel, onDataChange, onDestroy}) {
     this.#listContainer = listContainer;
+    this.#waypointsModel = waypointsModel;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+  }
+
+  get offers() {
+    return this.#waypointsModel.offers;
+  }
+
+  get destinations() {
+    return this.#waypointsModel.destinations;
   }
 
   init() {
@@ -21,8 +31,13 @@ export default class NewListElementPresenter {
       return;
     }
 
+    const offers = this.offers;
+    const destinations = this.destinations;
+
     this.#listElementEditComponent = new EditFormView({
       onFormSubmit: this.#handleFormSubmit,
+      offers: offers,
+      destinations: destinations,
       onCancelEditForm: this.#handleCancelEditForm,
       onDeleteClick: this.#handleCancelEditForm,
       isAddOrEdit: StatusOfForm.ADD

@@ -10,4 +10,13 @@ function getUpperCaseFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter };
+function getAllElementsByKey(elements, elementKey) {
+  const array = [];
+  elements.forEach((element) => {
+    array.push(element[elementKey]);
+  });
+
+  return array;
+}
+
+export { getRandomArrayElement, getRandomNumber, getUpperCaseFirstLetter, getAllElementsByKey };

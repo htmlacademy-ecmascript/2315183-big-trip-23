@@ -1,7 +1,7 @@
 export default class DestinationModel {
-  #destination = [];
+  #destinations = [];
 
   getDestination() {
-    return this.#destination;
+    return this.#destinations;
   }
 }

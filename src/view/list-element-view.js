@@ -1,5 +1,5 @@
 import { getCurrentDestination, getNeededOffers, humanizeDueDate } from '../utils/list.js';
-import { DateFormat } from '../const.js';
+import { DateFormat, destinationsFromServer, offersFromServer } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
 
@@ -32,9 +32,9 @@ function createFavoriteButtonTemplate(isFavorite) {
 </button>`);
 }
 
-function createListElementTemplate(listElement, allOffers, allDestination) {
-  const {type, destination, dateFrom, dateTo, basePrice, isFavorite, offers} = listElement;
-  const { name } = getCurrentDestination(allDestination, destination);
+function createListElementTemplate(listElement, allOffers, allDestinations) {
+  const { type, destination, dateFrom, dateTo, basePrice, isFavorite, offers } = listElement;
+  const { name } = getCurrentDestination(allDestinations, destination);
 
   const currentOffers = getNeededOffers(allOffers, type, offers);
 
@@ -82,16 +82,16 @@ function createListElementTemplate(listElement, allOffers, allDestination) {
 export default class ListElementView extends AbstractView{
   #listElement = null;
   #offers = [];
-  #destination = '';
+  #destinations = '';
 
   #handleEditClick = null;
   #handleFavoriteClick = null;
 
-  constructor({listElement, offers = [], destination = '', onEditClick, onFavoriteClick}) {
+  constructor({listElement, offers = offersFromServer, destinations = destinationsFromServer, onEditClick, onFavoriteClick}) {
     super();
     this.#listElement = listElement;
     this.#offers = offers;
-    this.#destination = destination;
+    this.#destinations = destinations;
 
     this.#handleEditClick = onEditClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
@@ -101,7 +101,7 @@ export default class ListElementView extends AbstractView{
   }
 
   get template() {
-    return createListElementTemplate(this.#listElement, this.#offers, this.#destination);
+    return createListElementTemplate(this.#listElement, this.#offers, this.#destinations);
   }
 
   #editClickHandler = (evt) => {

@@ -26,7 +26,7 @@ export default class ListPresenter {
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
   #offers = null;
-  #destination = null;
+  #destinations = null;
 
   constructor({listContainer, waypointsModel, filterModel, onNewTaskDestroy}) {
     this.#listContainer = listContainer;
@@ -35,6 +35,7 @@ export default class ListPresenter {
 
     this.#newListElementPresenter = new NewListElementPresenter({
       listContainer: this.#listContainer,
+      waypointsModel: this.#waypointsModel,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewTaskDestroy
     });
@@ -62,8 +63,8 @@ export default class ListPresenter {
     return this.#waypointsModel.offers;
   }
 
-  get destination() {
-    return this.#waypointsModel.destination;
+  get destinations() {
+    return this.#waypointsModel.destinations;
   }
 
   init() {
@@ -143,7 +144,7 @@ export default class ListPresenter {
     const waypointsCount = waypoints.length;
 
     this.#offers = this.offers;
-    this.#destination = this.destination;
+    this.#destinations = this.destinations;
 
     if (waypointsCount === 0) {
       this.#renderNoListElements(this.#listComponent);
@@ -153,18 +154,18 @@ export default class ListPresenter {
     this.#renderSort(this.#listContainer);
 
     this.waypoints.forEach((waypoint) => {
-      this.#renderListElement(waypoint, this.#offers, this.#destination);
+      this.#renderListElement(waypoint, this.#offers, this.#destinations);
     });
   }
 
-  #renderListElement(listElement, offers, destination) {
+  #renderListElement(listElement, offers, destinations) {
     const listElementPresenter = new ListElementPresenter({
       listContainer: this.#listComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModelChange
     });
 
-    listElementPresenter.init(listElement, offers, destination);
+    listElementPresenter.init(listElement, offers, destinations);
     this.#listElementPresenters.set(listElement.id, listElementPresenter);
   }
 

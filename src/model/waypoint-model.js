@@ -5,7 +5,7 @@ export default class WaypointsModel extends Observable{
   #waypointsApiService = null;
   #waypoints = [];
   #offers = [];
-  #destination = [];
+  #destinations = [];
 
   constructor({waypointsApiService}) {
     super();
@@ -20,23 +20,23 @@ export default class WaypointsModel extends Observable{
     return this.#offers;
   }
 
-  get destination() {
-    return this.#destination;
+  get destinations() {
+    return this.#destinations;
   }
 
   async init() {
     try {
       const waypoints = await this.#waypointsApiService.waypoints;
       const offers = await this.#waypointsApiService.offers;
-      const destination = await this.#waypointsApiService.destination;
+      const destinations = await this.#waypointsApiService.destinations;
 
       this.#offers = offers;
-      this.#destination = destination;
+      this.#destinations = destinations;
       this.#waypoints = waypoints.map(this.#adaptToClient);
     } catch(err) {
       this.#waypoints = [];
       this.#offers = [];
-      this.#destination = [];
+      this.#destinations = [];
     }
 
     this._notify(UpdateType.INIT);

@@ -16,7 +16,7 @@ export default class WaypointsApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
-  get destination() {
+  get destinations() {
     return this._load({url: 'destinations'})
       .then(ApiService.parseResponse);
   }
