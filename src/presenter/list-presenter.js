@@ -71,19 +71,32 @@ export default class ListPresenter {
     this.#renderList();
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_LIST_ELEMENT:
         this.#listElementPresenters.get(update.id).setSaving();
-        this.#waypointsModel.updateListElement(updateType, update);
+        try {
+          await this.#waypointsModel.updateListElement(updateType, update);
+        } catch(err) {
+          this.#listElementPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_LIST_ELEMENT:
         this.#newListElementPresenter.setSaving();
-        this.#waypointsModel.addListElement(updateType, update);
+        try {
+          await this.#waypointsModel.addListElement(updateType, update);
+        } catch(err) {
+          this.#newListElementPresenter.init();
+          this.#newListElementPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_LIST_ELEMENT:
         this.#listElementPresenters.get(update.id).setDeleting();
-        this.#waypointsModel.deleteListElement(updateType, update);
+        try {
+          await this.#waypointsModel.deleteListElement(updateType, update);
+        } catch(err) {
+          this.#listElementPresenters.get(update.id).setAborting();
+        }
         break;
     }
   };

@@ -47,6 +47,17 @@ export default class NewListElementPresenter {
     });
   }
 
+  setAborting() {
+    const resetFormState = () => {
+      this.#listElementEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#listElementEditComponent.shake(resetFormState);
+  }
+
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
