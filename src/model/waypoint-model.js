@@ -4,8 +4,6 @@ import Observable from '../framework/observable.js';
 export default class WaypointsModel extends Observable{
   #waypointsApiService = null;
   #waypoints = [];
-  #offers = [];
-  #destinations = [];
 
   constructor({waypointsApiService}) {
     super();
@@ -16,27 +14,12 @@ export default class WaypointsModel extends Observable{
     return this.#waypoints;
   }
 
-  get offers() {
-    return this.#offers;
-  }
-
-  get destinations() {
-    return this.#destinations;
-  }
-
   async init() {
     try {
       const waypoints = await this.#waypointsApiService.waypoints;
-      const offers = await this.#waypointsApiService.offers;
-      const destinations = await this.#waypointsApiService.destinations;
-
-      this.#offers = offers;
-      this.#destinations = destinations;
       this.#waypoints = waypoints.map(this.#adaptToClient);
     } catch(err) {
       this.#waypoints = [];
-      this.#offers = [];
-      this.#destinations = [];
     }
 
     this._notify(UpdateType.INIT);

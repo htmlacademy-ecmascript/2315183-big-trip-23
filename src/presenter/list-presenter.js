@@ -25,8 +25,6 @@ export default class ListPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
-  #offers = null;
-  #destinations = null;
 
   constructor({listContainer, waypointsModel, filterModel, onNewTaskDestroy}) {
     this.#listContainer = listContainer;
@@ -35,7 +33,6 @@ export default class ListPresenter {
 
     this.#newListElementPresenter = new NewListElementPresenter({
       listContainer: this.#listContainer,
-      waypointsModel: this.#waypointsModel,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewTaskDestroy
     });
@@ -57,14 +54,6 @@ export default class ListPresenter {
     }
 
     return filteredWaypoints;
-  }
-
-  get offers() {
-    return this.#waypointsModel.offers;
-  }
-
-  get destinations() {
-    return this.#waypointsModel.destinations;
   }
 
   init() {
@@ -143,9 +132,6 @@ export default class ListPresenter {
     const waypoints = this.waypoints;
     const waypointsCount = waypoints.length;
 
-    this.#offers = this.offers;
-    this.#destinations = this.destinations;
-
     if (waypointsCount === 0) {
       this.#renderNoListElements(this.#listComponent);
       return;
@@ -154,18 +140,18 @@ export default class ListPresenter {
     this.#renderSort(this.#listContainer);
 
     this.waypoints.forEach((waypoint) => {
-      this.#renderListElement(waypoint, this.#offers, this.#destinations);
+      this.#renderListElement(waypoint);
     });
   }
 
-  #renderListElement(listElement, offers, destinations) {
+  #renderListElement(listElement) {
     const listElementPresenter = new ListElementPresenter({
       listContainer: this.#listComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModelChange
     });
 
-    listElementPresenter.init(listElement, offers, destinations);
+    listElementPresenter.init(listElement);
     this.#listElementPresenters.set(listElement.id, listElementPresenter);
   }
 
