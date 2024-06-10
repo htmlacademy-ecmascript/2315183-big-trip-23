@@ -53,7 +53,8 @@ export default class ListElementPresenter {
     }
 
     if(this.#mode === Mode.EDITING) {
-      replace(this.#listELementEditComponent, prevListElementEditComponent);
+      replace(this.#listElementComponent, prevListElementEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevListElementComponent);
@@ -70,6 +71,24 @@ export default class ListElementPresenter {
     if(this.#mode !== Mode.DEFAULT) {
       this.#listELementEditComponent.reset(this.#listElement);
       this.#replaceEditFormToListElement();
+    }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#listELementEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#listELementEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
     }
   }
 
@@ -110,8 +129,6 @@ export default class ListElementPresenter {
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update
     );
-
-    this.#replaceEditFormToListElement();
   };
 
   #handleCancelEditForm = () => {

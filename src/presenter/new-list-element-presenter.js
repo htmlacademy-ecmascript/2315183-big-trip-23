@@ -40,6 +40,13 @@ export default class NewListElementPresenter {
     this.#handleDestroy();
   }
 
+  setSaving() {
+    this.#listElementEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
@@ -55,7 +62,6 @@ export default class NewListElementPresenter {
       listElement
     );
     remove(this.#listElementEditComponent);
-    this.destroy();
 
     this.#listElementEditComponent = null;
   };
