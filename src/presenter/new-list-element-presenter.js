@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import { RenderPosition, remove, render } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import { StatusOfForm, UpdateType, UserAction } from '../const.js';
@@ -53,7 +52,7 @@ export default class NewListElementPresenter {
     this.#handleDataChange(
       UserAction.ADD_LIST_ELEMENT,
       UpdateType.MINOR,
-      {id: nanoid(), ...listElement},
+      listElement
     );
     remove(this.#listElementEditComponent);
     this.destroy();
