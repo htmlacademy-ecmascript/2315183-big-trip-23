@@ -73,6 +73,7 @@ export default class NewListElementPresenter {
       listElement
     );
     remove(this.#listElementEditComponent);
+    this.destroy();
 
     this.#listElementEditComponent = null;
   };
