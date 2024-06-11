@@ -3,9 +3,9 @@ import { FilterType } from '../const.js';
 
 const NoListElementTextType = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
-  [FilterType.FUTURE]: 'There are no event in the future',
-  [FilterType.PRESENT]: 'There are no event in the present',
-  [FilterType.PAST]: 'There are no event in the past',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now',
 };
 
 function createNoListElementTemplate(filterType) {
