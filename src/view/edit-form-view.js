@@ -348,13 +348,13 @@ export default class EditFormView extends AbstractStatefulView {
     let offersById = null;
     this._state.offers = [];
 
-    for(let i = 0; i < elements.length; i++) {
-      if(elements[i].checked) {
-        offersById = elements[i].dataset.offerId;
+    elements.forEach((element) => {
+      if (element.checked) {
+        offersById = element.dataset.offerId;
         this._state.offers.push(offersById);
         this._state.isAnyOffers = true;
       }
-    }
+    });
 
     this._setState({
       offers: this._state.offers
