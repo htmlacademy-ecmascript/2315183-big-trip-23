@@ -6,6 +6,7 @@ import FilterModel from './model/filter-model.js';
 import { RenderPosition, render } from './framework/render.js';
 import NewEventButtonView from './view/new-event-button-view.js';
 import { waypointsApiService } from './const.js';
+import HeaderPresenter from './presenter/header-presenter.js';
 
 const siteMainElement = document.querySelector('main');
 const siteHeaderElement = document.querySelector('.page-header');
@@ -29,6 +30,10 @@ const filterPresenter = new FilterPresenter({
   filterModel,
   waypointsModel
 });
+const headerPresenter = new HeaderPresenter({
+  waypointsModel: waypointsModel,
+  siteTripInfoElement: siteTripInfoElement
+});
 const newEventButtonComponent = new NewEventButtonView({
   onClick: handleNewEventButtonClick
 });
@@ -42,8 +47,7 @@ function handleNewEventButtonClick() {
   newEventButtonComponent.element.disabled = true;
 }
 
-render(new TripInfoView(), siteTripInfoElement, RenderPosition.AFTERBEGIN);
-
+headerPresenter.init();
 filterPresenter.init();
 listPresenter.init();
 waypointsModel.init()

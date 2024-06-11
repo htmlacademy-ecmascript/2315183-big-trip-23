@@ -69,7 +69,6 @@ export default class ListPresenter {
 
   init() {
     this.waypoints.sort(sortListByDate);
-
     this.#renderList();
   }
 
