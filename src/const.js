@@ -34,6 +34,7 @@ const PLACES = getAllElementsByKey(destinationsFromServer, 'name');
 
 const DateFormat = {
   DAY_EVENT: 'MMM D',
+  DAY: 'D MMM',
   DAY_AND_TIME_EVENT: 'MM/DD/YYYY HH:mm',
   TIME: 'HH:mm'
 };
