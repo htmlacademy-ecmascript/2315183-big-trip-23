@@ -1,13 +1,8 @@
-import { UserAction, UpdateType, StatusOfForm } from '../const.js';
+import { UserAction, UpdateType, StatusOfForm, Mode } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import ListElementView from '../view/list-element-view.js';
-//import { isDatesEqual, isListElementHaveOffers } from '../utils/list.js';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING'
-};
+import { isDatesEqual, isListElementHaveOffers } from '../utils/list.js';
 
 export default class ListElementPresenter {
   #listContainer = null;
@@ -16,8 +11,6 @@ export default class ListElementPresenter {
   #listELementEditComponent = null;
 
   #listElement = null;
-  #offers = null;
-  #destination = null;
 
   #handleDataChange = null;
   #handleModeChange = null;
@@ -30,26 +23,20 @@ export default class ListElementPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(listElement, offers, destination) {
+  init(listElement) {
     const prevListElementComponent = this.#listElementComponent;
     const prevListElementEditComponent = this.#listELementEditComponent;
 
     this.#listElement = listElement;
-    this.#offers = offers;
-    this.#destination = destination;
 
     this.#listElementComponent = new ListElementView({
       listElement: this.#listElement,
-      offers: this.#offers,
-      destination: this.#destination,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick
     });
 
     this.#listELementEditComponent = new EditFormView({
       editFormElement: this.#listElement,
-      offers: this.#offers,
-      destination: this.#destination,
       onFormSubmit: this.#handleFormSubmit,
       onCancelEditForm: this.#handleCancelEditForm,
       onDeleteClick: this.#handleDeleteClick,
@@ -66,7 +53,8 @@ export default class ListElementPresenter {
     }
 
     if(this.#mode === Mode.EDITING) {
-      replace(this.#listELementEditComponent, prevListElementEditComponent);
+      replace(this.#listElementComponent, prevListElementEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevListElementComponent);
@@ -84,6 +72,41 @@ export default class ListElementPresenter {
       this.#listELementEditComponent.reset(this.#listElement);
       this.#replaceEditFormToListElement();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#listELementEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#listELementEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#listElementComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#listELementEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#listELementEditComponent.shake(resetFormState);
   }
 
   #escKeyDownHandler = (evt) => {
@@ -114,21 +137,15 @@ export default class ListElementPresenter {
   };
 
   #handleFormSubmit = (update) => {
-    // const isMinorUpdate =
-    // !isDatesEqual(this.#listElement.dateFrom, update.dateFrom) ||
-    // isListElementHaveOffers(this.#listElement.offers) !== isListElementHaveOffers(update.offers);
+    const isMinorUpdate =
+    !isDatesEqual(this.#listElement.dateFrom, update.dateFrom) ||
+    isListElementHaveOffers(this.#listElement.offers) !== isListElementHaveOffers(update.offers);
 
-    // this.#handleDataChange(
-    //   UserAction.UPDATE_LIST_ELEMENT,
-    //   isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
-    //   update
-    // );
     this.#handleDataChange(
       UserAction.UPDATE_LIST_ELEMENT,
-      UpdateType.MINOR,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update
     );
-    this.#replaceEditFormToListElement();
   };
 
   #handleCancelEditForm = () => {

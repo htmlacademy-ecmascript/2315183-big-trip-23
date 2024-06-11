@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import { RenderPosition, remove, render } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import { StatusOfForm, UpdateType, UserAction } from '../const.js';
@@ -25,6 +24,7 @@ export default class NewListElementPresenter {
       onFormSubmit: this.#handleFormSubmit,
       onCancelEditForm: this.#handleCancelEditForm,
       onDeleteClick: this.#handleCancelEditForm,
+      onOutsideClick: this.#handleCancelEditForm,
       isAddOrEdit: StatusOfForm.ADD
     });
 
@@ -40,6 +40,24 @@ export default class NewListElementPresenter {
     this.#handleDestroy();
   }
 
+  setSaving() {
+    this.#listElementEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#listElementEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#listElementEditComponent.shake(resetFormState);
+  }
+
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
@@ -52,10 +70,9 @@ export default class NewListElementPresenter {
     this.#handleDataChange(
       UserAction.ADD_LIST_ELEMENT,
       UpdateType.MINOR,
-      {id: nanoid(), ...listElement},
+      listElement
     );
     remove(this.#listElementEditComponent);
-    this.destroy();
 
     this.#listElementEditComponent = null;
   };

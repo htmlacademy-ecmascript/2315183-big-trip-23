@@ -8,6 +8,12 @@ import { sortListByDate, sortListByPrice, sortListByTime } from '../utils/list.j
 import { filter } from '../utils/filter.js';
 import NewListElementPresenter from './new-list-element-presenter.js';
 import LoadingView from '../view/loading-view.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000
+};
 
 export default class ListPresenter {
   #listContainer = null;
@@ -25,8 +31,11 @@ export default class ListPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
-  #offers = null;
-  #destination = null;
+
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor({listContainer, waypointsModel, filterModel, onNewTaskDestroy}) {
     this.#listContainer = listContainer;
@@ -58,14 +67,6 @@ export default class ListPresenter {
     return filteredWaypoints;
   }
 
-  get offers() {
-    return this.#waypointsModel.offers;
-  }
-
-  get destination() {
-    return this.#waypointsModel.destination;
-  }
-
   init() {
     this.waypoints.sort(sortListByDate);
 
@@ -81,18 +82,37 @@ export default class ListPresenter {
     this.#renderList();
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_LIST_ELEMENT:
-        this.#waypointsModel.updateListElement(updateType, update);
+        this.#listElementPresenters.get(update.id).setSaving();
+        try {
+          await this.#waypointsModel.updateListElement(updateType, update);
+        } catch(err) {
+          this.#listElementPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_LIST_ELEMENT:
-        this.#waypointsModel.addListElement(updateType, update);
+        this.#newListElementPresenter.setSaving();
+        try {
+          await this.#waypointsModel.addListElement(updateType, update);
+        } catch(err) {
+          this.#newListElementPresenter.init();
+          this.#newListElementPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_LIST_ELEMENT:
-        this.#waypointsModel.deleteListElement(updateType, update);
+        this.#listElementPresenters.get(update.id).setDeleting();
+        try {
+          await this.#waypointsModel.deleteListElement(updateType, update);
+        } catch(err) {
+          this.#listElementPresenters.get(update.id).setAborting();
+        }
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -142,9 +162,6 @@ export default class ListPresenter {
     const waypoints = this.waypoints;
     const waypointsCount = waypoints.length;
 
-    this.#offers = this.offers;
-    this.#destination = this.destination;
-
     if (waypointsCount === 0) {
       this.#renderNoListElements(this.#listComponent);
       return;
@@ -153,18 +170,18 @@ export default class ListPresenter {
     this.#renderSort(this.#listContainer);
 
     this.waypoints.forEach((waypoint) => {
-      this.#renderListElement(waypoint, this.#offers, this.#destination);
+      this.#renderListElement(waypoint);
     });
   }
 
-  #renderListElement(listElement, offers, destination) {
+  #renderListElement(listElement) {
     const listElementPresenter = new ListElementPresenter({
       listContainer: this.#listComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModelChange
     });
 
-    listElementPresenter.init(listElement, offers, destination);
+    listElementPresenter.init(listElement);
     this.#listElementPresenters.set(listElement.id, listElementPresenter);
   }
 

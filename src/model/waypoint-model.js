@@ -4,8 +4,6 @@ import Observable from '../framework/observable.js';
 export default class WaypointsModel extends Observable{
   #waypointsApiService = null;
   #waypoints = [];
-  #offers = [];
-  #destination = [];
 
   constructor({waypointsApiService}) {
     super();
@@ -16,27 +14,12 @@ export default class WaypointsModel extends Observable{
     return this.#waypoints;
   }
 
-  get offers() {
-    return this.#offers;
-  }
-
-  get destination() {
-    return this.#destination;
-  }
-
   async init() {
     try {
       const waypoints = await this.#waypointsApiService.waypoints;
-      const offers = await this.#waypointsApiService.offers;
-      const destination = await this.#waypointsApiService.destination;
-
-      this.#offers = offers;
-      this.#destination = destination;
       this.#waypoints = waypoints.map(this.#adaptToClient);
     } catch(err) {
       this.#waypoints = [];
-      this.#offers = [];
-      this.#destination = [];
     }
 
     this._notify(UpdateType.INIT);
@@ -49,40 +32,53 @@ export default class WaypointsModel extends Observable{
       throw new Error('Can\'t update unexisting waypoint');
     }
 
-    const response = await this.#waypointsApiService.updateWaypoint(update);
-    const updatedListElement = this.#adaptToClient(response);
+    try {
+      const response = await this.#waypointsApiService.updateWaypoint(update);
+      const updatedListElement = this.#adaptToClient(response);
 
-    this.#waypoints = [
-      ...this.#waypoints.slice(0, index),
-      updatedListElement,
-      ...this.#waypoints.slice(index + 1)
-    ];
+      this.#waypoints = [
+        ...this.#waypoints.slice(0, index),
+        updatedListElement,
+        ...this.#waypoints.slice(index + 1)
+      ];
 
-    this._notify(updateType, update);
+      this._notify(updateType, update);
+    } catch(err) {
+      throw new Error('Can\'t update list element');
+    }
   }
 
-  addListElement(updateType, update) {
-    this.#waypoints = [
-      update,
-      ...this.#waypoints
-    ];
-
-    this._notify(updateType, update);
+  async addListElement(updateType, update) {
+    try {
+      const response = await this.#waypointsApiService.addWaypoint(update);
+      const newListElement = this.#adaptToClient(response);
+      this.#waypoints = [
+        newListElement,
+        ...this.#waypoints
+      ];
+      this._notify(updateType, newListElement);
+    } catch(err) {
+      throw new Error('Can\'t add list element');
+    }
   }
 
-  deleteListElement(updateType, update) {
+  async deleteListElement(updateType, update) {
     const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting waypoint');
     }
 
-    this.#waypoints = [
-      ...this.#waypoints.slice(0, index),
-      ...this.#waypoints.slice(index + 1)
-    ];
-
-    this._notify(updateType, update);
+    try {
+      await this.#waypointsApiService.deleteWaypoint(update);
+      this.#waypoints = [
+        ...this.#waypoints.slice(0, index),
+        ...this.#waypoints.slice(index + 1)
+      ];
+      this._notify(updateType, update);
+    } catch(err) {
+      throw new Error('Can\'t delete list element');
+    }
   }
 
   #adaptToClient(waypoint) {

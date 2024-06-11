@@ -1,3 +1,23 @@
+import { getAllElementsByKey, getRandomArrayElement } from './utils/common.js';
+import WaypointsApiService from './waypoints-api-service.js';
+
+const AUTHORIZATION = 'Basic k8v5s7m2h9z';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
+
+const waypointsApiService = new WaypointsApiService(END_POINT, AUTHORIZATION);
+const offersFromServer = await waypointsApiService.offers;
+const destinationsFromServer = await waypointsApiService.destinations;
+
+const BLANK_FORM = {
+  basePrice: 0,
+  dateFrom: new Date(),
+  dateTo: new Date(),
+  destination: getRandomArrayElement(destinationsFromServer).id,
+  isFavorite: false,
+  offers: [],
+  type: 'flight'
+};
+
 const EVENTS = [
   'Taxi',
   'Bus',
@@ -10,26 +30,7 @@ const EVENTS = [
   'Restaurant'
 ];
 
-const PLACES = [
-  'Barcelona',
-  'Berlin',
-  'Madrid',
-  'Hiroshima',
-  'Kioto',
-  'Den Haag',
-  'Saint Petersburg',
-  'Valencia',
-  'Naples',
-  'Moscow'
-];
-
-const DESCRIPTION = [
-  'The mysterious ancient city of Machu Picchu: lost in the mountains of Peru, this archaeological complex leaves visitors in awe with its mystery and beauty',
-  'The idyllic beach on Bora Bora Island: with white sand, warm azure water, and palm trees, this beach is the perfect place for relaxation and leisure',
-  'The picturesque vineyards of the Tuscany region: famous for their wines and beautiful landscapes, these vineyards create a unique atmosphere inviting you to enjoy the beauty and flavors of the region',
-  'The snow-capped peaks of the Swiss Alps: majestic mountain peaks covered in snow offer a breathtaking view and a perfect location for winter sports',
-  'The mystical Yavari forest in Brazil: known for its diverse flora and fauna, this forest exudes a special aura of mystery and enigma'
-];
+const PLACES = getAllElementsByKey(destinationsFromServer, 'name');
 
 const DateFormat = {
   DAY_EVENT: 'MMM D',
@@ -70,4 +71,23 @@ const StatusOfForm = {
   ADD: 'ADD'
 };
 
-export { EVENTS, PLACES, DESCRIPTION, DateFormat, FilterType, SortType, UserAction, UpdateType, StatusOfForm };
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
+export {
+  EVENTS,
+  PLACES,
+  DateFormat,
+  FilterType,
+  SortType,
+  UserAction,
+  UpdateType,
+  StatusOfForm,
+  offersFromServer,
+  destinationsFromServer,
+  BLANK_FORM,
+  waypointsApiService,
+  Mode
+};
