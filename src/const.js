@@ -1,4 +1,4 @@
-import { getAllElementsByKey, getRandomArrayElement } from './utils/common.js';
+import { getAllElementsByKey } from './utils/common.js';
 import WaypointsApiService from './waypoints-api-service.js';
 
 const AUTHORIZATION = 'Basic k8v5s7m2h9z';
@@ -8,11 +8,18 @@ const waypointsApiService = new WaypointsApiService(END_POINT, AUTHORIZATION);
 const offersFromServer = await waypointsApiService.offers;
 const destinationsFromServer = await waypointsApiService.destinations;
 
+destinationsFromServer.push({
+  id: '1',
+  description: '',
+  name: '',
+  pictures: []
+});
+
 const BLANK_FORM = {
   basePrice: 0,
   dateFrom: new Date(),
   dateTo: new Date(),
-  destination: getRandomArrayElement(destinationsFromServer).id,
+  destination: destinationsFromServer.find((destination) => destination.id === '1').id,
   isFavorite: false,
   offers: [],
   type: 'flight'

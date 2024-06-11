@@ -63,6 +63,8 @@ export default class NewListElementPresenter {
       evt.preventDefault();
       remove(this.#listElementEditComponent);
       this.destroy();
+
+      this.#listElementEditComponent = null;
     }
   };
 

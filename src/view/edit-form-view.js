@@ -143,12 +143,7 @@ function createEditFormTemplate(editFormElement, statusOfForm, allOffers, allDes
   const to = humanizeDueDate(dateTo, DateFormat.DAY_AND_TIME_EVENT);
 
   const currentOffers = getNeededOffers(allOffers, type, offers);
-  const { description, pictures } = getCurrentDestination(allDestination, destination);
-  let { name } = getCurrentDestination(allDestination, destination);
-
-  if (basePrice === 0) {
-    name = '';
-  }
+  const { name, description, pictures } = getCurrentDestination(allDestination, destination);
 
   const nameDestination = name;
   const descriptionDestination = description;
@@ -368,10 +363,10 @@ export default class EditFormView extends AbstractStatefulView {
 
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
-    this._setState({
-      destination: getCurrentDestinationByName(this.#destinations, evt.target.value)?.id
-    });
     if (getCurrentDestinationByName(this.#destinations, evt.target.value)?.id) {
+      this._setState({
+        destination: getCurrentDestinationByName(this.#destinations, evt.target.value)?.id
+      });
       this.updateElement({
         destination: getCurrentDestinationByName(this.#destinations, evt.target.value)?.id
       });
