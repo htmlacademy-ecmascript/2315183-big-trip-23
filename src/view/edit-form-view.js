@@ -374,8 +374,7 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   #outsideClickHandler = (evt) => {
-    const form = document.querySelector('.event__details');
-    if (!evt.target.contains(form) && !evt.target.classList.contains('event__rollup-btn')) {
+    if (!evt.target.classList.contains('event__rollup-btn')) {
       return;
     }
     this.#handleOutsideClick();
