@@ -40,6 +40,13 @@ export default class NewListElementPresenter {
     this.#handleDestroy();
   }
 
+  removeForm() {
+    remove(this.#listElementEditComponent);
+    this.destroy();
+
+    this.#listElementEditComponent = null;
+  }
+
   setSaving() {
     this.#listElementEditComponent.updateElement({
       isDisabled: true,
@@ -61,10 +68,7 @@ export default class NewListElementPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      remove(this.#listElementEditComponent);
-      this.destroy();
-
-      this.#listElementEditComponent = null;
+      this.removeForm();
     }
   };
 
@@ -74,16 +78,9 @@ export default class NewListElementPresenter {
       UpdateType.MINOR,
       listElement
     );
-    remove(this.#listElementEditComponent);
-    this.destroy();
-
-    this.#listElementEditComponent = null;
   };
 
   #handleCancelEditForm = () => {
-    remove(this.#listElementEditComponent);
-    this.destroy();
-
-    this.#listElementEditComponent = null;
+    this.removeForm();
   };
 }

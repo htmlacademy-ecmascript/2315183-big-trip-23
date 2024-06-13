@@ -96,8 +96,8 @@ export default class ListPresenter {
         this.#newListElementPresenter.setSaving();
         try {
           await this.#waypointsModel.addListElement(updateType, update);
+          this.#newListElementPresenter.removeForm();
         } catch(err) {
-          this.#newListElementPresenter.init();
           this.#newListElementPresenter.setAborting();
         }
         break;
