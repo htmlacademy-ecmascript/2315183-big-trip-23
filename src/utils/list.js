@@ -16,8 +16,8 @@ function isListElementPast(dueDate) {
   return dueDate && dayjs().isAfter(dueDate, 'D');
 }
 
-function isListElementHaveOffers(having) {
-  return having.length !== 0;
+function isListElementHaveOffers(listElement) {
+  return listElement.length !== 0;
 }
 
 function getWeightForNullDate(dateA, dateB) {
@@ -94,6 +94,15 @@ function getCurrentDestinationByName(allDestinations, name) {
   return allDestinations?.find((destination) => destination.name === name);
 }
 
+function getAllElementsByKey(elements, elementKey) {
+  const array = [];
+  elements.forEach((element) => {
+    array.push(element[elementKey]);
+  });
+
+  return array;
+}
+
 export {
   humanizeDueDate,
   isListElementFuture,
@@ -107,5 +116,6 @@ export {
   getNeededOffers,
   getCurrentDestination,
   getOffersByType,
-  getCurrentDestinationByName
+  getCurrentDestinationByName,
+  getAllElementsByKey
 };

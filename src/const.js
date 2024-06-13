@@ -1,4 +1,4 @@
-import { getAllElementsByKey } from './utils/common.js';
+import { getAllElementsByKey } from './utils/list.js';
 import WaypointsApiService from './waypoints-api-service.js';
 
 const AUTHORIZATION = 'Basic k8v5s7m2h9z';
