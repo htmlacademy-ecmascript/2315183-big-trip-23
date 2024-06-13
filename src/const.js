@@ -8,6 +8,8 @@ const waypointsApiService = new WaypointsApiService(END_POINT, AUTHORIZATION);
 const offersFromServer = await waypointsApiService.offers;
 const destinationsFromServer = await waypointsApiService.destinations;
 
+const dateTo = new Date();
+
 destinationsFromServer.push({
   id: '1',
   description: '',
@@ -15,10 +17,12 @@ destinationsFromServer.push({
   pictures: []
 });
 
+dateTo.setDate(new Date().getDate() + 1);
+
 const BLANK_FORM = {
   basePrice: 0,
   dateFrom: new Date(),
-  dateTo: new Date(),
+  dateTo: dateTo,
   destination: destinationsFromServer.find((destination) => destination.id === '1').id,
   isFavorite: false,
   offers: [],
