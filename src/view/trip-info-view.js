@@ -1,6 +1,96 @@
 import { DateFormat, destinationsFromServer, offersFromServer } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { getCurrentDestination, getNeededOffers, humanizeDueDate } from '../utils/list.js';
+import { getNeededOffers, humanizeDueDate } from '../utils/list.js';
+
+function createPlacesDestinationTemlate(waypoints, destinations) {
+  const places = waypoints.map((waypoint) => destinations.find(({id}) => id === waypoint.destination).name);
+  const fisrtPlace = places[0];
+  const lastPlace = places.at(-1);
+  const middleplaces = places.slice(1, -1);
+  const allUniqCities = new Set(places);
+
+  const uniqPlaces = new Set(middleplaces);
+
+  let count = 0;
+  // count - 1: city
+  // count - 2: city - city
+  // count - 3: city - city - city
+  // count - 4: city - ... - city
+
+  switch(uniqPlaces.length) {
+    case 0:
+      if (fisrtPlace === lastPlace) {
+        count = 1;
+        break;
+      }
+      count = 2;
+      break;
+    case 1:
+      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[0] === lastPlace) {
+        count = 1;
+        break;
+      }
+      if (uniqPlaces[0] === fisrtPlace || uniqPlaces[0] === lastPlace) {
+        count = 2;
+        break;
+      }
+      count = 3;
+      break;
+    case 2:
+      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[1] === lastPlace) {
+        count = 2;
+        break;
+      }
+      if (uniqPlaces[0] === fisrtPlace || uniqPlaces[1] === lastPlace) {
+        count = 3;
+        break;
+      }
+      count = 4;
+      break;
+    case 3:
+      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[2] === lastPlace) {
+        if (uniqPlaces[1] === uniqPlaces[0] || uniqPlaces[1] === uniqPlaces[2]) {
+          count = 2;
+          break;
+        }
+        count = 3;
+        break;
+      }
+      count = 4;
+      break;
+    default:
+      count = 4;
+      break;
+  }
+
+  switch(count) {
+    case 1:
+      return `<h1 class="trip-info__title">${fisrtPlace}</h1>`;
+    case 2:
+      return `<h1 class="trip-info__title">${fisrtPlace} &mdash; ${lastPlace}</h1>`;
+    case 3:
+      return `<h1 class="trip-info__title">${fisrtPlace} &mdash; ${allUniqCities[1]} &mdash; ${lastPlace}</h1>`;
+    case 4:
+      return `<h1 class="trip-info__title">${fisrtPlace} &mdash; ... &mdash; ${lastPlace}</h1>`;
+  }
+}
+
+function createSumOfPricesTempate(waypoints, offers) {
+  let sumOfPrice = 0;
+
+  waypoints.forEach((waypoint) => {
+    sumOfPrice += waypoint.basePrice;
+
+    const currentOffers = getNeededOffers(offers, waypoint.type, waypoint.offers);
+    currentOffers.forEach((offer) => {
+      sumOfPrice += offer.price;
+    });
+  });
+
+  return `<p class="trip-info__cost">
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">${sumOfPrice}</span>
+      </p>`;
+}
 
 function createTripInfoTemplate(waypoints, offers, destinations) {
   if (waypoints[0] !== undefined) {
@@ -10,75 +100,21 @@ function createTripInfoTemplate(waypoints, offers, destinations) {
     const end = humanizeDueDate(dateEnd, DateFormat.DAY);
 
     const dateTemplate = `<p class="trip-info__dates">${start}&nbsp;&mdash;&nbsp;${end}</p>`;
+    const priceTemplate = createSumOfPricesTempate(waypoints, offers);
 
-    let summOfPrice = 0;
-
-    waypoints.forEach((waypoint) => {
-      summOfPrice += waypoint.basePrice;
-
-      const currentOffers = getNeededOffers(offers, waypoint.type, waypoint.offers);
-      currentOffers.forEach((offer) => {
-        summOfPrice += offer.price;
-      });
-    });
-
-    const priceTemplate = `<p class="trip-info__cost">
-          Total: &euro;&nbsp;<span class="trip-info__cost-value">${summOfPrice}</span>
-        </p>`;
-
-    if (waypoints.length === 1) {
-      const { name: nameFirstOne } = getCurrentDestination(destinations, waypoints[0].destination);
-      return (`<section class="trip-main__trip-info  trip-info">
-        <div class="trip-info__main">
-          <h1 class="trip-info__title">${nameFirstOne}</h1>
-
-          ${dateTemplate}
-        </div>
-
-        ${priceTemplate}
-      </section>`);
-    }
-    if (waypoints.length === 2) {
-      const { name: nameFirstTwo } = getCurrentDestination(destinations, waypoints[0].destination);
-      const { name: nameSecondTwo } = getCurrentDestination(destinations, waypoints[waypoints.length - 1].destination);
-      return (`<section class="trip-main__trip-info  trip-info">
-        <div class="trip-info__main">
-          <h1 class="trip-info__title">${nameFirstTwo} &mdash; ${nameSecondTwo}</h1>
-
-          ${dateTemplate}
-        </div>
-
-        ${priceTemplate}
-      </section>`);
-    }
-    if (waypoints.length === 3) {
-      const { name: nameFirstThree } = getCurrentDestination(destinations, waypoints[0].destination);
-      const { name: nameSecondThree } = getCurrentDestination(destinations, waypoints[1].destination);
-      const { name: nameThird } = getCurrentDestination(destinations, waypoints[waypoints.length - 1].destination);
-      return (`<section class="trip-main__trip-info  trip-info">
-        <div class="trip-info__main">
-          <h1 class="trip-info__title">${nameFirstThree} &mdash; ${nameSecondThree} &mdash; ${nameThird}</h1>
-
-          ${dateTemplate}
-        </div>
-
-        ${priceTemplate}
-      </section>`);
-    }
-    const { name: nameFirst } = getCurrentDestination(destinations, waypoints[0].destination);
-    const { name: nameSecond } = getCurrentDestination(destinations, waypoints[waypoints.length - 1].destination);
     return (`<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">${nameFirst} &mdash; ... &mdash; ${nameSecond}</h1>
+      ${createPlacesDestinationTemlate(waypoints, destinations)}
 
-        ${dateTemplate}
+      ${dateTemplate}
       </div>
 
       ${priceTemplate}
-    </section>`);
+      </section>`);
+  } else {
+    return (`<section class="trip-main__trip-info  trip-info">
+      </section>`);
   }
-  return `<section class="trip-main__trip-info  trip-info">
-  </section>`;
 }
 
 export default class TripInfoView extends AbstractView {
