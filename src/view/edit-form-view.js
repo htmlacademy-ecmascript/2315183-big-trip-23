@@ -125,7 +125,7 @@ function createSelectTypeEventTemplate(event, isDisabled) {
   </fieldset>`);
 }
 
-function createEditFormTemplate(editFormElement, statusOfForm, allOffers, allDestination) {
+function createEditFormTemplate(formData, statusOfForm, allOffers, allDestination) {
   const {
     type,
     dateFrom,
@@ -137,18 +137,13 @@ function createEditFormTemplate(editFormElement, statusOfForm, allOffers, allDes
     isDisabled,
     isSaving,
     isDeleting
-  } = editFormElement;
+  } = formData;
 
   const from = humanizeDueDate(dateFrom, DateFormat.DAY_AND_TIME_EVENT);
   const to = humanizeDueDate(dateTo, DateFormat.DAY_AND_TIME_EVENT);
 
   const currentOffers = getNeededOffers(allOffers, type, offers);
-  const { description, pictures } = getCurrentDestination(allDestination, destination);
-  let { name } = getCurrentDestination(allDestination, destination);
-
-  if (basePrice === 0) {
-    name = '';
-  }
+  const { name, description, pictures } = getCurrentDestination(allDestination, destination);
 
   const nameDestination = name;
   const descriptionDestination = description;
@@ -203,9 +198,9 @@ function createEditFormTemplate(editFormElement, statusOfForm, allOffers, allDes
 
     <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
     <button class="event__reset-btn" type="reset">${buttonInfo}</button>
-    <button class="event__rollup-btn" type="button">
+    ${statusOfForm === StatusOfForm.EDIT ? `<button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
-    </button>
+    </button>` : ''}
 
     </header>
     <section class="event__details">
@@ -229,7 +224,7 @@ export default class EditFormView extends AbstractStatefulView {
   #destinations = null;
 
   constructor({
-    editFormElement = BLANK_FORM,
+    formData = BLANK_FORM,
     offers = offersFromServer,
     destinations = destinationsFromServer,
     onFormSubmit,
@@ -239,7 +234,7 @@ export default class EditFormView extends AbstractStatefulView {
     onOutsideClick
   }) {
     super();
-    this._setState(EditFormView.parseListElementToState(editFormElement));
+    this._setState(EditFormView.parseListElementToState(formData));
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCancelEditForm = onCancelEditForm;
@@ -279,7 +274,11 @@ export default class EditFormView extends AbstractStatefulView {
 
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
+
+    if (this.#statusOfForm === StatusOfForm.EDIT) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelEditFormHandle);
+    }
+
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
 
     this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
@@ -353,13 +352,13 @@ export default class EditFormView extends AbstractStatefulView {
     let offersById = null;
     this._state.offers = [];
 
-    for(let i = 0; i < elements.length; i++) {
-      if(elements[i].checked) {
-        offersById = elements[i].dataset.offerId;
+    elements.forEach((element) => {
+      if (element.checked) {
+        offersById = element.dataset.offerId;
         this._state.offers.push(offersById);
         this._state.isAnyOffers = true;
       }
-    }
+    });
 
     this._setState({
       offers: this._state.offers
@@ -368,10 +367,10 @@ export default class EditFormView extends AbstractStatefulView {
 
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
-    this._setState({
-      destination: getCurrentDestinationByName(this.#destinations, evt.target.value)?.id
-    });
     if (getCurrentDestinationByName(this.#destinations, evt.target.value)?.id) {
+      this._setState({
+        destination: getCurrentDestinationByName(this.#destinations, evt.target.value)?.id
+      });
       this.updateElement({
         destination: getCurrentDestinationByName(this.#destinations, evt.target.value)?.id
       });
@@ -379,8 +378,7 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   #outsideClickHandler = (evt) => {
-    const form = document.querySelector('.event__details');
-    if (!evt.target.contains(form) && !evt.target.classList.contains('event__rollup-btn')) {
+    if (!evt.target.classList.contains('event__rollup-btn')) {
       return;
     }
     this.#handleOutsideClick();

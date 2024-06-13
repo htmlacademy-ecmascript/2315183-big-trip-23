@@ -1,4 +1,4 @@
-import { getAllElementsByKey, getRandomArrayElement } from './utils/common.js';
+import { getAllElementsByKey } from './utils/common.js';
 import WaypointsApiService from './waypoints-api-service.js';
 
 const AUTHORIZATION = 'Basic k8v5s7m2h9z';
@@ -8,11 +8,22 @@ const waypointsApiService = new WaypointsApiService(END_POINT, AUTHORIZATION);
 const offersFromServer = await waypointsApiService.offers;
 const destinationsFromServer = await waypointsApiService.destinations;
 
+const dateTo = new Date();
+
+destinationsFromServer.push({
+  id: '1',
+  description: '',
+  name: '',
+  pictures: []
+});
+
+dateTo.setDate(new Date().getDate() + 1);
+
 const BLANK_FORM = {
   basePrice: 0,
   dateFrom: new Date(),
-  dateTo: new Date(),
-  destination: getRandomArrayElement(destinationsFromServer).id,
+  dateTo: dateTo,
+  destination: destinationsFromServer.find((destination) => destination.id === '1').id,
   isFavorite: false,
   offers: [],
   type: 'flight'
@@ -34,6 +45,7 @@ const PLACES = getAllElementsByKey(destinationsFromServer, 'name');
 
 const DateFormat = {
   DAY_EVENT: 'MMM D',
+  DAY: 'D MMM',
   DAY_AND_TIME_EVENT: 'MM/DD/YYYY HH:mm',
   TIME: 'HH:mm'
 };

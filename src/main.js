@@ -1,11 +1,11 @@
-import TripInfoView from './view/trip-info-view.js';
 import ListPresenter from './presenter/list-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import WaypointsModel from './model/waypoint-model.js';
 import FilterModel from './model/filter-model.js';
-import { RenderPosition, render } from './framework/render.js';
 import NewEventButtonView from './view/new-event-button-view.js';
 import { waypointsApiService } from './const.js';
+import HeaderPresenter from './presenter/header-presenter.js';
+import { render } from './framework/render.js';
 
 const siteMainElement = document.querySelector('main');
 const siteHeaderElement = document.querySelector('.page-header');
@@ -29,6 +29,10 @@ const filterPresenter = new FilterPresenter({
   filterModel,
   waypointsModel
 });
+const headerPresenter = new HeaderPresenter({
+  waypointsModel: waypointsModel,
+  siteTripInfoElement: siteTripInfoElement
+});
 const newEventButtonComponent = new NewEventButtonView({
   onClick: handleNewEventButtonClick
 });
@@ -42,8 +46,7 @@ function handleNewEventButtonClick() {
   newEventButtonComponent.element.disabled = true;
 }
 
-render(new TripInfoView(), siteTripInfoElement, RenderPosition.AFTERBEGIN);
-
+headerPresenter.init();
 filterPresenter.init();
 listPresenter.init();
 waypointsModel.init()

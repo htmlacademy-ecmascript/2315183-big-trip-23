@@ -36,7 +36,7 @@ export default class ListElementPresenter {
     });
 
     this.#listELementEditComponent = new EditFormView({
-      editFormElement: this.#listElement,
+      formData: this.#listElement,
       onFormSubmit: this.#handleFormSubmit,
       onCancelEditForm: this.#handleCancelEditForm,
       onDeleteClick: this.#handleDeleteClick,
