@@ -126,7 +126,7 @@ const getHeaderInfoRow = (points, destinations) => {
   const uniqCities = [...new Set(tripCities)];
   const uniqCitiesLength = uniqCities.length;
 
-  switch (uniqCitiesLength.length) {
+  switch (uniqCitiesLength) {
     case 2: {
       const lastUniqueCity = uniqCities[uniqCitiesLength - 1];
       const indexOfLastUnique = tripCities.indexOf(lastUniqueCity);
