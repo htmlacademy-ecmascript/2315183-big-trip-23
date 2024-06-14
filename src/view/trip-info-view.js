@@ -1,79 +1,6 @@
 import { DateFormat, destinationsFromServer, offersFromServer } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { getNeededOffers, humanizeDueDate } from '../utils/list.js';
-
-function createPlacesDestinationTemlate(waypoints, destinations) {
-  const places = waypoints.map((waypoint) => destinations.find(({id}) => id === waypoint.destination).name);
-  const fisrtPlace = places[0];
-  const lastPlace = places.at(-1);
-  const middleplaces = places.slice(1, -1);
-  const allUniqCities = new Set(places);
-
-  const uniqPlaces = new Set(middleplaces);
-
-  let count = 0;
-  // count - 1: city
-  // count - 2: city - city
-  // count - 3: city - city - city
-  // count - 4: city - ... - city
-
-  switch(uniqPlaces.length) {
-    case 0:
-      if (fisrtPlace === lastPlace) {
-        count = 1;
-        break;
-      }
-      count = 2;
-      break;
-    case 1:
-      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[0] === lastPlace) {
-        count = 1;
-        break;
-      }
-      if (uniqPlaces[0] === fisrtPlace || uniqPlaces[0] === lastPlace) {
-        count = 2;
-        break;
-      }
-      count = 3;
-      break;
-    case 2:
-      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[1] === lastPlace) {
-        count = 2;
-        break;
-      }
-      if (uniqPlaces[0] === fisrtPlace || uniqPlaces[1] === lastPlace) {
-        count = 3;
-        break;
-      }
-      count = 4;
-      break;
-    case 3:
-      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[2] === lastPlace) {
-        if (uniqPlaces[1] === uniqPlaces[0] || uniqPlaces[1] === uniqPlaces[2]) {
-          count = 2;
-          break;
-        }
-        count = 3;
-        break;
-      }
-      count = 4;
-      break;
-    default:
-      count = 4;
-      break;
-  }
-
-  switch(count) {
-    case 1:
-      return `<h1 class="trip-info__title">${fisrtPlace}</h1>`;
-    case 2:
-      return `<h1 class="trip-info__title">${fisrtPlace} &mdash; ${lastPlace}</h1>`;
-    case 3:
-      return `<h1 class="trip-info__title">${fisrtPlace} &mdash; ${allUniqCities[1]} &mdash; ${lastPlace}</h1>`;
-    case 4:
-      return `<h1 class="trip-info__title">${fisrtPlace} &mdash; ... &mdash; ${lastPlace}</h1>`;
-  }
-}
+import { getHeaderInfoRow, getNeededOffers, humanizeDueDate } from '../utils/list.js';
 
 function createSumOfPricesTempate(waypoints, offers) {
   let sumOfPrice = 0;
@@ -104,7 +31,9 @@ function createTripInfoTemplate(waypoints, offers, destinations) {
 
     return (`<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-      ${createPlacesDestinationTemlate(waypoints, destinations)}
+        <h1 class="trip-info__title">
+        ${getHeaderInfoRow(waypoints, destinations)}
+        </h1>
 
       ${dateTemplate}
       </div>
