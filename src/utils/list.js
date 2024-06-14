@@ -103,6 +103,46 @@ function getAllElementsByKey(elements, elementKey) {
   return array;
 }
 
+const getHeaderInfoRow = (points, destinations) => {
+  const tripCities = points.map(
+    ({destination}) => destinations.find(({id}) => id === destination).name
+  );
+
+  const citiesLength = tripCities.length;
+
+  const first = tripCities[0];
+  const last = tripCities[tripCities.length - 1];
+
+  if (citiesLength <= 1 || first === last) {
+    return first || '';
+  }
+
+  const twoCitiesRow = `${first}  &mdash;  ${last}`;
+
+  if (citiesLength === 2) {
+    return twoCitiesRow;
+  }
+
+  const uniqCities = [...new Set(tripCities)];
+  const uniqCitiesLength = uniqCities.length;
+
+  switch (uniqCitiesLength.length) {
+    case 2: {
+      const lastUniqueCity = uniqCities[uniqCitiesLength - 1];
+      const indexOfLastUnique = tripCities.indexOf(lastUniqueCity);
+
+      const isLastUniqueCityInMiddle = indexOfLastUnique > 0 && indexOfLastUnique < citiesLength - 1;
+
+      return isLastUniqueCityInMiddle
+        ? `${first}  &mdash;  ${lastUniqueCity} &mdash;  ${first}`
+        : twoCitiesRow;
+    }
+
+    case 3: return uniqCities.join(' &mdash; ');
+    default: return `${first}   &mdash;  ...  &mdash;   ${last}`;
+  }
+};
+
 export {
   humanizeDueDate,
   isListElementFuture,
@@ -117,5 +157,6 @@ export {
   getCurrentDestination,
   getOffersByType,
   getCurrentDestinationByName,
-  getAllElementsByKey
+  getAllElementsByKey,
+  getHeaderInfoRow
 };
