@@ -103,43 +103,84 @@ function getAllElementsByKey(elements, elementKey) {
   return array;
 }
 
-const getHeaderInfoRow = (points, destinations) => {
-  const tripCities = points.map(
-    ({destination}) => destinations.find(({id}) => id === destination).name
-  );
+const getHeaderInfoRow = (waypoints, destinations) => {
+  const places = waypoints.map((waypoint) => destinations.find(({id}) => id === waypoint.destination).name);
+  const fisrtPlace = places[0];
+  const lastPlace = places.at(-1);
+  const middleplaces = places.slice(1, -1);
+  const allUniqCities = Array.from(new Set(places));
 
-  const citiesLength = tripCities.length;
+  const uniqPlaces = new Set(middleplaces);
 
-  const first = tripCities[0];
-  const last = tripCities[tripCities.length - 1];
+  let count = 0;
+  // count - 1: city
+  // count - 2: city - city
+  // count - 3: city - city - city
+  // count - 4: city - ... - city
 
-  if (citiesLength <= 1 || first === last) {
-    return first || '';
+  switch(uniqPlaces.size) {
+    case 0:
+      if (fisrtPlace === lastPlace) {
+        count = 1;
+        break;
+      }
+      count = 2;
+      break;
+    case 1:
+      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[0] === lastPlace) {
+        count = 1;
+        break;
+      }
+      if (uniqPlaces[0] === fisrtPlace || uniqPlaces[0] === lastPlace) {
+        count = 2;
+        break;
+      }
+      count = 3;
+      break;
+    case 2:
+      if (fisrtPlace === lastPlace) {
+        count = 1;
+        break;
+      }
+      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[1] === lastPlace) {
+        count = 2;
+        break;
+      }
+      if (uniqPlaces[0] === fisrtPlace || uniqPlaces[1] === lastPlace) {
+        count = 3;
+        break;
+      }
+      count = 4;
+      break;
+    case 3:
+      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[2] === lastPlace) {
+        if (uniqPlaces[1] === uniqPlaces[0] || uniqPlaces[1] === uniqPlaces[2]) {
+          count = 2;
+          break;
+        }
+        count = 3;
+        break;
+      }
+      count = 4;
+      break;
+    default:
+      if (fisrtPlace === lastPlace) {
+        count = 1;
+        break;
+      }
+      count = 4;
+      break;
   }
 
-  const twoCitiesRow = `${first}  &mdash;  ${last}`;
-
-  if (citiesLength === 2) {
-    return twoCitiesRow;
-  }
-
-  const uniqCities = [...new Set(tripCities)];
-  const uniqCitiesLength = uniqCities.length;
-
-  switch (uniqCitiesLength) {
-    case 2: {
-      const lastUniqueCity = uniqCities[uniqCitiesLength - 1];
-      const indexOfLastUnique = tripCities.indexOf(lastUniqueCity);
-
-      const isLastUniqueCityInMiddle = indexOfLastUnique > 0 && indexOfLastUnique < citiesLength - 1;
-
-      return isLastUniqueCityInMiddle
-        ? `${first}  &mdash;  ${lastUniqueCity} &mdash;  ${first}`
-        : twoCitiesRow;
-    }
-
-    case 3: return uniqCities.join(' &mdash; ');
-    default: return `${first}   &mdash;  ...  &mdash;   ${last}`;
+  switch(count) {
+    case 1:
+      return fisrtPlace;
+    case 2:
+      return `${fisrtPlace} &mdash; ${lastPlace}`;
+    case 3:
+      return `${fisrtPlace} &mdash; ${allUniqCities[1]} &mdash; ${lastPlace}`;
+    case 4:
+      return `${fisrtPlace} &mdash; ... &mdash; ${lastPlace}`;
   }
 };
 
