@@ -47,10 +47,10 @@ function sortListByPrice(waypointA, waypointB) {
 }
 
 function sortListByTime(waypointA, waypointB) {
-  const minuteDuractionB = dayjs(waypointB.dateFrom).diff(waypointB.dateTo, 'm');
-  const minuteDuractionA = dayjs(waypointA.dateFrom).diff(waypointA.dateTo, 'm');
+  const minuteDurationB = dayjs(waypointB.dateFrom).diff(waypointB.dateTo, 'm');
+  const minuteDurationA = dayjs(waypointA.dateFrom).diff(waypointA.dateTo, 'm');
 
-  return minuteDuractionA - minuteDuractionB;
+  return minuteDurationA - minuteDurationB;
 }
 
 function isDatesEqual(dateA, dateB) {
@@ -105,12 +105,12 @@ function getAllElementsByKey(elements, elementKey) {
 
 const getHeaderInfoRow = (waypoints, destinations) => {
   const places = waypoints.map((waypoint) => destinations.find(({id}) => id === waypoint.destination).name);
-  const fisrtPlace = places[0];
+  const firstPlace = places[0];
   const lastPlace = places.at(-1);
-  const middleplaces = places.slice(1, -1);
+  const middlePlaces = places.slice(1, -1);
   const allUniqCities = Array.from(new Set(places));
 
-  const uniqPlaces = new Set(middleplaces);
+  const uniqPlaces = new Set(middlePlaces);
 
   let count = 0;
   // count - 1: city
@@ -120,40 +120,40 @@ const getHeaderInfoRow = (waypoints, destinations) => {
 
   switch(uniqPlaces.size) {
     case 0:
-      if (fisrtPlace === lastPlace) {
+      if (firstPlace === lastPlace) {
         count = 1;
         break;
       }
       count = 2;
       break;
     case 1:
-      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[0] === lastPlace) {
+      if (uniqPlaces[0] === firstPlace && uniqPlaces[0] === lastPlace) {
         count = 1;
         break;
       }
-      if (uniqPlaces[0] === fisrtPlace || uniqPlaces[0] === lastPlace) {
+      if (uniqPlaces[0] === firstPlace || uniqPlaces[0] === lastPlace) {
         count = 2;
         break;
       }
       count = 3;
       break;
     case 2:
-      if (fisrtPlace === lastPlace) {
+      if (firstPlace === lastPlace) {
         count = 1;
         break;
       }
-      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[1] === lastPlace) {
+      if (uniqPlaces[0] === firstPlace && uniqPlaces[1] === lastPlace) {
         count = 2;
         break;
       }
-      if (uniqPlaces[0] === fisrtPlace || uniqPlaces[1] === lastPlace) {
+      if (uniqPlaces[0] === firstPlace || uniqPlaces[1] === lastPlace) {
         count = 3;
         break;
       }
       count = 4;
       break;
     case 3:
-      if (uniqPlaces[0] === fisrtPlace && uniqPlaces[2] === lastPlace) {
+      if (uniqPlaces[0] === firstPlace && uniqPlaces[2] === lastPlace) {
         if (uniqPlaces[1] === uniqPlaces[0] || uniqPlaces[1] === uniqPlaces[2]) {
           count = 2;
           break;
@@ -164,7 +164,7 @@ const getHeaderInfoRow = (waypoints, destinations) => {
       count = 4;
       break;
     default:
-      if (fisrtPlace === lastPlace) {
+      if (firstPlace === lastPlace) {
         count = 1;
         break;
       }
@@ -174,13 +174,13 @@ const getHeaderInfoRow = (waypoints, destinations) => {
 
   switch(count) {
     case 1:
-      return fisrtPlace;
+      return firstPlace;
     case 2:
-      return `${fisrtPlace} &mdash; ${lastPlace}`;
+      return `${firstPlace} &mdash; ${lastPlace}`;
     case 3:
-      return `${fisrtPlace} &mdash; ${allUniqCities[1]} &mdash; ${lastPlace}`;
+      return `${firstPlace} &mdash; ${allUniqCities[1]} &mdash; ${lastPlace}`;
     case 4:
-      return `${fisrtPlace} &mdash; ... &mdash; ${lastPlace}`;
+      return `${firstPlace} &mdash; ... &mdash; ${lastPlace}`;
   }
 };
 

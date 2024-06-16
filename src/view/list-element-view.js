@@ -3,7 +3,7 @@ import { DateFormat, destinationsFromServer, offersFromServer } from '../const.j
 import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
 
-function createDateElementTemplate(timeFrom, timeTo, totalDuraction) {
+function createDateElementTemplate(timeFrom, timeTo, totalDuration) {
   return (`
   <div class="event__schedule">
         <p class="event__time">
@@ -11,7 +11,7 @@ function createDateElementTemplate(timeFrom, timeTo, totalDuraction) {
           &mdash;
           <time class="event__end-time" datetime="${timeTo}">${timeTo}</time>
         </p>
-        <p class="event__duration">${totalDuraction}</p>
+        <p class="event__duration">${totalDuration}</p>
       </div>`);
 }
 
@@ -42,12 +42,12 @@ function createListElementTemplate(listElement, allOffers, allDestinations) {
   const from = humanizeDueDate(dateFrom, DateFormat.TIME);
   const to = humanizeDueDate(dateTo, DateFormat.TIME);
 
-  const dayDuraction = dayjs(dateFrom).diff(dateTo, 'd') * (-1);
-  const hourDuraction = dayjs(dateFrom).diff(dateTo, 'h') % 24 * (-1);
-  const minuteDuraction = dayjs(dateFrom).diff(dateTo, 'm') % 60 * (-1);
-  const totalDuraction = `${dayDuraction !== 0 ? `${dayDuraction}D` : ''}
-    ${hourDuraction !== 0 ? `${hourDuraction}H` : ''}
-    ${minuteDuraction !== 0 ? `${minuteDuraction}M` : ''}`;
+  const dayDuration = dayjs(dateFrom).diff(dateTo, 'd') * (-1);
+  const hourDuration = dayjs(dateFrom).diff(dateTo, 'h') % 24 * (-1);
+  const minuteDuration = dayjs(dateFrom).diff(dateTo, 'm') % 60 * (-1);
+  const totalDuration = `${dayDuration !== 0 ? `${dayDuration}D` : ''}
+    ${hourDuration !== 0 ? `${hourDuration}H` : ''}
+    ${minuteDuration !== 0 ? `${minuteDuration}M` : ''}`;
 
   return (
     `<li class="trip-events__item">
@@ -58,7 +58,7 @@ function createListElementTemplate(listElement, allOffers, allDestinations) {
       </div>
       <h3 class="event__title">${type} ${name}</h3>
 
-      ${createDateElementTemplate(from, to, totalDuraction)}
+      ${createDateElementTemplate(from, to, totalDuration)}
 
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
