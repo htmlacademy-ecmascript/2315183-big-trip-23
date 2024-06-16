@@ -2,7 +2,7 @@ import { DateFormat, destinationsFromServer, offersFromServer } from '../const.j
 import AbstractView from '../framework/view/abstract-view.js';
 import { getHeaderInfoRow, getNeededOffers, humanizeDueDate } from '../utils/list.js';
 
-function createSumOfPricesTempate(waypoints, offers) {
+function createSumOfPricesTemplate(waypoints, offers) {
   let sumOfPrice = 0;
 
   waypoints.forEach((waypoint) => {
@@ -27,7 +27,7 @@ function createTripInfoTemplate(waypoints, offers, destinations) {
     const end = humanizeDueDate(dateEnd, DateFormat.DAY);
 
     const dateTemplate = `<p class="trip-info__dates">${start}&nbsp;&mdash;&nbsp;${end}</p>`;
-    const priceTemplate = createSumOfPricesTempate(waypoints, offers);
+    const priceTemplate = createSumOfPricesTemplate(waypoints, offers);
 
     return (`<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">

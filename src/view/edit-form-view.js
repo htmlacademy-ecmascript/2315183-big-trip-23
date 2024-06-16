@@ -80,14 +80,14 @@ function createOffersEditTemplate(offers, isAnyOffers, allOffers, type, isDisabl
       </div>
     </section>`);
     } else {
-      const uncelectedOffersId = getOffersByType(allOffers, type);
-      const uncelectedOffers = getNeededOffers(allOffers, type, uncelectedOffersId);
+      const unselectedOffersId = getOffersByType(allOffers, type);
+      const unselectedOffers = getNeededOffers(allOffers, type, unselectedOffersId);
 
-      if (uncelectedOffersId.length !== 0) {
+      if (unselectedOffersId.length !== 0) {
         return (`<section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
           <div class="event__available-offers">
-          ${Object.entries(uncelectedOffers).map((offer) => {
+          ${Object.entries(unselectedOffers).map((offer) => {
             count++;
             return (`<div class="event__offer-selector">
           <input class="event__offer-checkbox  visually-hidden" id="event-offer-${count}" data-offer-id="${offer[1].id}"
@@ -153,7 +153,7 @@ function createEditFormTemplate(formData, statusOfForm, allOffers, allDestinatio
   const eventPhotoTemplate = createEventDataInPhotoTemplate(type);
   const typesOfEventTemplate = createSelectTypeEventTemplate(type, isDisabled);
   const destinationInfoTemplate = createDestinationInfoTemplate(type, nameDestination, isDisabled);
-  const timeInfotemplate = createTimeInEventTemplate(from, to, isDisabled);
+  const timeInfoTemplate = createTimeInEventTemplate(from, to, isDisabled);
   const offerEditTemplate = createOffersEditTemplate(currentOffers, isAnyOffers, allOffers, type, isDisabled);
   const destinationDescriptionTemplate = createDestinationDescriptionTemplate(descriptionDestination, picturesDestination);
 
@@ -185,7 +185,7 @@ function createEditFormTemplate(formData, statusOfForm, allOffers, allDestinatio
     </div>
 
     <div class="event__field-group  event__field-group--time">
-    ${timeInfotemplate}
+    ${timeInfoTemplate}
     </div>
 
     <div class="event__field-group  event__field-group--price">

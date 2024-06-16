@@ -29,7 +29,7 @@ export default class WaypointsModel extends Observable{
     const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting waypoint');
+      throw new Error('Can\'t update unexisting list element');
     }
 
     try {
@@ -66,7 +66,7 @@ export default class WaypointsModel extends Observable{
     const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting waypoint');
+      throw new Error('Can\'t update unexisting list element');
     }
 
     try {
