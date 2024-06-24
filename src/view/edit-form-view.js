@@ -197,7 +197,7 @@ function createEditFormTemplate(formData, statusOfForm, allOffers, allDestinatio
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
-    <button class="event__reset-btn" type="reset">${buttonInfo}</button>
+    <button class="event__reset-btn" type="reset" ${isSaving ? 'disabled' : ''}>${buttonInfo}</button>
     ${statusOfForm === StatusOfForm.EDIT ? `<button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>` : ''}
