@@ -1,6 +1,6 @@
 import ListPresenter from './presenter/list-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
-import WaypointsModel from './model/waypoint-model.js';
+import WaypointsModel from './model/waypoints-model.js';
 import FilterModel from './model/filter-model.js';
 import NewEventButtonView from './view/new-event-button-view.js';
 import { waypointsApiService } from './const.js';

@@ -95,12 +95,12 @@ function getCurrentDestinationByName(allDestinations, name) {
 }
 
 function getAllElementsByKey(elements, elementKey) {
-  const array = [];
+  const allElementsByKey = [];
   elements.forEach((element) => {
-    array.push(element[elementKey]);
+    allElementsByKey.push(element[elementKey]);
   });
 
-  return array;
+  return allElementsByKey;
 }
 
 const getHeaderInfoRow = (waypoints, destinations) => {
@@ -113,10 +113,6 @@ const getHeaderInfoRow = (waypoints, destinations) => {
   const uniqPlaces = new Set(middlePlaces);
 
   let count = 0;
-  // count - 1: city
-  // count - 2: city - city
-  // count - 3: city - city - city
-  // count - 4: city - ... - city
 
   switch(uniqPlaces.size) {
     case 0:
