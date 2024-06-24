@@ -5,6 +5,8 @@ import WaypointsApiService from '../waypoints-api-service.js';
 const AUTHORIZATION = 'Basic k8v5s7m2h9z';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
+const siteTripInfoElement = document.querySelector('.trip-events');
+
 async function getDataFromServer() {
   try {
     const waypointsApiService = new WaypointsApiService(END_POINT, AUTHORIZATION);
@@ -40,7 +42,6 @@ async function getDataFromServer() {
       waypointsApiService: waypointsApiService
     };
   } catch(err) {
-    const siteTripInfoElement = document.querySelector('.trip-events');
     render(new FailedLoadDataView, siteTripInfoElement);
     throw new Error('Failed to load latest route information');
   }
